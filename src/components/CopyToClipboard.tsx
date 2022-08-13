@@ -1,7 +1,8 @@
 import React from 'react'
-import { IconButton } from '@chakra-ui/react'
+import { ChakraProvider, IconButton } from '@chakra-ui/react'
 
 import { ClipBoardIcon } from './Icons'
+import { theme } from '../styles/theme';
 
 interface CopyToClipboardProps {
   copyFn?: () => void;
@@ -10,6 +11,7 @@ interface CopyToClipboardProps {
 
 export const CopyToClipboard = ({ copyFn, color }: CopyToClipboardProps) => {
   return (
+    <ChakraProvider theme={theme}>
     <IconButton
       variant='outline'
       colorScheme='whiteAlpha'
@@ -18,5 +20,6 @@ export const CopyToClipboard = ({ copyFn, color }: CopyToClipboardProps) => {
       icon={<ClipBoardIcon boxSize={5} color={color} />}
       onClick={copyFn}
     />
+    </ChakraProvider>
   )
 }

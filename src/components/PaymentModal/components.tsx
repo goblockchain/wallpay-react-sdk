@@ -9,6 +9,7 @@ import {
   ButtonProps,
   Divider,
   Image,
+  ChakraProvider,
 } from "@chakra-ui/react";
 import {
   PaymentElement,
@@ -19,6 +20,7 @@ import { useStore } from "../../hooks/useStore";
 import { useNotification } from "../../hooks/useNotification";
 import closeblack from "../../assets/closeblack.png";
 import { useTranslation } from "next-export-i18n";
+import { theme } from "../../styles/theme";
 
 interface PaymentStepsButtonProps extends ButtonProps {
   loading?: boolean;
@@ -77,21 +79,23 @@ export const PaymentStepsButton = ({
   ...rest
 }: PaymentStepsButtonProps) => {
   return (
-    <Button
-      borderRadius="45px"
-      border="1px solid #dfdfdf"
-      bg="#fff"
-      m="0 auto"
-      height="38px"
-      textAlign="center"
-      width="104px"
-      fontSize="14px"
-      color="#454545"
-      _hover={{ bg: "" }}
-      {...rest}
-    >
-      {loading !== undefined && loading === true ? "Loading..." : children}
-    </Button>
+    <ChakraProvider theme={theme}>
+      <Button
+        borderRadius="45px"
+        border="1px solid #dfdfdf"
+        bg="#fff"
+        m="0 auto"
+        height="38px"
+        textAlign="center"
+        width="104px"
+        fontSize="14px"
+        color="#454545"
+        _hover={{ bg: "" }}
+        {...rest}
+      >
+        {loading !== undefined && loading === true ? "Loading..." : children}
+      </Button>
+    </ChakraProvider>
   );
 };
 
@@ -100,32 +104,35 @@ export const PaymentModalBody = ({
   onClosePaymentModal,
   title,
 }: PaymentModalBodyProps) => {
+  console.log('children @ PaymentModalBody', children);
   const { t } = useTranslation();
 
   return (
-    <Flex
-      direction="column"
-      alignItems="center"
-      justifyContent="space-between"
-      borderRadius="15px"
-      fontSize="20px"
-      textAlign="center"
-      fontWeight="bold"
-      p="38px 50px"
-    >
-      <Flex justifyContent="space-between" alignItems="center" w="100%">
-        <Text fontSize="22px" color="#454545">
-          {" "}
-          {title ? title : t("payment_title")}
-        </Text>
-        <Image
-          cursor="pointer"
-          src={closeblack.src}
-          onClick={onClosePaymentModal}
-        />
+    <ChakraProvider theme={theme}>
+      <Flex
+        direction="column"
+        alignItems="center"
+        justifyContent="space-between"
+        borderRadius="15px"
+        fontSize="20px"
+        textAlign="center"
+        fontWeight="bold"
+        p="38px 50px"
+      >
+        <Flex justifyContent="space-between" alignItems="center" w="100%">
+          <Text fontSize="22px" color="#454545">
+            {" "}
+            {title ? title : t("payment_title")}
+          </Text>
+          <Image
+            cursor="pointer"
+            src={closeblack.src}
+            onClick={onClosePaymentModal}
+          />
+        </Flex>
+        {children}
       </Flex>
-      {children}
-    </Flex>
+    </ChakraProvider>
   );
 };
 
@@ -136,48 +143,54 @@ export const PaymentDetails = ({
   const renderPaymentInfo = () => {
     if (paymentType === "credit") {
       return (
-        <PaymentDetailsInfo
-          amount={purchaseInfo.fiatAmount}
-          symbol={purchaseInfo.currency}
-          fiatAmount={purchaseInfo.amount}
-          currency={purchaseInfo.symbol}
-        />
+        <ChakraProvider theme={theme}>
+          <PaymentDetailsInfo
+            amount={purchaseInfo.fiatAmount}
+            symbol={purchaseInfo.currency}
+            fiatAmount={purchaseInfo.amount}
+            currency={purchaseInfo.symbol}
+          />
+        </ChakraProvider>
       );
     }
 
     return (
-      <PaymentDetailsInfo
-        amount={purchaseInfo.amount}
-        symbol={purchaseInfo.symbol}
-        fiatAmount={purchaseInfo.fiatAmount}
-        currency={purchaseInfo.currency}
-      />
+      <ChakraProvider theme={theme}>
+        <PaymentDetailsInfo
+          amount={purchaseInfo.amount}
+          symbol={purchaseInfo.symbol}
+          fiatAmount={purchaseInfo.fiatAmount}
+          currency={purchaseInfo.currency}
+        />
+      </ChakraProvider>
     );
   };
 
   return (
-    <Box
-      mt="20px"
-      mb="15px"
-      textAlign="end"
-      borderRadius="10px"
-      background="#f4f4f4"
-      p="19px 26px"
-      fontSize="12px"
-      fontWeight="normal"
-    >
-      <Flex w="100%" justifyContent="space-between">
-        <Text fontWeight="400">Valor</Text>
-        {renderPaymentInfo()}
-      </Flex>
-      {/* <Box mt="15px" w="100%" height="1px" background="#dfdfdf" /> */}
-      {/* <Flex mt="15px" w="100%" justifyContent="space-between">
+    <ChakraProvider theme={theme}>
+      <Box
+        mt="20px"
+        mb="15px"
+        textAlign="end"
+        borderRadius="10px"
+        background="#f4f4f4"
+        p="19px 26px"
+        fontSize="12px"
+        fontWeight="normal"
+      >
+        <Flex w="100%" justifyContent="space-between">
+          <Text fontWeight="400">Valor</Text>
+          {renderPaymentInfo()}
+        </Flex>
+        {/* <Box mt="15px" w="100%" height="1px" background="#dfdfdf" /> */}
+        {/* <Flex mt="15px" w="100%" justifyContent="space-between">
         <Text fontWeight="400" fontSize="10px">{t('tax')} GoTokens (10%)</Text>
         <Text fontWeight="400" color="#a19d9d" fontSize="10px">
           {Number(purchaseInfo.fiatAmount * 0.1).toFixed(2)} {purchaseInfo.currency}
         </Text>
       </Flex> */}
-    </Box>
+      </Box>
+    </ChakraProvider>
   );
 };
 
@@ -187,7 +200,7 @@ export const PaymentTotalSection = ({
   checkFn,
 }: PaymentTotalSectionProps) => {
   return (
-    <>
+    <ChakraProvider theme={theme}>
       <Divider />
       <Flex mt="15px" w="100%" justifyContent="space-between">
         <Text fontSize="12px">pagamento total</Text>
@@ -207,7 +220,7 @@ export const PaymentTotalSection = ({
           </Link>
         </Text>
       </Flex>
-    </>
+    </ChakraProvider>
   );
 };
 
@@ -248,13 +261,13 @@ export const CheckoutForm = ({
   };
 
   return (
-    <>
+    <ChakraProvider theme={theme}>
       <form id="payment-form" onSubmit={handleSubmit}>
         <PaymentElement id="payment-element" />
       </form>
       <PaymentDetails paymentType="credit" purchaseInfo={purchaseInfo} />
       <PaymentTotalSection
-        amount={purchaseInfo.total}
+        amount={Number(purchaseInfo.total)}
         symbol={purchaseInfo.currency}
         checkFn={checkFn}
       />
@@ -267,6 +280,6 @@ export const CheckoutForm = ({
       >
         completo
       </PaymentStepsButton>
-    </>
+    </ChakraProvider>
   );
 };

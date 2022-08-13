@@ -18,12 +18,12 @@ import { ConnectProviderButtonMetamaskOrWalletConnect } from "../ConnectEtherWal
 import { useConfig } from "../../hooks/useConfig";
 import { useTranslation } from "next-export-i18n";
 
-import metamask from "../../../public/metamask.png";
-import walletConnect from "../../../public/walletconnect.png";
-import googleConnect from "../../../public/google.png";
-import facebookConnect from "../../../public/facebook.png";
-import twitterConnect from "../../../public/twitter.png";
-import passwordlessConnect from "../../../public/passwordless.png";
+import metamask from "../../assets/metamask.png";
+import walletConnect from "../../assets/walletconnect.png";
+import googleConnect from "../../assets/google.png";
+import facebookConnect from "../../assets/facebook.png";
+import twitterConnect from "../../assets/twitter.png";
+import passwordlessConnect from "../../assets/passwordless.png";
 
 const imageUrl = {
   metamask: metamask.src,

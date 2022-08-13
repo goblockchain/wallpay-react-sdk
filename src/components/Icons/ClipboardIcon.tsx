@@ -2,7 +2,7 @@ import React from 'react'
 import { Icon, IconProps } from '@chakra-ui/react'
 
 export const ClipBoardIcon = (props: IconProps) => {
-  const getColor = (color = undefined) => {
+  const getColor = (color) => {
     return color === undefined ? '#454545' : color
   }
 

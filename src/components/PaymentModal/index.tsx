@@ -25,6 +25,7 @@ import {
   Progress,
   Show,
   Hide,
+  ChakraProvider,
 } from "@chakra-ui/react";
 
 import BigNumber from "bignumber.js";
@@ -47,6 +48,7 @@ import pix_full from "../../assets/pix_full.png";
 import axios from "axios";
 import { useTranslation } from "next-export-i18n";
 import { FormatPrice } from "../../utils";
+import { theme } from '../../styles/theme';
 
 export type PaymentData = {
   itemName: any;
@@ -117,7 +119,7 @@ const PixCopyAndPaste = ({ copyFn }: PixCopyAndPasteProps) => {
 
   function handleCopyAndPasteClick() {
     setCopyText(t("pix_copy_paste_copied"));
-    copyFn();
+    if (copyFn) copyFn();
     console.log("Copiado");
     setTimeout(() => {
       setCopyText(t("pix_copy_paste"));
@@ -183,7 +185,6 @@ const PixCopyAndPaste = ({ copyFn }: PixCopyAndPasteProps) => {
 
 let shouldCancelPixRequests = false;
 export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentModalProps) => {
-  console.log('[[[[[[[[[[[[[[[[[[         sdkPrivateKey         ]]]]]]]]]]]]]]]]]]] ', sdkPrivateKey);
   const {
     onOpen: onSelectOpen,
     onClose: onSelectClose,
@@ -244,13 +245,11 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
   >("Selecionar");
   const [termsIsChecked, setTermsIsChecked] = useState(false);
   const [blockchainInfo] = useState(() => {
-    let info: BlockchainInfo;
+    let info = NETWORKS.TESTNET.find(
+      (info) => info.BLOCKCHAIN === config.blockchain
+    );
     if (config.networkType === "mainnet") {
       info = NETWORKS.MAINNET.find(
-        (info) => info.BLOCKCHAIN === config.blockchain
-      );
-    } else {
-      info = NETWORKS.TESTNET.find(
         (info) => info.BLOCKCHAIN === config.blockchain
       );
     }
@@ -273,7 +272,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       if (userEmail !== "") {
         postData = {
           storeName: config.title.toLocaleLowerCase(),
-          currency: blockchainInfo.SYMBOL,
+          currency: blockchainInfo?.SYMBOL,
           walletAddress: walletAddress,
           contractAddress: config.contractAddress,
           email: userEmail,
@@ -289,7 +288,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       } else {
         postData = {
           storeName: config.title.toLocaleLowerCase(),
-          currency: blockchainInfo.SYMBOL,
+          currency: blockchainInfo?.SYMBOL,
           walletAddress: walletAddress,
           contractAddress: config.contractAddress,
           clientName: userName,
@@ -307,7 +306,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         postData,
         {
           headers: {
-            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE,
+            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
           },
         }
       );
@@ -431,7 +430,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         },
         {
           headers: {
-            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE,
+            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
           },
         }
       );
@@ -479,7 +478,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       `${process.env.NEXT_PUBLIC_API_URL}/transaction/${idPaymentProvider}`,
       {
         headers: {
-          "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE,
+          "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
         },
       }
     );
@@ -497,7 +496,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       if (userEmail !== "") {
         postData = {
           storeName: config.title.toLocaleLowerCase(),
-          currency: blockchainInfo.SYMBOL,
+          currency: blockchainInfo?.SYMBOL,
           walletAddress: walletAddress,
           contractAddress: config.contractAddress,
           email: userEmail,
@@ -513,7 +512,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       } else {
         postData = {
           storeName: config.title.toLocaleLowerCase(),
-          currency: blockchainInfo.SYMBOL,
+          currency: blockchainInfo?.SYMBOL,
           walletAddress: walletAddress,
           contractAddress: config.contractAddress,
           item: {
@@ -530,7 +529,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         postData,
         {
           headers: {
-            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE,
+            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
           },
         }
       );
@@ -538,8 +537,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       console.log("cryptoData", data);
       cryptoDataId = data._id;
 
-      const gasPrice = infuraW3instance.utils.toHex(
-        await infuraW3instance.eth.getGasPrice()
+      const gasPrice = infuraW3instance?.utils.toHex(
+        await infuraW3instance?.eth.getGasPrice()
       );
       const buyTokenObject = {
         from: walletAddress,
@@ -553,7 +552,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         .buyToken(paymentData.tokenId, 1)
         .send({
           ...buyTokenObject,
-          gas: infuraW3instance.utils.toHex(gasLimit),
+          gas: infuraW3instance?.utils.toHex(gasLimit),
         });
 
       emitNotificationModal({
@@ -569,7 +568,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         },
         {
           headers: {
-            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE,
+            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
           },
         }
       );
@@ -689,7 +688,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
   }, [countDown, step]);
 
   function toTime(seconds) {
-    var date = new Date(null);
+    var date = new Date();
     date.setSeconds(seconds);
     return date.toISOString().substr(14, 5);
   }
@@ -744,7 +743,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                       fontFamily="Roboto"
                       color="#454545"
                     >
-                      {blockchainInfo.SYMBOL}
+                      {blockchainInfo?.SYMBOL}
                     </Text>
                   </Center>
                 </>
@@ -823,7 +822,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                         fontFamily="Roboto"
                         color="#454545"
                       >
-                        {blockchainInfo.SYMBOL}
+                        {blockchainInfo?.SYMBOL}
                       </Text>
                     </Center>
                   </PopoverBody>
@@ -850,7 +849,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                     {t("saldo2")}:{" "}
                     <FormatPrice
                       amount={walletBalance}
-                      currency={blockchainInfo.SYMBOL}
+                      currency={blockchainInfo?.SYMBOL}
                     />
                   </Text>
                 </Flex>
@@ -862,7 +861,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                   {t("saldo2")}:{" "}
                   <FormatPrice
                     amount={walletBalance}
-                    currency={blockchainInfo.SYMBOL}
+                    currency={blockchainInfo?.SYMBOL}
                   />
                 </Text>
               </Flex>
@@ -912,7 +911,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                     {paymentType !== "Pix" && (
                       <FormatPrice
                         amount={paymentData.fixedPrice}
-                        currency={blockchainInfo.SYMBOL}
+                        currency={blockchainInfo?.SYMBOL}
                       />
                     )}
                     {paymentType == "Pix" && (
@@ -944,7 +943,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                     fontStyle="normal"
                     color="#A19D9D"
                   >
-                    {blockchainInfo.SYMBOL}
+                    {blockchainInfo?.SYMBOL}
                   </Text>
                 </Flex>
                 <Text
@@ -983,7 +982,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                 {paymentType !== "Pix" && (
                   <FormatPrice
                     amount={etherPriceWithFee}
-                    currency={blockchainInfo.SYMBOL}
+                    currency={blockchainInfo?.SYMBOL}
                   />
                 )}
                 {paymentType == "Pix" && (

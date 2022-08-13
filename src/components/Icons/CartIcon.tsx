@@ -3,7 +3,7 @@ import { Icon, IconProps } from '@chakra-ui/react'
 
 {/* 
 export const CartIcon = (props: IconProps) => {
-  const getColor = (color = undefined) => {
+  const getColor = (color) => {
     return color === undefined ? '#454545' : color
   }
 */}
