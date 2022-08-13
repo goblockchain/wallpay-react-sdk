@@ -27,7 +27,7 @@ type Config = {
   GTMTrackinID: string
 }
 
-interface IConfigContext {
+export interface IConfigContext {
   config: Config
 }
 
@@ -39,6 +39,7 @@ type ConfigProviderProps = {
 const ConfigContext = createContext<IConfigContext>({} as IConfigContext)
 
 export const ConfigProvider = ({ children, config }: ConfigProviderProps) => {
+  console.log('children @ ConfigProvider', children);
   return (
     <ConfigContext.Provider value={{ config }}>
       {children}

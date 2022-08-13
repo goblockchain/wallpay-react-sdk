@@ -12,8 +12,9 @@ import {
   Spinner,
   Center,
   Button,
+  ChakraProvider,
 } from "@chakra-ui/react";
-import wallpayLogo from "../../public/wallpay.png";
+import wallpayLogo from "../assets/wallpay.png";
 
 import { useConfig } from "./useConfig";
 import { ERRORS, PAYMENT_STEPS } from "../enums";
@@ -21,18 +22,18 @@ import { useLanguageQuery, useTranslation } from "next-export-i18n";
 import Lottie from "react-lottie";
 
 // @ts-ignore
-import processing from "../../public/lotties/processando.json";
+import processing from "../assets/lotties/processando.json";
 // @ts-ignore
-import oops from "../../public/lotties/oops.json";
+import oops from "../assets/lotties/oops.json";
 
-import end_succ from "../../public/progress/end_succ.svg";
-import process_succ from "../../public/progress/process_succ.svg";
-import process_fail from "../../public/progress/process_fail.svg";
-import transf_succ from "../../public/progress/transf_succ.svg";
+import end_succ from "../assets/progress/end_succ.svg";
+import process_succ from "../assets/progress/process_succ.svg";
+import process_fail from "../assets/progress/process_fail.svg";
+import transf_succ from "../assets/progress/transf_succ.svg";
+import { theme } from "../styles/theme";
 // TODO: create Link component to get rid of NextJS dependency
 // import Link from "next/link";
 // TODO: receive redirect fn to remove NextJS useRouter dependency
-// import router from "next/router";
 
 // import badstatus from "../../public/bad-status.png";
 // import success from "../../public/success-status.png";
@@ -69,7 +70,7 @@ type EmitNotificationModal = ({
   image,
 }: EmitNotificationModalArgs) => void;
 
-interface INotificationContext {
+export interface INotificationContext {
   emitNotificationModal: EmitNotificationModal;
   onCloseModificationModal: () => void;
   isNotificationModalOpen: boolean;
@@ -105,6 +106,7 @@ const LottieAnimation = (animation) => {
 };
 
 export const NotificationProvider = ({ children }) => {
+  console.log('children @ NotificationProvider', children);
   const [notificationData, setNotificationData] = useState<NotificationData>(
     {} as NotificationData
   );
@@ -119,7 +121,7 @@ export const NotificationProvider = ({ children }) => {
     image,
   }) => {
     if (isOpen === false) onOpen();
-    setNotificationModalData({ message, type, image });
+    setNotificationModalData({ message: message as Message, type: type as string, image });
   };
 
   const setNotificationModalData = ({
@@ -269,7 +271,7 @@ export const NotificationProvider = ({ children }) => {
     setTimeout(() => {
       onClose();
     }, 2000);
-      
+
   }
 
   return (
@@ -281,88 +283,54 @@ export const NotificationProvider = ({ children }) => {
       }}
     >
       {children}
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        closeOnOverlayClick={notificationData.canClose}
-      >
-        <ModalOverlay />
-        <ModalContent borderRadius="15px" maxWidth="507px" mx="20px">
-          <ModalBody p="0px" m="0px">
-            <Box
-              p="50px"
-              borderTop="6px solid"
-              borderColor={
-                notificationData.borderColor === undefined
-                  ? "#FDC921"
-                  : notificationData.borderColor
-              }
-              borderRadius="15px"
-            >
-              <Flex
-                w="100%"
-                m="0 auto"
-                flexDir="column"
-                justifyContent="center"
-                alignItems="center"
+      <ChakraProvider theme={theme}>
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          closeOnOverlayClick={notificationData.canClose}
+        >
+          <ModalOverlay />
+          <ModalContent borderRadius="15px" maxWidth="507px" mx="20px">
+            <ModalBody p="0px" m="0px">
+              <Box
+                p="50px"
+                borderTop="6px solid"
+                borderColor={
+                  notificationData.borderColor === undefined
+                    ? "#FDC921"
+                    : notificationData.borderColor
+                }
+                borderRadius="15px"
               >
-                {/* ANIMAÇÃO ERRO OU PROGRESS OU PROCESSING */}
-                {notificationData.lottieSrc !== undefined && (
-                  <>
-                    {notificationData.progressImg !== undefined ? (
-                      <Image
-                        src={notificationData.progressImg?.src}
-                        w="100%"
-                        borderRadius="15px"
-                      />
-                    ) : (
-                      <Text
-                        mb="15px"
-                        fontSize="22px"
-                        lineHeight="26px"
-                        fontWeight="700"
-                        textAlign="center"
-                      >
-                        {notificationData.heading}
-                      </Text>
-                    )}
-
-                    <LottieAnimation animation={notificationData.lottieSrc} />
-                    <Text
-                      fontSize="18px"
-                      mt="45px"
-                      color="#A19D9D"
-                      fontWeight="700"
-                      textAlign="center"
-                    >
-                      {notificationData.primaryText}
-                    </Text>
-                    <Text
-                      textAlign="center"
-                      fontSize="18px"
-                      lineHeight="21px"
-                      color="#454545"
-                      mt="27px"
-                    >
-                      {notificationData.secondaryText},
-                    </Text>
-                  </>
-                )}
-
-                {/* ANIMAÇÃO PADRÃO */}
-                {notificationData.lottieSrc === undefined &&
-                  notificationData.nftImage === undefined && (
+                <Flex
+                  w="100%"
+                  m="0 auto"
+                  flexDir="column"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  {/* ANIMAÇÃO ERRO OU PROGRESS OU PROCESSING */}
+                  {notificationData.lottieSrc !== undefined && (
                     <>
-                      <Text
-                        mb="15px"
-                        fontSize="22px"
-                        lineHeight="26px"
-                        fontWeight="700"
-                        textAlign="center"
-                      >
-                        {notificationData.heading}
-                      </Text>
-                      <LottieAnimation animation={undefined} />
+                      {notificationData.progressImg !== undefined ? (
+                        <Image
+                          src={notificationData.progressImg?.src}
+                          w="100%"
+                          borderRadius="15px"
+                        />
+                      ) : (
+                        <Text
+                          mb="15px"
+                          fontSize="22px"
+                          lineHeight="26px"
+                          fontWeight="700"
+                          textAlign="center"
+                        >
+                          {notificationData.heading}
+                        </Text>
+                      )}
+
+                      <LottieAnimation animation={notificationData.lottieSrc} />
                       <Text
                         fontSize="18px"
                         mt="45px"
@@ -384,63 +352,98 @@ export const NotificationProvider = ({ children }) => {
                     </>
                   )}
 
-                {/* ANIMAÇÃO COMPRA COM SUCESSO */}
-                {notificationData.nftImage !== undefined && (
-                  <>
-                    {notificationData.progressImg !== undefined && (
-                      <Image
-                        src={notificationData.progressImg?.src}
-                        w="100%"
-                        borderRadius="15px"
-                      />
-                    )}
-
-                    <Flex
-                      mt="55px"
-                      alignItems="center"
-                      justifyContent="center"
-                      flexWrap={{ base: "wrap", sm: "nowrap" }}
-                    >
-                      <Image
-                        src={notificationData.nftImage}
-                        w="153px"
-                        h="100%"
-                        borderRadius="15px"
-                      />
-                      <Box ml={{ base: 0, sm: "35px" }}>
+                  {/* ANIMAÇÃO PADRÃO */}
+                  {notificationData.lottieSrc === undefined &&
+                    notificationData.nftImage === undefined && (
+                      <>
+                        <Text
+                          mb="15px"
+                          fontSize="22px"
+                          lineHeight="26px"
+                          fontWeight="700"
+                          textAlign="center"
+                        >
+                          {notificationData.heading}
+                        </Text>
+                        <LottieAnimation animation={undefined} />
                         <Text
                           fontSize="18px"
-                          mt="20px"
-                          color="#454545"
+                          mt="45px"
+                          color="#A19D9D"
                           fontWeight="700"
-                          textAlign={{ base: "center", sm: "left" }}
+                          textAlign="center"
                         >
                           {notificationData.primaryText}
                         </Text>
                         <Text
+                          textAlign="center"
                           fontSize="18px"
                           lineHeight="21px"
                           color="#454545"
-                          mt="20px"
-                          fontWeight="400"
-                          textAlign={{ base: "center", sm: "left" }}
+                          mt="27px"
                         >
                           {notificationData.secondaryText},
                         </Text>
-                      </Box>
-                    </Flex>
-                    <Center mt="50px">
-                      <Text
-                        textAlign="center"
-                        fontSize="18px"
-                        fontWeight="400"
-                        color="#717171"
+                      </>
+                    )}
+
+                  {/* ANIMAÇÃO COMPRA COM SUCESSO */}
+                  {notificationData.nftImage !== undefined && (
+                    <>
+                      {notificationData.progressImg !== undefined && (
+                        <Image
+                          src={notificationData.progressImg?.src}
+                          w="100%"
+                          borderRadius="15px"
+                        />
+                      )}
+
+                      <Flex
+                        mt="55px"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexWrap={{ base: "wrap", sm: "nowrap" }}
                       >
-                        {t("redirecting")}
-                      </Text>
-                    </Center>
-                    <Center mt="20px" flexWrap={{ base: "wrap", sm: "nowrap" }}>
-                      {/* <Link href={{ pathname: "/userSpace", query: query }}>
+                        <Image
+                          src={notificationData.nftImage}
+                          w="153px"
+                          h="100%"
+                          borderRadius="15px"
+                        />
+                        <Box ml={{ base: 0, sm: "35px" }}>
+                          <Text
+                            fontSize="18px"
+                            mt="20px"
+                            color="#454545"
+                            fontWeight="700"
+                            textAlign={{ base: "center", sm: "left" }}
+                          >
+                            {notificationData.primaryText}
+                          </Text>
+                          <Text
+                            fontSize="18px"
+                            lineHeight="21px"
+                            color="#454545"
+                            mt="20px"
+                            fontWeight="400"
+                            textAlign={{ base: "center", sm: "left" }}
+                          >
+                            {notificationData.secondaryText},
+                          </Text>
+                        </Box>
+                      </Flex>
+                      <Center mt="50px">
+                        <Text
+                          textAlign="center"
+                          fontSize="18px"
+                          fontWeight="400"
+                          color="#717171"
+                        >
+                          {t("redirecting")}
+                        </Text>
+                      </Center>
+                      <Center mt="20px" flexWrap={{ base: "wrap", sm: "nowrap" }}>
+                        {/* <Link href={{ pathname: "/userSpace", query: query }}>
                         <Button
                           minWidth="190px"
                           h="60px"
@@ -459,42 +462,43 @@ export const NotificationProvider = ({ children }) => {
                           {t("go_now")}
                         </Button>
                       </Link> */}
-                      <Button
-                        minWidth="190px"
-                        h="60px"
-                        m="10px"
-                        borderRadius="45px"
-                        border="solid 1px #DFDFDF"
-                        color="red"
-                        fontSize="22px"
-                        backgroundColor="white"
-                        fontWeight="400"
-                        _hover={{ backgroundColor: "white" }}
-                        _active={{ backgroundColor: "white" }}
-                        _focus={{ backgroundColor: "white", outline: "none" }}
-                        onClick={() => handleCancelButton()}
-                      >
-                        {t("not_now")}
-                      </Button>
-                    </Center>
-                  </>
-                )}
-              </Flex>
-            </Box>
-            <Center mb="40px" flexWrap="wrap">
-              <Text fontWeight={500} fontSize={"16px"} textAlign="center">
-                {t("processed_by")}
-              </Text>
-              <Image
-                src={wallpayLogo.src}
-                alt="Wallpay Logo"
-                mx="10px"
-                w="120px"
-              />
-            </Center>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+                        <Button
+                          minWidth="190px"
+                          h="60px"
+                          m="10px"
+                          borderRadius="45px"
+                          border="solid 1px #DFDFDF"
+                          color="red"
+                          fontSize="22px"
+                          backgroundColor="white"
+                          fontWeight="400"
+                          _hover={{ backgroundColor: "white" }}
+                          _active={{ backgroundColor: "white" }}
+                          _focus={{ backgroundColor: "white", outline: "none" }}
+                          onClick={() => handleCancelButton()}
+                        >
+                          {t("not_now")}
+                        </Button>
+                      </Center>
+                    </>
+                  )}
+                </Flex>
+              </Box>
+              <Center mb="40px" flexWrap="wrap">
+                <Text fontWeight={500} fontSize={"16px"} textAlign="center">
+                  {t("processed_by")}
+                </Text>
+                <Image
+                  src={wallpayLogo.src}
+                  alt="Wallpay Logo"
+                  mx="10px"
+                  w="120px"
+                />
+              </Center>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </ChakraProvider>
     </NotificationContext.Provider>
   );
 };

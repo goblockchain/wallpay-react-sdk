@@ -15,23 +15,26 @@ type InfuraOptions = {
   web3: Web3
   contract: Contract
 }
-interface IEthereumContext {
+export interface IEthereumContext {
   infuraW3instance?: Web3
   infuraContract?: any
   setFiatRates: (fiatRates: EthFiatRates) => void
   fiatRates: EthFiatRates
 }
 
-export const EthereumContext = createContext<IEthereumContext>(null)
+export const EthereumContext = createContext<IEthereumContext>({
+  setFiatRates: (fiatRates: EthFiatRates) => {},
+  fiatRates: {},
+})
 
 export const EthereumProvider = ({ children }) => {
   const { config } = useConfig()
   const [infuraOptions] = useState<InfuraOptions>(() => {
     const getInfuraUrl = (): string | undefined => {
       if (config.networkType === 'mainnet') {
-        return NETWORKS.MAINNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain).INFURA_URL
+        return NETWORKS.MAINNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain)?.INFURA_URL
       } else {
-        return NETWORKS.TESTNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain).INFURA_URL
+        return NETWORKS.TESTNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain)?.INFURA_URL
       }
     }
 
@@ -44,18 +47,18 @@ export const EthereumProvider = ({ children }) => {
         contract: infuraGoBlockchainContract
       }
     } else {
-      return undefined as InfuraOptions | undefined
+      return {} as InfuraOptions
     }
   })
-  const [fiatRates, setFiatRates] = useState<EthFiatRates>(undefined as EthFiatRates | undefined)
+  const [fiatRates, setFiatRates] = useState<EthFiatRates>(() => ({}) as EthFiatRates)
 
   useEffect(() => {
     const getFiatRates = async () => {
       let symbol: string
       if (config.networkType === 'mainnet') {
-        symbol = NETWORKS.MAINNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain).SYMBOL
+        symbol = NETWORKS.MAINNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain)?.SYMBOL as string
       } else {
-        symbol = NETWORKS.TESTNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain).SYMBOL
+        symbol = NETWORKS.TESTNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain)?.SYMBOL as string
       }
       const { data } = await axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=${config.currency}&api_key=${process.env.NEXT_PUBLIC_CRYPTOCOMPARE_API_KEY}`)
       setFiatRates(data)

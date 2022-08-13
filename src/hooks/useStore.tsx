@@ -52,7 +52,7 @@ export type SellOffer = {
   fiatPrice: number;
 };
 
-interface IStoreContext {
+export interface IStoreContext {
   sellOffers: SellOffer[];
   setSellOffers: (sellOffers: SellOffer[]) => void;
   ownedNfts: any[];
@@ -61,10 +61,19 @@ interface IStoreContext {
   hasStoreNFTpurchased: boolean;
   setHasStoreNFTpurchased: (hasStoreNFTpurchased: boolean) => void;
 }
-const StoreContext = createContext<IStoreContext>(null);
+const StoreContext = createContext<IStoreContext>({
+  sellOffers: [],
+  setSellOffers: () => { },
+  ownedNfts: [],
+  updateSellOffers: () => Promise.resolve(),
+  updateUserNfts: () => Promise.resolve(),
+  setHasStoreNFTpurchased: () => { },
+  hasStoreNFTpurchased: false,
+});
 
 export const StoreProvider = ({ children }) => {
-  const [sellOffers, setSellOffers] = useState(undefined as SellOffer[]);
+  console.log('children @ StoreProvider', children);
+  const [sellOffers, setSellOffers] = useState([] as SellOffer[]);
   const { config } = useConfig();
   const [purchased, setPurchased] = useState(undefined);
   const [ownedNfts, setOwnedNfts] = useState([]);
@@ -157,11 +166,11 @@ export const StoreProvider = ({ children }) => {
     contractInstance,
     walletAddress
   ) => {
+    let tempSellOffers: SellOffer[] = [];
     try {
       const baseTokenURI = await callTokenUri(contractInstance);
       let nftAmount = 0;
       let quantity = 0;
-      let tempSellOffers: SellOffer[] = [];
       for (let i = 0; i < idsList.length; i++) {
         nftAmount = await callBalanceOf(
           contractInstance,
@@ -209,21 +218,22 @@ export const StoreProvider = ({ children }) => {
           )
           */
           // Mudar esse fiatPrice depois para o que está acima
-          fiatPrice: fixedPrice
+          fiatPrice: Number(fixedPrice)
         };
         tempSellOffers.push(sellOffer);
       }
-      return tempSellOffers;
     } catch (error) {
       console.log(error);
     }
+
+    return tempSellOffers;
   };
 
   const callNFTs: CallNFTs = async (contractInstance) => {
+    let tempSellOffers: SellOffer[] = [];
     try {
       const baseTokenURI = await callTokenUri(contractInstance);
       let nftAmount = 0;
-      let tempSellOffers: SellOffer[] = [];
       for (let i = 0; i < idsList.length; i++) {
         nftAmount = await callBalanceOf(
           contractInstance,
@@ -265,14 +275,14 @@ export const StoreProvider = ({ children }) => {
           ),
           */
           // Mudar esse fiatPrice depois para o que está acima
-          fiatPrice: fixedPrice
+          fiatPrice: Number(fixedPrice)
         };
         tempSellOffers.push(sellOffer);
       }
-      return tempSellOffers;
     } catch (error) {
       console.log(error);
     }
+    return tempSellOffers;
   };
 
   useEffect(() => {
