@@ -26,10 +26,38 @@ export default wallpaySDK;
 
 3. Use the exported tools through wallpaySDK
 
+```
+import wallpay from 'src/utils/wallpay';
+
+const {
+  PaymentModal,
+  PaymentProvider,
+  usePayment,
+};
+
+<PaymentModal
+  onClose={onClose}
+  paymentData={{
+    PriceBRL: paymentData.fiatPrice,
+    fixedPrice: paymentData.price,
+    itemId: paymentData.itemId,
+    tokenId: paymentData.tokenId,
+    itemName: paymentData.itemName,
+    itemImage: paymentData.itemImage,
+  }}
+/>
+
+<PaymentProvider>
+  <Component />
+</PaymentProvider>
+
+const { onOpenPaymentModal } = usePayment();
+```
+
 ## Local Setup
 
 1. Clone this repo `git clone https://github.com/goblockchain/wallpay-react-sdk.git`
-2. Go to the folder where of the cloned repo
+2. Go to the folder of the cloned repo
 3. Install its dependencies `yarn install`
 4. Build the package `yarn run build`
 5. Register its link `yarn link`
@@ -42,7 +70,7 @@ export default wallpaySDK;
     "wallpay-react-sdk": "your/path/to/wallpay-react-sdk"
   }
   ```
-9. Install the app's dependencies `yarn install`
+9. Install the app's dependencies `yarn install` and it's ready to be used by the app
 
 Whenever a change is made to the local version of the SDK, follow the next steps to properly update the codebase being used as a dependency of your app:
 
