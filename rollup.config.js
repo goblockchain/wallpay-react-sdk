@@ -1,12 +1,9 @@
 import path from 'path';
 import fs from 'fs';
-import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "rollup-plugin-typescript2";
 import dts from "rollup-plugin-dts";
 import jsonPlugin from "@rollup/plugin-json";
-import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import builtins from 'rollup-plugin-node-builtins';
 
 const packageJson = require("./package.json");
 
@@ -22,7 +19,7 @@ function pngResolverPlugin() {
       if (id.endsWith('.png')) {
         const referenceId = this.emitFile({
           type: 'asset',
-          name: path.basename(id),
+          fileName: 'assets/' + path.basename(id),
           source: fs.readFileSync(id)
         });
         return `export default import.meta.ROLLUP_FILE_URL_${referenceId};`;
@@ -43,7 +40,7 @@ function svgResolverPlugin() {
       if (id.endsWith('.svg')) {
         const referenceId = this.emitFile({
           type: 'asset',
-          name: path.basename(id),
+          fileName: 'assets/' + path.basename(id),
           source: fs.readFileSync(id)
         });
         return `export default import.meta.ROLLUP_FILE_URL_${referenceId};`;
@@ -57,7 +54,7 @@ function nodeResolverPlugin() {
     name: 'node-resolver',
     resolveId(source, importer) {
       if (source.endsWith('.node')) {
-        return path.resolve(path.dirname(importer), source);
+        return source;
       }
     },
     load(id) {
@@ -65,7 +62,7 @@ function nodeResolverPlugin() {
         const referenceId = this.emitFile({
           type: 'asset',
           name: path.basename(id),
-          source: fs.readFileSync(id)
+          source: fs.readFileSync(id),
         });
         return `export default import.meta.ROLLUP_FILE_URL_${referenceId};`;
       }
@@ -89,17 +86,12 @@ export default [
       },
     ],
     plugins: [
-      // peerDepsExternal(),
-      // resolve({
-      //   preferBuiltins: true
-      // }),
       commonjs(),
       typescript({ tsconfig: "./tsconfig.json" }),
       pngResolverPlugin(),
       svgResolverPlugin(),
       nodeResolverPlugin(),
       jsonPlugin(),
-      // builtins(),
     ],
     external: ["react", "react-dom", "@chakra-ui/react"],
   },
