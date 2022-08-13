@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const FormatPrice = ({ amount, currency }) => {
   amount = Number(amount);
   if (currency === "BRL") {
