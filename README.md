@@ -27,13 +27,13 @@ export default wallpaySDK;
 3. Use the exported tools through wallpaySDK
 
 ```
-import wallpay from 'src/utils/wallpay';
+import wallpaySDK from 'src/utils/wallpay';
 
 const {
   PaymentModal,
   PaymentProvider,
   usePayment,
-};
+} = wallpaySDK;
 
 <PaymentModal
   onClose={onClose}
