@@ -30,24 +30,24 @@ export default wallpaySDK;
 
 1. Clone this repo `git clone https://github.com/goblockchain/wallpay-react-sdk.git`
 2. Go to the folder where of the cloned repo
-  2.1 Install its dependencies `yarn install`
-  2.2 Build the package `yarn run build`
-  2.3 Register its link `yarn link`
-3. Go to your React application's folder
-  3.1 Create a link to the package's folder `yarn link wallpay-react-sdk`
-  3.2 Add wallpay-react-sdk as one of your app's dependencies like below
+3. Install its dependencies `yarn install`
+4. Build the package `yarn run build`
+5. Register its link `yarn link`
+6. Go to your React application's folder
+7. Create a link to the package's folder `yarn link wallpay-react-sdk`
+8. Add wallpay-react-sdk as one of your app's dependencies like below
   ```
   "dependencies": {
     [... other dependencies]
     "wallpay-react-sdk": "your/path/to/wallpay-react-sdk"
   }
   ```
-  3.3 Install the app's dependencies `yarn install`
+9. Install the app's dependencies `yarn install`
 
 Whenever a change is made to the local version of the SDK, follow the next steps to properly update the codebase being used as a dependency of your app:
 
 1. Go to the folder where of the SDK repo
-  1.2 Build the package `yarn run build`
-2. Go to the folder where of the React application
-  2.1 Remove wallpay-react-sdk from `yarn.lock`
-  2.2 Install the dependencies again `yarn install`
+2. Build the package `yarn run build`
+3. Go to the folder where of the React application
+4. Remove wallpay-react-sdk from `yarn.lock`
+5. Install the dependencies again `yarn install`
