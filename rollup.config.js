@@ -4,55 +4,14 @@ import commonjs from "@rollup/plugin-commonjs";
 import typescript from "rollup-plugin-typescript2";
 import dts from "rollup-plugin-dts";
 import jsonPlugin from "@rollup/plugin-json";
+import image from '@rollup/plugin-image';
 
 const packageJson = require("./package.json");
-
-function pngResolverPlugin() {
-  return {
-    name: 'png-resolver',
-    resolveId(source, importer) {
-      if (source.endsWith('.png')) {
-        return path.resolve(path.dirname(importer), source);
-      }
-    },
-    load(id) {
-      if (id.endsWith('.png')) {
-        const referenceId = this.emitFile({
-          type: 'asset',
-          fileName: 'assets/' + path.basename(id),
-          source: fs.readFileSync(id)
-        });
-        return `export default import.meta.ROLLUP_FILE_URL_${referenceId};`;
-      }
-    }
-  };
-}
-
-function svgResolverPlugin() {
-  return {
-    name: 'svg-resolver',
-    resolveId(source, importer) {
-      if (source.endsWith('.svg')) {
-        return path.resolve(path.dirname(importer), source);
-      }
-    },
-    load(id) {
-      if (id.endsWith('.svg')) {
-        const referenceId = this.emitFile({
-          type: 'asset',
-          fileName: 'assets/' + path.basename(id),
-          source: fs.readFileSync(id)
-        });
-        return `export default import.meta.ROLLUP_FILE_URL_${referenceId};`;
-      }
-    }
-  };
-}
 
 function nodeResolverPlugin() {
   return {
     name: 'node-resolver',
-    resolveId(source, importer) {
+    resolveId(source) {
       if (source.endsWith('.node')) {
         return source;
       }
@@ -88,8 +47,7 @@ export default [
     plugins: [
       commonjs(),
       typescript({ tsconfig: "./tsconfig.json" }),
-      pngResolverPlugin(),
-      svgResolverPlugin(),
+      image(),
       nodeResolverPlugin(),
       jsonPlugin(),
     ],
