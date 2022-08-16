@@ -74,8 +74,8 @@ interface PaymentModalProps {
 }
 
 const symbolImages = {
-  ethereum: eth.src,
-  polygon: polygon.src,
+  ethereum: eth,
+  polygon: polygon,
 };
 
 interface ButtonModalProps {
@@ -721,7 +721,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
               {paymentType == "Pix" && (
                 <>
                   <Center ml="15px" flexDir="row" justifyContent="start">
-                    <Image src={pix.src} mr="17px" h="16px" />
+                    <Image src={pix} mr="17px" h="16px" />
                     <Text
                       fontSize="14px"
                       fontWeight="400px"
@@ -774,7 +774,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                     _hover={{ bg: "0" }}
                     _focus={{ outline: "none" }}
                   >
-                    <Image src={Vector.src} />
+                    <Image src={Vector} />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent
@@ -795,7 +795,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                       justifyContent="start"
                       cursor="pointer"
                     >
-                      <Image src={pix.src} mr="17px" />
+                      <Image src={pix} mr="17px" />
                       <Text
                         fontSize="14px"
                         fontWeight="400px"
@@ -1051,7 +1051,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                 {t("processed_by")}
               </Text>
               <Image
-                src={wallpayLogo.src}
+                src={wallpayLogo}
                 alt="Wallpay Logo"
                 mx="10px"
                 w="120px"
@@ -1076,7 +1076,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
           onClosePaymentModal={onOpen}
         >
           <Box w="100%" m="0 auto">
-            <Image src={pix_full.src} w="50%" m="30px auto" />
+            <Image src={pix_full} w="50%" m="30px auto" />
             <Text
               display={{ base: "none", md: "block" }}
               color="#A19D9D"
@@ -1175,7 +1175,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
               {t("processed_by")}
             </Text>
             <Image
-              src={wallpayLogo.src}
+              src={wallpayLogo}
               alt="Wallpay Logo"
               mx="10px"
               w="120px"

@@ -28,12 +28,12 @@ import passwordlessConnect from "../assets/passwordless.png";
 import { theme } from "../styles/theme";
 
 const imageUrl = {
-  metamask: metamask.src,
-  "wallet-connect": walletConnect.src,
-  google: googleConnect.src,
-  facebook: facebookConnect.src,
-  twitter: twitterConnect.src,
-  passwordless: passwordlessConnect.src,
+  metamask: metamask,
+  "wallet-connect": walletConnect,
+  google: googleConnect,
+  facebook: facebookConnect,
+  twitter: twitterConnect,
+  passwordless: passwordlessConnect,
 };
 
 interface ConnectWalletsModalProps {

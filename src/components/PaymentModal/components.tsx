@@ -126,7 +126,7 @@ export const PaymentModalBody = ({
           </Text>
           <Image
             cursor="pointer"
-            src={closeblack.src}
+            src={closeblack}
             onClick={onClosePaymentModal}
           />
         </Flex>

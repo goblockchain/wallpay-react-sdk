@@ -43,19 +43,19 @@ import polygonWallet from "../../assets/polygon-wallet.png";
 import { theme } from "../../styles/theme";
 
 const walletProvidersImageSrc = {
-  metamask: metamaskWallet.src,
-  ["wallet-connect"]: walletConnectWallet.src,
+  metamask: metamaskWallet,
+  ["wallet-connect"]: walletConnectWallet,
 };
 
 const socialLoginVerifierImageSrc = {
-  google: googleWallet.src,
-  facebook: facebookWallet.src,
-  passwordless: torusWallet.src,
+  google: googleWallet,
+  facebook: facebookWallet,
+  passwordless: torusWallet,
 };
 
 const blockchainIcons = {
-  ethereum: ethWallet.src,
-  polygon: polygonWallet.src,
+  ethereum: ethWallet,
+  polygon: polygonWallet,
 };
 
 // TODO: receive redirect fn to remove NextJS useRouter dependency

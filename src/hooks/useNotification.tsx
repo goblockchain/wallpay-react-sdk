@@ -314,7 +314,7 @@ export const NotificationProvider = ({ children }) => {
                     <>
                       {notificationData.progressImg !== undefined ? (
                         <Image
-                          src={notificationData.progressImg?.src}
+                          src={notificationData.progressImg}
                           w="100%"
                           borderRadius="15px"
                         />
@@ -392,7 +392,7 @@ export const NotificationProvider = ({ children }) => {
                     <>
                       {notificationData.progressImg !== undefined && (
                         <Image
-                          src={notificationData.progressImg?.src}
+                          src={notificationData.progressImg}
                           w="100%"
                           borderRadius="15px"
                         />
@@ -489,7 +489,7 @@ export const NotificationProvider = ({ children }) => {
                   {t("processed_by")}
                 </Text>
                 <Image
-                  src={wallpayLogo.src}
+                  src={wallpayLogo}
                   alt="Wallpay Logo"
                   mx="10px"
                   w="120px"
