@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/goblockchain/wallpay-react-sdk.git"
   },
-  "author": "Murilo Portescheller <@mukaportes>",
+  "author": "GoBlockchain <@goblockchain>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/goblockchain/wallpay-react-sdk/issues"
@@ -28,6 +28,7 @@
     "@emotion/styled": "^11.8.1",
     "@metamask/providers": "^9.1.0",
     "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-typescript": "^8.3.4",
     "@stripe/react-stripe-js": "^1.7.2",
