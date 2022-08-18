@@ -13,7 +13,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 
-import closeblack from "../../../../public/closeblack.png";
+import closeblack from "../../assets/closeblack.png";
 import { useTranslation } from "next-export-i18n";
 import { useNotification } from "../../hooks/useNotification";
 import { theme } from "../../styles/theme";

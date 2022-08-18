@@ -53,6 +53,7 @@ import axios from "axios";
 import { useTranslation } from "next-export-i18n";
 import { FormatPrice, sleep } from "../../utils";
 import { theme } from '../../styles/theme';
+import { WALLPAY_API_URL } from "../../config";
 
 type PaymentData = {
   itemName: any;
@@ -320,11 +321,12 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         };
       }
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/payment/pix`,
+        `${WALLPAY_API_URL}/payments/pix`,
         postData,
         {
           headers: {
             "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+            authorization: sdkPrivateKey,
           },
         }
       );
@@ -455,7 +457,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
   const cancelPayment = async (paymentId) => {
     try {
       const notPaidData = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/payment/${paymentId}`,
+        `${WALLPAY_API_URL}/payments/crypto/${paymentId}`,
         {
           status: "cancelled",
           auth: "Das4a-OPhjkFASkj",
@@ -463,6 +465,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         {
           headers: {
             "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+            authorization: sdkPrivateKey,
           },
         }
       );
@@ -474,10 +477,11 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
 
   const getPixPaymentStatus = async () => {
     return await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/transaction/iugu/${idPaymentProvider}`,
+      `${WALLPAY_API_URL}/payments/pix/transaction/${idPaymentProvider}`,
       {
         headers: {
           "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+          authorization: sdkPrivateKey,
         },
       }
     );
@@ -527,11 +531,12 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         };
       }
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/payment/crypto`,
+        `${WALLPAY_API_URL}/payments/crypto`,
         postData,
         {
           headers: {
             "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+            authorization: sdkPrivateKey,
           },
         }
       );
@@ -567,7 +572,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       });
 
       const paidData = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/payment/${data._id}`,
+        `${WALLPAY_API_URL}/payments/crypto/${data._id}`,
         {
           status: "paid",
           auth: "Das4a-OPhjkFASkj",
@@ -575,6 +580,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         {
           headers: {
             "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+            authorization: sdkPrivateKey,
           },
         }
       );
@@ -620,10 +626,11 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
 
   const getCreditPaymentStatus = async () => {
     return await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/transaction/${idTransaction}`,
+      `${WALLPAY_API_URL}/payments/credit_card/transaction/${idTransaction}`,
       {
         headers: {
           "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+          authorization: sdkPrivateKey,
         },
       }
     );
@@ -704,7 +711,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     try {
       setIPaying(true);
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/payment/cc`,
+        `${process.env.NEXT_PUBLIC_API_URL}/payments/credit_card`,
         {
           storeName: config.title,
           currency: blockchainInfo?.SYMBOL,
@@ -722,6 +729,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         {
           headers: {
             "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+            authorization: sdkPrivateKey,
           },
         }
       );
@@ -1285,7 +1293,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
             <CheckoutForm
               purchaseInfo={{
                 amount: paymentData.fixedPrice,
-                symbol: blockchainInfo?.SYMBOL,
+                symbol: String(blockchainInfo?.SYMBOL),
                 fiatAmount: paymentData.PriceBRL,
                 currency: config.currency,
                 total: paymentData.PriceBRL,

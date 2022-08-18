@@ -69,7 +69,7 @@ type GetNftsInput = {
 };
 type GetNfts = (input: GetNftsInput) => Promise<void>;
 
-interface IWalletsContext {
+export interface IWalletsContext {
   connectWallet: ConnectWallet;
   disconnectWallet: DisconnectWallet;
   setNewBalance: SetNewBalance;

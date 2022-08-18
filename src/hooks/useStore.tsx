@@ -52,7 +52,7 @@ export type SellOffer = {
   fiatPrice: number;
 };
 
-interface IStoreContext {
+export interface IStoreContext {
   sellOffers: SellOffer[];
   setSellOffers: (sellOffers: SellOffer[]) => void;
   purchased: SellOffer[];
