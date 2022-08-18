@@ -4,10 +4,6 @@ import {
   Box,
   Text,
   Flex,
-  Checkbox,
-  Link,
-  ButtonProps,
-  Divider,
   Image,
   ChakraProvider,
 } from "@chakra-ui/react";
@@ -16,15 +12,11 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { useStore } from "../../hooks/useStore";
-import { useNotification } from "../../hooks/useNotification";
-import closeblack from "../../assets/closeblack.png";
-import { useTranslation } from "next-export-i18n";
-import { theme } from "../../styles/theme";
 
-interface PaymentStepsButtonProps extends ButtonProps {
-  loading?: boolean;
-}
+import closeblack from "../../../../public/closeblack.png";
+import { useTranslation } from "next-export-i18n";
+import { useNotification } from "../../hooks/useNotification";
+import { theme } from "../../styles/theme";
 
 interface PaymentModalBodyProps {
   children: React.ReactNode;
@@ -43,12 +35,6 @@ type PurchaseInfo = {
 interface PaymentDetailsProps {
   paymentType: "credit" | "crypto";
   purchaseInfo: PurchaseInfo;
-}
-
-interface PaymentTotalSectionProps {
-  amount: number;
-  symbol: string;
-  checkFn: () => void;
 }
 
 interface CheckoutFormProps {
@@ -73,38 +59,8 @@ const PaymentDetailsInfo = ({
   </Box>
 );
 
-export const PaymentStepsButton = ({
-  children,
-  loading,
-  ...rest
-}: PaymentStepsButtonProps) => {
-  return (
-    <ChakraProvider theme={theme}>
-      <Button
-        borderRadius="45px"
-        border="1px solid #dfdfdf"
-        bg="#fff"
-        m="0 auto"
-        height="38px"
-        textAlign="center"
-        width="104px"
-        fontSize="14px"
-        color="#454545"
-        _hover={{ bg: "" }}
-        {...rest}
-      >
-        {loading !== undefined && loading === true ? "Loading..." : children}
-      </Button>
-    </ChakraProvider>
-  );
-};
+export const PaymentModalBody = ({ children, onClosePaymentModal, title, }: PaymentModalBodyProps) => {
 
-export const PaymentModalBody = ({
-  children,
-  onClosePaymentModal,
-  title,
-}: PaymentModalBodyProps) => {
-  console.log('children @ PaymentModalBody', children);
   const { t } = useTranslation();
 
   return (
@@ -140,7 +96,9 @@ export const PaymentDetails = ({
   paymentType,
   purchaseInfo,
 }: PaymentDetailsProps) => {
+  const { t } = useTranslation();
   const renderPaymentInfo = () => {
+
     if (paymentType === "credit") {
       return (
         <ChakraProvider theme={theme}>
@@ -168,71 +126,26 @@ export const PaymentDetails = ({
 
   return (
     <ChakraProvider theme={theme}>
-      <Box
-        mt="20px"
-        mb="15px"
-        textAlign="end"
-        borderRadius="10px"
-        background="#f4f4f4"
-        p="19px 26px"
-        fontSize="12px"
-        fontWeight="normal"
+      <Box mt="25px" fontSize="18px"
+        lineHeight="21px"
+        fontWeight="700"
+        color="#454545"
       >
         <Flex w="100%" justifyContent="space-between">
-          <Text fontWeight="400">Valor</Text>
+          <Text>{t('total_value')}</Text>
           {renderPaymentInfo()}
         </Flex>
-        {/* <Box mt="15px" w="100%" height="1px" background="#dfdfdf" /> */}
-        {/* <Flex mt="15px" w="100%" justifyContent="space-between">
-        <Text fontWeight="400" fontSize="10px">{t('tax')} GoTokens (10%)</Text>
-        <Text fontWeight="400" color="#a19d9d" fontSize="10px">
-          {Number(purchaseInfo.fiatAmount * 0.1).toFixed(2)} {purchaseInfo.currency}
-        </Text>
-      </Flex> */}
       </Box>
     </ChakraProvider>
   );
 };
 
-export const PaymentTotalSection = ({
-  amount,
-  symbol,
-  checkFn,
-}: PaymentTotalSectionProps) => {
-  return (
-    <ChakraProvider theme={theme}>
-      <Divider />
-      <Flex mt="15px" w="100%" justifyContent="space-between">
-        <Text fontSize="12px">pagamento total</Text>
-        <Text fontWeight="400" fontSize="12px">
-          {amount} {symbol}
-        </Text>
-      </Flex>
 
-      <Flex mt="15px" mb="33px" w="100%" alignItems="flex-start">
-        <Checkbox checked={false} onChange={checkFn} />
-        <Text fontWeight="400" fontSize="12px" ml="10px">
-          termos
-          <Link isExternal={true} href="about:blank">
-            <Text fontWeight="700" as="span">
-              de serviço
-            </Text>
-          </Link>
-        </Text>
-      </Flex>
-    </ChakraProvider>
-  );
-};
-
-export const CheckoutForm = ({
-  purchaseInfo,
-  checkFn,
-  termsIsChecked,
-}: CheckoutFormProps) => {
+export const CheckoutForm = ({ purchaseInfo }: CheckoutFormProps) => {
   const { emitNotificationModal } = useNotification();
-  const { sellOffers } = useStore();
   const stripe = useStripe();
   const elements = useElements();
+  const { t } = useTranslation();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -245,18 +158,18 @@ export const CheckoutForm = ({
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/conclusion`,
+        return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/nft?hash=2`,
       },
     });
-    if (error.type === "card_error" || error.type === "validation_error") {
-      emitNotificationModal({
-        message: {
-          secondaryText: error.message,
-        },
-      });
-    } else {
-      emitNotificationModal({});
-    }
+    // if (error.type === "card_error" || error.type === "validation_error") {
+    //   emitNotificationModal({
+    //     message: {
+    //       secondaryText: error.message,
+    //     },
+    //   });
+    // } else {
+    //   emitNotificationModal({});
+    // }
     setIsLoading(false);
   };
 
@@ -265,21 +178,23 @@ export const CheckoutForm = ({
       <form id="payment-form" onSubmit={handleSubmit}>
         <PaymentElement id="payment-element" />
       </form>
+      <Box mt="28px" h="1px" w="100%" bgColor="#DFDFDF" />
       <PaymentDetails paymentType="credit" purchaseInfo={purchaseInfo} />
-      <PaymentTotalSection
-        amount={Number(purchaseInfo.total)}
-        symbol={purchaseInfo.currency}
-        checkFn={checkFn}
-      />
-      <PaymentStepsButton
-        disabled={!termsIsChecked}
-        id="submit"
-        form="payment-form"
+      <Button w="100%" h="60px"
+        bg="#454545" mt="29px"
+        borderRadius="45px"
         type="submit"
         isLoading={isLoading}
+        color="#FFFFFF"
+        _hover={{ bg: "#454545" }}
+        form="payment-form"
+        fontSize="20px"
+        lineHeight="23px"
+        fontWeight="400"
       >
-        completo
-      </PaymentStepsButton>
+        {t('continue')}
+      </Button>
     </ChakraProvider>
   );
 };
+

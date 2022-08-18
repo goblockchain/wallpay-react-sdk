@@ -5,7 +5,7 @@ import {
   ModalContent,
   ModalOverlay,
   useDisclosure,
-  ChakraProvider,
+  ChakraProvider
 } from "@chakra-ui/react";
 import { PaymentModal } from "../components/PaymentModal";
 import { theme } from '../styles/theme';
@@ -29,11 +29,7 @@ export interface IPaymentContext {
 const PaymentContext = createContext<IPaymentContext>({} as IPaymentContext);
 
 export const PaymentProvider = ({ children, sdkPrivateKey }) => {
-  console.log('children @ PaymentProvider', children);
-  console.log('PAYMENT PROVIDER KEY', sdkPrivateKey);
-  const [paymentData, setPaymentData] = useState<PaymentData>(
-    {} as PaymentData
-  );
+  const [paymentData, setPaymentData] = useState<PaymentData>({} as PaymentData);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onOpenPaymentModal: OnOpenPaymentModal = (paymentData) => {
@@ -51,25 +47,25 @@ export const PaymentProvider = ({ children, sdkPrivateKey }) => {
     >
       {children}
       <ChakraProvider theme={theme}>
-        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false} >
-          <ModalOverlay />
-          <ModalContent borderRadius="15px" maxWidth="507px" mx="20px">
-            <ModalBody p="0px" m="0px">
-              <PaymentModal
-                onClose={onClose}
-                paymentData={{
-                  PriceBRL: Number(paymentData.fiatPrice),
-                  fixedPrice: Number(paymentData.price),
-                  itemId: Number(paymentData.itemId),
-                  tokenId: Number(paymentData.tokenId),
-                  itemName: paymentData.itemName,
-                  itemImage: String(paymentData.itemImage),
-                }}
-                sdkPrivateKey={sdkPrivateKey}
-              />
-            </ModalBody>
-          </ModalContent>
-        </Modal>
+      <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false} >
+        <ModalOverlay />
+        <ModalContent borderRadius="15px" maxWidth="507px" mx="20px">
+          <ModalBody p="0px" m="0px">
+            <PaymentModal
+              onClose={onClose}
+              paymentData={{
+                PriceBRL: Number(paymentData.fiatPrice),
+                fixedPrice: Number(paymentData.price),
+                itemId: Number(paymentData.itemId),
+                tokenId: Number(paymentData.tokenId),
+                itemName: paymentData.itemName,
+                itemImage: String(paymentData.itemImage),
+              }}
+              sdkPrivateKey={sdkPrivateKey}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       </ChakraProvider>
     </PaymentContext.Provider>
   );

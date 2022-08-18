@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { UserInfo } from "@toruslabs/torus-embed";
 import {
   Button,
   Image,
@@ -27,34 +28,37 @@ import {
   Hide,
   ChakraProvider,
 } from "@chakra-ui/react";
-
+import { useRouter } from "next/router";
 import BigNumber from "bignumber.js";
-import { PaymentModalBody } from "./components";
+import { PaymentModalBody, CheckoutForm } from "./components";
 import validator from "validator";
 import wallpayLogo from "../../assets/wallpay.png";
-
 import { PAYMENT_STEPS, NETWORKS, BlockchainInfo } from "../../enums";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
 import { useNotification } from "../../hooks/useNotification";
-import { useStore } from "../../hooks/useStore";
+import { SellOffer, useStore } from "../../hooks/useStore";
 import { useWallets } from "../../hooks/useWallets";
 import { useConfig } from "../../hooks/useConfig";
 import { useEthereum } from "../../hooks/useEthereum";
-
+import { redeemToken } from "../../utils/api";
 import eth from "../../assets/eth.png";
+import card from "../../assets/card.png";
 import polygon from "../../assets/polygon-wallet.png";
 import Vector from "../../assets/Vector.png";
 import pix from "../../assets/pix.png";
 import pix_full from "../../assets/pix_full.png";
 import axios from "axios";
 import { useTranslation } from "next-export-i18n";
-import { FormatPrice } from "../../utils";
+import { FormatPrice, sleep } from "../../utils";
 import { theme } from '../../styles/theme';
 
-export type PaymentData = {
+type PaymentData = {
   itemName: any;
   itemId: number;
   tokenId: number;
-  fixedPrice: number; 
+  fixedPrice: number;
   PriceBRL: number;
   itemImage: string;
 };
@@ -77,6 +81,7 @@ const symbolImages = {
   ethereum: eth,
   polygon: polygon,
 };
+
 
 interface ButtonModalProps {
   color: string;
@@ -120,7 +125,6 @@ const PixCopyAndPaste = ({ copyFn }: PixCopyAndPasteProps) => {
   function handleCopyAndPasteClick() {
     setCopyText(t("pix_copy_paste_copied"));
     if (copyFn) copyFn();
-    console.log("Copiado");
     setTimeout(() => {
       setCopyText(t("pix_copy_paste"));
     }, 2000);
@@ -200,7 +204,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
   const getSymbolImage = () => {
     return symbolImages[config.blockchain];
   };
-  // const router = useRouter();
+  const router = useRouter();
   const { infuraW3instance } = useEthereum();
   const {
     web3,
@@ -212,13 +216,24 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     walletProvider,
     walletIsConnected,
   } = useWallets();
+
+  let stripePromise;
+  if (walletIsConnected) {
+    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY as string);
+  }
+
   const { emitNotificationModal } = useNotification();
-  const { sellOffers, setSellOffers, updateUserNfts, setHasStoreNFTpurchased } =
-    useStore();
+  const {
+    sellOffers,
+    setSellOffers,
+    updateUserNfts,
+    setHasStoreNFTpurchased,
+    purchased,
+    setPurchased,
+  } = useStore();
   const { config } = useConfig();
   const [qrCodeImg, setQrCodeImg] = useState<string>("");
   const [paymentProvider, setPaymentProvider] = useState<string>("");
-  console.log("paymentProvider" + paymentProvider);
 
   const [qrCodeTxt, setQrCodeTxt] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string>("");
@@ -227,8 +242,11 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
 
   const [iPaying, setIPaying] = useState(false);
 
+  const [clientSecret, setClientSecret] = useState("");
+
   // const [iuguId, setIuguId] = useState<string>("");
   let idPaymentProvider = "";
+  let idTransaction = "";
 
   const { hasCopied, onCopy } = useClipboard(qrCodeTxt);
   const { t } = useTranslation();
@@ -241,7 +259,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     | "pix"
   >("paymentType");
   const [paymentType, setPaymentType] = useState<
-    "Crypto" | "Pix" | "Selecionar"
+    "Crypto" | "Pix" | "Selecionar" | "Credit"
   >("Selecionar");
   const [termsIsChecked, setTermsIsChecked] = useState(false);
   const [blockchainInfo] = useState(() => {
@@ -267,7 +285,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
 
   const handlePixPayment = async () => {
     try {
-      setIPaying(true)
+      setIPaying(true);
       let postData = {};
       if (userEmail !== "") {
         postData = {
@@ -316,10 +334,9 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       setQrCodeTxt(data.pix.qrcode_text);
       idPaymentProvider = data.idPaymentProvider;
       setPixDataId(data.paymentId);
-      console.log("tudoData", data);
       setStep("pix");
       calcDueDate();
-      updateUserNfts();
+      //updateUserNfts();
       // TODO: remover linha abaixo. Apenas para simulação
       setTimeout(async () => {
         // makePixPayment();
@@ -329,7 +346,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     } catch (error) {
       console.log(error);
     } finally {
-      setIPaying(false)
+      setIPaying(false);
     }
   };
 
@@ -407,7 +424,22 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
           const newlyPurchasedIndex = sellOffersWithNewlyPurchased.findIndex(
             (offer) => offer.tokenId === paymentData.tokenId.toString()
           );
+
           sellOffersWithNewlyPurchased[newlyPurchasedIndex].purchased = true;
+          const newlyPurchased = sellOffersWithNewlyPurchased.filter(
+            (sellOffer: SellOffer) => sellOffer.purchased
+          );
+
+          const nftIndex = newlyPurchased.findIndex(
+            (offer) => offer.tokenId === paymentData.tokenId.toString()
+          );
+
+          newlyPurchased[nftIndex].userQuantity = newlyPurchased[nftIndex]
+            .userQuantity
+            ? +(newlyPurchased[nftIndex].userQuantity || 0) + 1
+            : 1;
+
+          setPurchased(newlyPurchased);
           setSellOffers(sellOffersWithNewlyPurchased);
           await setNewBalance({ web3, address: walletAddress });
           setHasStoreNFTpurchased(true);
@@ -440,42 +472,9 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     }
   };
 
-  const makePixPayment = () => {
-    console.log("makePixPayment com: ", idPaymentProvider);
-    try {
-      const pixResult = async () => {
-        if (idPaymentProvider) {
-          console.log("makePix iugu:", idPaymentProvider);
-          const getData = async () => {
-            const { data } = await axios.post(
-              `${process.env.NEXT_PUBLIC_API_URL}/webhooks/pix`,
-              {
-                authorization: process.env.NEXT_PUBLIC_API_AUTH_CODE,
-                event: "invoice.status_changed",
-                data: {
-                  status: "paid",
-                  id: idPaymentProvider,
-                },
-              }
-            );
-            console.log("PAGUEI data: ", data);
-            emitNotificationModal({
-              type: PAYMENT_STEPS.IN_PROGRESS,
-            });
-          };
-          getData();
-          await waitPixPayment();
-        }
-      };
-      pixResult();
-    } catch (error) {
-      console.log("makePixPayment", error);
-    }
-  };
-
   const getPixPaymentStatus = async () => {
     return await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/transaction/${idPaymentProvider}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/transaction/iugu/${idPaymentProvider}`,
       {
         headers: {
           "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
@@ -493,7 +492,9 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         type: PAYMENT_STEPS.IN_PROGRESS,
       });
       let postData = {};
+      let hasEmail = false;
       if (userEmail !== "") {
+        hasEmail = true;
         postData = {
           storeName: config.title.toLocaleLowerCase(),
           currency: blockchainInfo?.SYMBOL,
@@ -510,6 +511,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
           },
         };
       } else {
+        hasEmail = false;
         postData = {
           storeName: config.title.toLocaleLowerCase(),
           currency: blockchainInfo?.SYMBOL,
@@ -535,6 +537,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       );
 
       console.log("cryptoData", data);
+      console.log("postData", postData);
       cryptoDataId = data._id;
 
       const gasPrice = infuraW3instance?.utils.toHex(
@@ -554,9 +557,12 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
           ...buyTokenObject,
           gas: infuraW3instance?.utils.toHex(gasLimit),
         });
-
       emitNotificationModal({
-        type: PAYMENT_STEPS.SUCCESS,
+        type: PAYMENT_STEPS.PROCESSING,
+      });
+      await sleep(2000);
+      emitNotificationModal({
+        type: hasEmail ? PAYMENT_STEPS.SUCCESS : PAYMENT_STEPS.SUCCESS_NO_EMAIL,
         image: paymentData.itemImage,
       });
 
@@ -582,6 +588,13 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       await setNewBalance({ web3, address: walletAddress });
       setHasStoreNFTpurchased(true);
       await updateUserNfts();
+
+      console.log(
+        "sellOffers With Newly Purchased",
+        sellOffersWithNewlyPurchased
+      );
+      console.log("newly Purchased Index INDEX DA NFT", newlyPurchasedIndex);
+      console.log("sellOffers", sellOffers);
     } catch (error: any) {
       if (error.code === 4001) {
         console.log(error);
@@ -602,6 +615,137 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       if (cryptoDataId !== "") {
         await cancelPayment(cryptoDataId);
       }
+    }
+  };
+
+  const getCreditPaymentStatus = async () => {
+    return await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/transaction/${idTransaction}`,
+      {
+        headers: {
+          "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+        },
+      }
+    );
+  };
+
+  const waitCreditPayment = async () => {
+    console.log("waitCreditPayment");
+    let firstModal = false;
+    let firstModalProcessing = false;
+    try {
+      const interval = setInterval(async () => {
+        if (paymentStatus !== "succeeded") {
+          const { data } = await getCreditPaymentStatus();
+          paymentStatus = data.status;
+          console.log("STATUS: ", paymentStatus);
+        }
+
+        if (paymentStatus === "pending") {
+          if (!firstModal) {
+            onClose();
+            emitNotificationModal({
+              type: PAYMENT_STEPS.IN_PROGRESS,
+            });
+            firstModal = true;
+          }
+        }
+
+        if (paymentStatus === "processing") {
+          if (!firstModalProcessing) {
+            onClose();
+            emitNotificationModal({
+              type: PAYMENT_STEPS.PROCESSING,
+            });
+            firstModalProcessing = true;
+          }
+        }
+
+        if (paymentStatus === "succeeded") {
+          onClose();
+          emitNotificationModal({
+            type: PAYMENT_STEPS.SUCCESS,
+            image: paymentData.itemImage,
+          });
+          clearInterval(interval);
+          const sellOffersWithNewlyPurchased = sellOffers;
+          const newlyPurchasedIndex = sellOffersWithNewlyPurchased.findIndex(
+            (offer) => offer.tokenId === paymentData.tokenId.toString()
+          );
+
+          sellOffersWithNewlyPurchased[newlyPurchasedIndex].purchased = true;
+          const newlyPurchased = sellOffersWithNewlyPurchased.filter(
+            (sellOffer: SellOffer) => sellOffer.purchased
+          );
+
+          const nftIndex = newlyPurchased.findIndex(
+            (offer) => offer.tokenId === paymentData.tokenId.toString()
+          );
+
+          newlyPurchased[nftIndex].userQuantity = newlyPurchased[nftIndex]
+            .userQuantity
+            ? +(newlyPurchased[nftIndex].userQuantity || 0) + 1
+            : 1;
+
+          setPurchased(newlyPurchased);
+          setSellOffers(sellOffersWithNewlyPurchased);
+          await setNewBalance({ web3, address: walletAddress });
+          setHasStoreNFTpurchased(true);
+          //await updateUserNfts();
+        }
+      }, 2000);
+      return () => clearInterval(interval);
+    } catch (error) {
+      console.log("waitCredit", error);
+    }
+  };
+
+  const handleCreditPayment = async () => {
+    try {
+      setIPaying(true);
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/payment/cc`,
+        {
+          storeName: config.title,
+          currency: blockchainInfo?.SYMBOL,
+          email: userEmail,
+          walletAddress: walletAddress,
+          contractAddress: config.contractAddress,
+          item: {
+            amount: 1,
+            price: paymentData.fixedPrice.toString(),
+            description: `${paymentData.itemName}`,
+            tokenId: paymentData.tokenId,
+            fiat: config.currency,
+          },
+        },
+        {
+          headers: {
+            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+          },
+        }
+      );
+      console.log("data: ", data);
+      if (!data.clientSecret) {
+        throw new Error("Erro ao gerar o pagamento");
+      }
+      //setPostReturn(data);
+      setClientSecret(data.clientSecret);
+      setStep("confirmPaymentCredit");
+      idTransaction = data.transaction_id;
+
+      // waitCreditPayment();
+    } catch (error: any) {
+      console.log(error);
+      onClose();
+      emitNotificationModal({
+        message: {
+          primaryText: error.message,
+          secondaryText: "Connect your wallet with Google then try again",
+        },
+      });
+    } finally {
+      setIPaying(false);
     }
   };
 
@@ -629,9 +773,12 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     if (paymentType === "Pix") {
       handlePixPayment();
     }
+    if (paymentType === "Credit") {
+      handleCreditPayment();
+    }
   };
 
-  const handlePaymentSelect = (paymentType: "Crypto" | "Pix") => {
+  const handlePaymentSelect = (paymentType: "Crypto" | "Pix" | "Credit") => {
     setPaymentType(paymentType);
     onSelectClose();
   };
@@ -693,6 +840,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     return date.toISOString().substr(14, 5);
   }
 
+  const handleTermsIsChecked = () => setTermsIsChecked(!termsIsChecked);
+
   return (
     <>
       {step === "paymentType" && (
@@ -748,6 +897,21 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                   </Center>
                 </>
               )}
+              {paymentType == "Credit" && (
+                <>
+                  <Center ml="15px" flexDir="row" justifyContent="start">
+                    <Image src={card} mr="17px" h="23px" />
+                    <Text
+                      fontSize="14px"
+                      fontWeight="400px"
+                      fontFamily="Roboto"
+                      color="#454545"
+                    >
+                      BRL - {t("credit")}
+                    </Text>
+                  </Center>
+                </>
+              )}
               {paymentType == "Selecionar" && (
                 <>
                   <Text
@@ -786,6 +950,30 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                   mr="-10px"
                   mt="20px"
                 >
+                  {/* If para o cartão de crédito só aparecer para o NFT 2
+                  Corrigir no futuro */}
+                  {paymentData.tokenId == 20 && (
+                    <PopoverBody
+                      p="20px"
+                      onClick={() => handlePaymentSelect("Credit")}
+                    >
+                      <Center
+                        flexDir="row"
+                        justifyContent="start"
+                        cursor="pointer"
+                      >
+                        <Image src={card} mr="17px" />
+                        <Text
+                          fontSize="14px"
+                          fontWeight="400px"
+                          fontFamily="Roboto"
+                          color="#454545"
+                        >
+                          BRL - {t("credit")}
+                        </Text>
+                      </Center>
+                    </PopoverBody>
+                  )}
                   <PopoverBody
                     p="20px"
                     onClick={() => handlePaymentSelect("Pix")}
@@ -1026,7 +1214,12 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
             </Flex>
             <Box mt="17px">
               <Button
-                disabled={!termsIsChecked || paymentType == "Selecionar" || (paymentType === "Pix" && !validator.isEmail(userEmail)) || iPaying == true}
+                disabled={
+                  !termsIsChecked ||
+                  paymentType == "Selecionar" ||
+                  (paymentType === "Pix" && !validator.isEmail(userEmail)) ||
+                  iPaying == true
+                }
                 onClick={choosePaymentType}
                 borderRadius="48px"
                 border="1px solid #dfdfdf"
@@ -1070,6 +1263,40 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
           <Text>Cripto</Text>
         </Box>
       )}
+      {step === "confirmPaymentCredit" && (
+        <Box p="50px">
+          <Elements
+            options={{
+              appearance: {
+                theme: "stripe",
+              },
+              clientSecret,
+              loader: "always",
+              // locale: "en",
+              fonts: [
+                {
+                  cssSrc:
+                    "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap",
+                },
+              ],
+            }}
+            stripe={stripePromise}
+          >
+            <CheckoutForm
+              purchaseInfo={{
+                amount: paymentData.fixedPrice,
+                symbol: blockchainInfo?.SYMBOL,
+                fiatAmount: paymentData.PriceBRL,
+                currency: config.currency,
+                total: paymentData.PriceBRL,
+              }}
+              checkFn={handleTermsIsChecked}
+              termsIsChecked={termsIsChecked}
+            />
+          </Elements>
+        </Box>
+      )}
+
       {step === "pix" && (
         <PaymentModalBody
           title={t("pix_payment_title")}

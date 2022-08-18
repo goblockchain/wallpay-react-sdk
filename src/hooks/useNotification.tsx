@@ -12,12 +12,12 @@ import {
   Spinner,
   Center,
   Button,
-  ChakraProvider,
+  ChakraProvider
 } from "@chakra-ui/react";
 import wallpayLogo from "../assets/wallpay.png";
 
 import { useConfig } from "./useConfig";
-import { ERRORS, PAYMENT_STEPS } from "../enums";
+import { ERRORS, PAYMENT_STEPS, EMAIL_STATUS } from "../enums";
 import { useLanguageQuery, useTranslation } from "next-export-i18n";
 import Lottie from "react-lottie";
 
@@ -31,9 +31,8 @@ import process_succ from "../assets/progress/process_succ.svg";
 import process_fail from "../assets/progress/process_fail.svg";
 import transf_succ from "../assets/progress/transf_succ.svg";
 import { theme } from "../styles/theme";
-// TODO: create Link component to get rid of NextJS dependency
-// import Link from "next/link";
-// TODO: receive redirect fn to remove NextJS useRouter dependency
+import Link from "next/link";
+import router from "next/router";
 
 // import badstatus from "../../public/bad-status.png";
 // import success from "../../public/success-status.png";
@@ -106,7 +105,6 @@ const LottieAnimation = (animation) => {
 };
 
 export const NotificationProvider = ({ children }) => {
-  console.log('children @ NotificationProvider', children);
   const [notificationData, setNotificationData] = useState<NotificationData>(
     {} as NotificationData
   );
@@ -185,6 +183,25 @@ export const NotificationProvider = ({ children }) => {
           canClose: true,
         };
         break;
+
+      case PAYMENT_STEPS.SUCCESS_NO_EMAIL:
+        data = {
+          borderColor: "#8AC576",
+          progressImg: end_succ,
+          nftImage: image,
+          heading: "Yeah!",
+          primaryText:
+            message !== undefined && message.primaryText !== undefined
+              ? message.primaryText
+              : t("done_modal"),
+          secondaryText:
+            message !== undefined && message.secondaryText !== undefined
+              ? message.secondaryText
+              : t("done_descr_no_email"),
+          canClose: true,
+        };
+        break;
+
       case PAYMENT_STEPS.TIMEOUT:
         data = {
           borderColor: "#E30000",
@@ -284,7 +301,7 @@ export const NotificationProvider = ({ children }) => {
     >
       {children}
       <ChakraProvider theme={theme}>
-        <Modal
+        <Modal isCentered
           isOpen={isOpen}
           onClose={onClose}
           closeOnOverlayClick={notificationData.canClose}
@@ -314,7 +331,7 @@ export const NotificationProvider = ({ children }) => {
                     <>
                       {notificationData.progressImg !== undefined ? (
                         <Image
-                          src={notificationData.progressImg}
+                          src={notificationData.progressImg?.src}
                           w="100%"
                           borderRadius="15px"
                         />
@@ -347,7 +364,7 @@ export const NotificationProvider = ({ children }) => {
                         color="#454545"
                         mt="27px"
                       >
-                        {notificationData.secondaryText},
+                        {notificationData.secondaryText}
                       </Text>
                     </>
                   )}
@@ -382,7 +399,7 @@ export const NotificationProvider = ({ children }) => {
                           color="#454545"
                           mt="27px"
                         >
-                          {notificationData.secondaryText},
+                          {notificationData.secondaryText}
                         </Text>
                       </>
                     )}
@@ -428,7 +445,7 @@ export const NotificationProvider = ({ children }) => {
                             fontWeight="400"
                             textAlign={{ base: "center", sm: "left" }}
                           >
-                            {notificationData.secondaryText},
+                            {notificationData.secondaryText}
                           </Text>
                         </Box>
                       </Flex>
@@ -443,25 +460,25 @@ export const NotificationProvider = ({ children }) => {
                         </Text>
                       </Center>
                       <Center mt="20px" flexWrap={{ base: "wrap", sm: "nowrap" }}>
-                        {/* <Link href={{ pathname: "/userSpace", query: query }}>
-                        <Button
-                          minWidth="190px"
-                          h="60px"
-                          m="10px"
-                          borderRadius="45px"
-                          border="solid 1px #DFDFDF"
-                          color="#454545"
-                          fontSize="22px"
-                          backgroundColor="white"
-                          fontWeight="400"
-                          _hover={{ backgroundColor: "white" }}
-                          _active={{ backgroundColor: "white" }}
-                          _focus={{ backgroundColor: "white", outline: "none" }}
-                          onClick={() => handleGoNowButton()}
-                        >
-                          {t("go_now")}
-                        </Button>
-                      </Link> */}
+                        <Link href={{ pathname: "/userSpace", query: query }}>
+                          <Button
+                            minWidth="190px"
+                            h="60px"
+                            m="10px"
+                            borderRadius="45px"
+                            border="solid 1px #DFDFDF"
+                            color="#454545"
+                            fontSize="22px"
+                            backgroundColor="white"
+                            fontWeight="400"
+                            _hover={{ backgroundColor: "white" }}
+                            _active={{ backgroundColor: "white" }}
+                            _focus={{ backgroundColor: "white", outline: "none" }}
+                            onClick={() => handleGoNowButton()}
+                          >
+                            {t("go_now")}
+                          </Button>
+                        </Link>
                         <Button
                           minWidth="190px"
                           h="60px"

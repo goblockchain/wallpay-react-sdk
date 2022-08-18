@@ -24,14 +24,15 @@ import {
   ChakraProvider,
 } from "@chakra-ui/react";
 
-import { useWallets } from "../../hooks/useWallets";
-import { useConfig } from "../../hooks/useConfig";
+import { useRouter } from "next/router";
+
+// import { useWallets, useConfig } from "../../hooks";
 import { useTranslation, useLanguageQuery } from "next-export-i18n";
-import { CopyToClipboard } from "../CopyToClipboard";
+
+// import { CopyToClipboard } from "..";
 import { BlockchainInfo, NETWORKS } from "../../enums";
 import { FiLogOut, FiUser } from "react-icons/fi";
-// TODO: create Link component to get rid of NextJS dependency
-// import Link from 'next/link'
+import Link from 'next/link'
 
 import metamaskWallet from "../../assets/metamask.png";
 import walletConnectWallet from "../../assets/walletconnect-wallet.png";
@@ -41,24 +42,26 @@ import torusWallet from "../../assets/torus-wallet.png";
 import ethWallet from "../../assets/eth-wallet.png";
 import polygonWallet from "../../assets/polygon-wallet.png";
 import { theme } from "../../styles/theme";
+import { useWallets } from "../../hooks/useWallets";
+import { useConfig } from "../../hooks/useConfig";
+import { CopyToClipboard } from "../CopyToClipboard";
 
 const walletProvidersImageSrc = {
-  metamask: metamaskWallet,
-  ["wallet-connect"]: walletConnectWallet,
+  metamask: metamaskWallet.src,
+  ["wallet-connect"]: walletConnectWallet.src,
 };
 
 const socialLoginVerifierImageSrc = {
-  google: googleWallet,
-  facebook: facebookWallet,
-  passwordless: torusWallet,
+  google: googleWallet.src,
+  facebook: facebookWallet.src,
+  passwordless: torusWallet.src,
 };
 
 const blockchainIcons = {
-  ethereum: ethWallet,
-  polygon: polygonWallet,
+  ethereum: ethWallet.src,
+  polygon: polygonWallet.src,
 };
 
-// TODO: receive redirect fn to remove NextJS useRouter dependency
 export const ConnectBodyMetaMask = () => {
   const {
     walletAddress,
@@ -73,7 +76,7 @@ export const ConnectBodyMetaMask = () => {
   const [query] = useLanguageQuery();
 
   const { onCopy } = useClipboard(walletAddress);
-  // const router = useRouter();
+  const router = useRouter();
   const [blockchainInfo] = useState(() => {
     let info: BlockchainInfo;
     if (config.networkType === "mainnet") {
@@ -89,10 +92,12 @@ export const ConnectBodyMetaMask = () => {
   });
 
   const handleDisconnectMetamask = async () => {
-    // router.push("/");
+    //setHasStoreNFTpurchased(false);
+    //setPurchased(undefined);
+    router.push("/");
     disconnectWallet();
     setTimeout(() => {
-      // router.reload();
+      router.reload();
     }, 2000);
   };
 
@@ -113,7 +118,7 @@ export const ConnectBodyMetaMask = () => {
               src={String(socialLoginVerifier) !== '' ? socialLoginVerifierImageSrc[socialLoginVerifier] : walletProvidersImageSrc[walletProvider]}
               mr="10px" h="25px"
             />
-            <Text fontSize="18px" fontWeight='700' lineHeight="21px" ml="5px" color="#4554545" >
+            <Text fontSize="18px" fontWeight='700' lineHeight="21px" ml="5px" color="#FFFFFF" >
               {String(walletAddress).substring(0, 5) + '...' + String(walletAddress).substring(38)}
             </Text>
           </Button>
@@ -207,29 +212,28 @@ export const ConnectBodyMetaMask = () => {
                     label={t('user_area')}
                     shouldWrapChildren
                     bg={"#454545"}
-                  >
-                    {/* <Link href={{ pathname: '/userSpace', query: query }}>
-                    <IconButton
-                      mr="10px"
-                      variant="outline"
-                      colorScheme="whiteAlpha"
-                      aria-label="User Space"
-                      isRound={true}
-                      icon={<FiUser size={"25px"} color="#454545" />}
-                      border="none"
-                      _hover={{
-                        backgroundColor: "#f5f5f5",
-                      }}
-                      _focus={{
-                        outline: "none",
-                        backgroundColor: "#f5f5f5",
-                      }}
-                      _active={{
-                        outline: "none",
-                        backgroundColor: "#f5f5f5",
-                      }}
-                    />
-                  </Link> */}
+                  > <Link href={{ pathname: '/userSpace', query: query }}>
+                      <IconButton
+                        mr="10px"
+                        variant="outline"
+                        colorScheme="whiteAlpha"
+                        aria-label="User Space"
+                        isRound={true}
+                        icon={<FiUser size={"25px"} color="#454545" />}
+                        border="none"
+                        _hover={{
+                          backgroundColor: "#f5f5f5",
+                        }}
+                        _focus={{
+                          outline: "none",
+                          backgroundColor: "#f5f5f5",
+                        }}
+                        _active={{
+                          outline: "none",
+                          backgroundColor: "#f5f5f5",
+                        }}
+                      />
+                    </Link>
                   </Tooltip>
                 </Center>
               </Flex>

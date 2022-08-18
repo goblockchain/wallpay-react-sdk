@@ -1,5 +1,6 @@
 import React from 'react'
 import { Text, Button, ButtonProps, ChakraProvider } from '@chakra-ui/react'
+import { WalletIcon } from '../Icons'
 import { useTranslation } from "next-export-i18n";
 import { theme } from '../../styles/theme';
 
@@ -32,6 +33,7 @@ export const ConnectEtherWalletsButton = ({ handleOpenWalletModal, ...rest }: Co
           lineHeight="21px"
         >  {t('connect_wallet')}
         </Text>
+        {/* <WalletIcon ml="10px" boxSize={6} /> */}
       </Button>
     </ChakraProvider>
   )
