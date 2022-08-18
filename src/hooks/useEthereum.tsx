@@ -50,7 +50,7 @@ export const EthereumProvider = ({ children }) => {
       return {} as InfuraOptions
     }
   })
-  const [fiatRates, setFiatRates] = useState<EthFiatRates>(() => ({}) as EthFiatRates)
+  const [fiatRates, setFiatRates] = useState<EthFiatRates>({} as EthFiatRates)
 
   useEffect(() => {
     const getFiatRates = async () => {

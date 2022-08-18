@@ -25,8 +25,6 @@ import facebookConnect from "../../assets/facebook.png";
 import twitterConnect from "../../assets/twitter.png";
 import passwordlessConnect from "../../assets/passwordless.png";
 
-// file:///home/mukaportes/dev-work/goblockchain/stockcar/web_app/.next/server/pages/assets/metamask.png
-console.log('MODAL -------------- metamask', metamask);
 const imageUrl = {
   metamask: metamask,
   "wallet-connect": walletConnect,

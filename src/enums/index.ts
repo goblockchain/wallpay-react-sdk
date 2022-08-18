@@ -116,6 +116,7 @@ export const ERRORS = {
 export const PAYMENT_STEPS = {
   IN_PROGRESS: 'payment.inProgress',
   SUCCESS: 'payment.success',
+  SUCCESS_NO_EMAIL: 'payment.success_no_email',
   TIMEOUT: 'payment.timeout',
   PROCESSING: 'payment.processing'
 }

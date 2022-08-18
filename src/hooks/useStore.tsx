@@ -2,11 +2,11 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { Contract } from "web3-eth-contract";
 import Web3 from "web3";
 import axios from "axios";
+import { convertTimeStampToDateString } from "../utils";
 import { useEthereum } from "./useEthereum";
 import { useNotification } from "./useNotification";
 import { useConfig } from "./useConfig";
 import { useWallets } from "./useWallets";
-import { convertTimeStampToDateString } from "../utils";
 // import fallback1 from '../../public/store/fallback/1.png'
 
 type CallNFTs = (contractInstance: Contract) => Promise<SellOffer[]>;
@@ -55,12 +55,16 @@ export type SellOffer = {
 export interface IStoreContext {
   sellOffers: SellOffer[];
   setSellOffers: (sellOffers: SellOffer[]) => void;
+  purchased: SellOffer[];
+  setPurchased: (sellOffers: SellOffer[]) => void;
   ownedNfts: any[];
   updateSellOffers: (contractInstance: any) => Promise<void>;
   updateUserNfts: () => Promise<void>;
   hasStoreNFTpurchased: boolean;
   setHasStoreNFTpurchased: (hasStoreNFTpurchased: boolean) => void;
+  callBalanceOf: (contractInstance: Contract, walletAddress: string, tokenId: string) => Promise<number>;
 }
+
 const StoreContext = createContext<IStoreContext>({
   sellOffers: [],
   setSellOffers: () => { },
@@ -69,20 +73,21 @@ const StoreContext = createContext<IStoreContext>({
   updateUserNfts: () => Promise.resolve(),
   setHasStoreNFTpurchased: () => { },
   hasStoreNFTpurchased: false,
+  purchased: [],
+  setPurchased: () => { },
+  callBalanceOf: () => Promise.resolve(0),
 });
 
 export const StoreProvider = ({ children }) => {
-  console.log('children @ StoreProvider', children);
   const [sellOffers, setSellOffers] = useState([] as SellOffer[]);
+  const [purchased, setPurchased] = useState<SellOffer[]>([] as SellOffer[]);
   const { config } = useConfig();
-  const [purchased, setPurchased] = useState(undefined);
   const [ownedNfts, setOwnedNfts] = useState([]);
   const { infuraContract, fiatRates } = useEthereum();
-  const { walletIsConnected, walletAddress, goBlockchainContract } =
-    useWallets();
+  const { walletIsConnected, walletAddress, goBlockchainContract, walletIsNotConnected, setWalletIsNotConnected } = useWallets();
   const { emitNotificationModal } = useNotification();
   const [hasStoreNFTpurchased, setHasStoreNFTpurchased] = useState(false);
-  const idsList = ["1", "2"];
+  const idsList = ["1", "2", "4"];
 
   async function updateSellOffers(contractInstance) {
     const data = await callNFTs(contractInstance);
@@ -128,6 +133,31 @@ export const StoreProvider = ({ children }) => {
       getData();
     }
   }, [walletIsConnected]);
+
+  useEffect(() => {
+    if (walletIsNotConnected) {
+      const getData = async () => {
+        try {
+          await updateUserNfts();
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getData();
+    } else {
+      const getData = async () => {
+        try {
+          await updateSellOffers(infuraContract);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getData();
+    }
+    setWalletIsNotConnected(false)
+
+
+  }, [walletIsNotConnected]);
 
   const getMetadata = async (baseURI: string, tokenId: string) => {
     const { data } = await axios.get(
@@ -225,7 +255,6 @@ export const StoreProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
     }
-
     return tempSellOffers;
   };
 
@@ -279,6 +308,7 @@ export const StoreProvider = ({ children }) => {
         };
         tempSellOffers.push(sellOffer);
       }
+      return tempSellOffers;
     } catch (error) {
       console.log(error);
     }
@@ -314,6 +344,9 @@ export const StoreProvider = ({ children }) => {
         updateUserNfts,
         hasStoreNFTpurchased,
         setHasStoreNFTpurchased,
+        purchased,
+        setPurchased,
+        callBalanceOf
       }}
     >
       {children}

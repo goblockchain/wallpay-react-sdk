@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Image,
   Text,
   Button,
+  Flex,
   Center,
   ChakraProvider
 } from '@chakra-ui/react'
@@ -11,7 +12,6 @@ import { useTranslation } from 'next-export-i18n';
 
 import { ConnectWalletInput, WalletProviders } from '../../../hooks/useWallets';
 import { theme } from '../../../styles/theme';
-
 type ConnectProviderButtonProps = {
   handleWalletConnect: (provider: ConnectWalletInput) => Promise<void>
   walletProviderImageSrc: string
