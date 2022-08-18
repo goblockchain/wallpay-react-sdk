@@ -357,9 +357,10 @@ export const WalletsProvider = ({ children }) => {
         };
       }
       const balance = await getBalance({ web3: web3 as Web3, address: address as string });
+      // rceber address e abi do backend pra instanciar o contrato
       const goBlockchainContract = getContract({
         web3: web3 as Web3,
-        abi: goBlockchainAbi as AbiItem[],
+        abi: goBlockchainAbi as AbiItem[], // só precisa ser a abi só da funcao que vamos usar
         contractAddress: config.contractAddress,
       });
       subscribeToEthereumProviderEvents(ethereumProvider);

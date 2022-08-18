@@ -53,7 +53,7 @@ import axios from "axios";
 import { useTranslation } from "next-export-i18n";
 import { FormatPrice, sleep } from "../../utils";
 import { theme } from '../../styles/theme';
-import { WALLPAY_API_URL } from "../../config";
+import { WALLPAY_API_URL, STRIPE_SECRET_KEY } from "../../config";
 
 type PaymentData = {
   itemName: any;
@@ -220,7 +220,10 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
 
   let stripePromise;
   if (walletIsConnected) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY as string);
+    stripePromise = loadStripe(STRIPE_SECRET_KEY, {
+      stripeAccount: 'acct_1LXrofPR5Eq6G1Er', // puxar do backend
+    }); 
+    // stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY as string);
   }
 
   const { emitNotificationModal } = useNotification();
@@ -296,13 +299,14 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
           contractAddress: config.contractAddress,
           email: userEmail,
           clientName: userName,
+          hasFixedPrice: true,
           item: {
             amount: 1,
-            price: paymentData.fixedPrice.toString(),
+            price: '10000',
             description: `${config.title} - ${paymentData.itemName} NFT`,
             tokenId: paymentData.tokenId,
-            fiat: config.currency,
           },
+          fiat: config.currency,
         };
       } else {
         postData = {
@@ -311,13 +315,14 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
           walletAddress: walletAddress,
           contractAddress: config.contractAddress,
           clientName: userName,
+          hasFixedPrice: true,
           item: {
             amount: 1,
-            price: paymentData.fixedPrice.toString(),
+            price: '10000',
             description: `${config.title} - ${paymentData.itemName} NFT`,
             tokenId: paymentData.tokenId,
-            fiat: config.currency,
           },
+          fiat: config.currency,
         };
       }
       const { data } = await axios.post(
@@ -388,7 +393,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
 
         if (paymentStatus !== "succeeded") {
           const { data } = await getPixPaymentStatus();
-          paymentStatus = data.status;
+          paymentStatus = data.data.status;
           console.log("STATUS: ", paymentStatus);
         }
 
@@ -511,8 +516,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
             price: paymentData.fixedPrice.toString(),
             description: `${config.title} - ${paymentData.itemName} NFT`,
             tokenId: paymentData.tokenId,
-            fiat: config.currency,
           },
+          fiat: config.currency,
         };
       } else {
         hasEmail = false;
@@ -526,8 +531,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
             price: paymentData.fixedPrice.toString(),
             description: `${config.title} - ${paymentData.itemName} NFT`,
             tokenId: paymentData.tokenId,
-            fiat: config.currency,
           },
+          fiat: config.currency,
         };
       }
       const { data } = await axios.post(
@@ -556,7 +561,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       const gasLimit = await goBlockchainContract.methods
         .buyToken(paymentData.tokenId, 1)
         .estimateGas(buyTokenObject);
-      const result = await goBlockchainContract.methods
+      // TODO: 
+        const result = await goBlockchainContract.methods
         .buyToken(paymentData.tokenId, 1)
         .send({
           ...buyTokenObject,
@@ -711,20 +717,21 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     try {
       setIPaying(true);
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/payments/credit_card`,
+        `${WALLPAY_API_URL}/payments/credit_card`,
         {
           storeName: config.title,
           currency: blockchainInfo?.SYMBOL,
           email: userEmail,
           walletAddress: walletAddress,
           contractAddress: config.contractAddress,
+          hasFixedPrice: true,
           item: {
             amount: 1,
-            price: paymentData.fixedPrice.toString(),
+            price: '10000',
             description: `${paymentData.itemName}`,
             tokenId: paymentData.tokenId,
-            fiat: config.currency,
           },
+          fiat: config.currency,
         },
         {
           headers: {
@@ -960,7 +967,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                 >
                   {/* If para o cartão de crédito só aparecer para o NFT 2
                   Corrigir no futuro */}
-                  {paymentData.tokenId == 20 && (
+                  {paymentData.tokenId == 2 && (
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Credit")}
@@ -1063,7 +1070,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
               </Flex>
             )}
 
-            {paymentType === "Pix" && showEmailInput && (
+            {["Pix", "Credit"].includes(paymentType) && showEmailInput && (
               <>
                 <Flex w="100%" justifyContent="flex-end">
                   <Input
