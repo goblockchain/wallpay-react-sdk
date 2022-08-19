@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Box,
@@ -41,6 +41,7 @@ interface CheckoutFormProps {
   purchaseInfo: PurchaseInfo;
   termsIsChecked: boolean;
   checkFn: () => void;
+  sdkPrivateKey: string;
 }
 
 const PaymentDetailsInfo = ({
@@ -158,9 +159,10 @@ export const CheckoutForm = ({ purchaseInfo }: CheckoutFormProps) => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/nft?hash=2`,
+        return_url: window.location.href, // TODO: receber url junto com privateKey do sdk
       },
     });
+
     // if (error.type === "card_error" || error.type === "validation_error") {
     //   emitNotificationModal({
     //     message: {

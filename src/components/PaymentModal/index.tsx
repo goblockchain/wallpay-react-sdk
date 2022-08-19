@@ -205,7 +205,6 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
   const getSymbolImage = () => {
     return symbolImages[config.blockchain];
   };
-  const router = useRouter();
   const { infuraW3instance } = useEthereum();
   const {
     web3,
@@ -465,7 +464,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         `${WALLPAY_API_URL}/payments/crypto/${paymentId}`,
         {
           status: "cancelled",
-          auth: "Das4a-OPhjkFASkj",
+          auth: "Das4a-OPhjkFASkj", // hardcoded
         },
         {
           headers: {
@@ -1307,6 +1306,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
               }}
               checkFn={handleTermsIsChecked}
               termsIsChecked={termsIsChecked}
+              sdkPrivateKey={sdkPrivateKey}
             />
           </Elements>
         </Box>
