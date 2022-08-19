@@ -5,6 +5,7 @@ import * as useNotificationHooks from "./hooks/useNotification";
 import * as usePaymentHooks from "./hooks/usePayment";
 import * as useStoreHooks from "./hooks/useStore";
 import * as useWalletsHooks from "./hooks/useWallets";
+import HandleConfirmCredit from './components/ConfirmCredit';
 
 // TODO: receive router here to avoid dependency of nextjs
 const buildElements = (sdkPrivateKey: string) => {
@@ -24,6 +25,10 @@ const buildElements = (sdkPrivateKey: string) => {
     ...useNotificationHooks,
     ...useStoreHooks,
     ...useWalletsHooks,
+    HandleConfirmCredit: (props: any) => (<HandleConfirmCredit
+      router={props.router}
+      sdkPrivateKey={sdkPrivateKey}
+    />),
   };
 };
 
