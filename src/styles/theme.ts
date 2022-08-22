@@ -4,9 +4,11 @@ export const theme = extendTheme({
   styles: {
     global: {
       "html, body": {
+        fontFamily: null,
         height: "100%",
       },
       body: {
+        fontFamily: null,
         display: "flex",
         flexDirection: "column",
       },
