@@ -6,9 +6,25 @@ import * as usePaymentHooks from "./hooks/usePayment";
 import * as useStoreHooks from "./hooks/useStore";
 import * as useWalletsHooks from "./hooks/useWallets";
 import HandleConfirmCredit from './components/ConfirmCredit';
+import axios from "axios";
+
+const validateKey = async (sdkPrivateKey: string) => {
+  try {
+    await axios.post('http://localhost:8001/keys/validateKey');
+    return true;
+  } catch (error) {
+    console.error('Error validating keys', error);
+
+    return false;
+  }
+};
 
 // TODO: receive router here to avoid dependency of nextjs
-const buildElements = (sdkPrivateKey: string) => {
+const buildElements = async (sdkPrivateKey: string) => {
+  const isKeyValid = await validateKey(sdkPrivateKey);
+
+  if (!isKeyValid) throw new Error('Invalid Wallpay private key provided.');
+
   // TODO: verify how to pass along the private key
   return {
     ...usePaymentHooks,
