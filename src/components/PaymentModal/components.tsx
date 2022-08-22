@@ -65,7 +65,7 @@ export const PaymentModalBody = ({ children, onClosePaymentModal, title, }: Paym
   const { t } = useTranslation();
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Flex
         direction="column"
         alignItems="center"
@@ -102,7 +102,7 @@ export const PaymentDetails = ({
 
     if (paymentType === "credit") {
       return (
-        <ChakraProvider theme={theme}>
+        <ChakraProvider resetCSS={false} theme={theme}>
           <PaymentDetailsInfo
             amount={purchaseInfo.fiatAmount}
             symbol={purchaseInfo.currency}
@@ -114,7 +114,7 @@ export const PaymentDetails = ({
     }
 
     return (
-      <ChakraProvider theme={theme}>
+      <ChakraProvider resetCSS={false} theme={theme}>
         <PaymentDetailsInfo
           amount={purchaseInfo.amount}
           symbol={purchaseInfo.symbol}
@@ -126,7 +126,7 @@ export const PaymentDetails = ({
   };
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Box mt="25px" fontSize="18px"
         lineHeight="21px"
         fontWeight="700"
@@ -176,7 +176,7 @@ export const CheckoutForm = ({ purchaseInfo }: CheckoutFormProps) => {
   };
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <form id="payment-form" onSubmit={handleSubmit}>
         <PaymentElement id="payment-element" />
       </form>

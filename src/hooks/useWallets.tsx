@@ -464,7 +464,7 @@ export const WalletsProvider = ({ children }) => {
       }}
     >
       {children}
-      <ChakraProvider theme={theme}>
+      <ChakraProvider resetCSS={false} theme={theme}>
         <ConnectWalletsModal
           isOpen={isOpen}
           onClose={onClose}

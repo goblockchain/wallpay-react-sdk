@@ -13,7 +13,7 @@ export const ConnectEtherWalletsButton = ({ handleOpenWalletModal, ...rest }: Co
   const { t } = useTranslation();
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Button p="0px 38px"
         _hover={{
           transform: 'translateY(0px)'

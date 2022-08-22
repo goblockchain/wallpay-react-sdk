@@ -102,7 +102,7 @@ export const ConnectBodyMetaMask = () => {
   };
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Popover placement="bottom-start">
         <PopoverTrigger>
           <Button

@@ -38,7 +38,7 @@ export const ConnectProviderButtonMetamaskOrWalletConnect = ({
   }
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Button p='17px, 38px'
         h='70px'
         w={{ base: "240px", md: "407px" }}

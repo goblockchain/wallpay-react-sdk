@@ -300,7 +300,7 @@ export const NotificationProvider = ({ children }) => {
       }}
     >
       {children}
-      <ChakraProvider theme={theme}>
+      <ChakraProvider resetCSS={false} theme={theme}>
         <Modal isCentered
           isOpen={isOpen}
           onClose={onClose}

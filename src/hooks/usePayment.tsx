@@ -46,7 +46,7 @@ export const PaymentProvider = ({ children, sdkPrivateKey }) => {
       }}
     >
       {children}
-      <ChakraProvider theme={theme}>
+      <ChakraProvider resetCSS={false} theme={theme}>
       <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false} >
         <ModalOverlay />
         <ModalContent borderRadius="15px" maxWidth="507px" mx="20px">

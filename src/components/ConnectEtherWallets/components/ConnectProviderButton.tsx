@@ -31,7 +31,7 @@ export const ConnectProviderButton = ({
   }
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Button
         p='0'
         h='70px'

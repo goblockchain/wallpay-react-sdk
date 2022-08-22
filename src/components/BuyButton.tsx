@@ -41,7 +41,7 @@ export const BuyButton = ({
   const { t } = useTranslation();
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Flex
         alignItems="center"
         justifyContent="center"

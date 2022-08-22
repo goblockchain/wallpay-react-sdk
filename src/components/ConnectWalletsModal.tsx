@@ -52,7 +52,7 @@ export const ConnectWalletsModal = ({
   const { config } = useConfig();
   const { t } = useTranslation();
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent

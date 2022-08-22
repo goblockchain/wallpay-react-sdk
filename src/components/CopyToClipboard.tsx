@@ -11,7 +11,7 @@ interface CopyToClipboardProps {
 
 export const CopyToClipboard = ({ copyFn, color }: CopyToClipboardProps) => {
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
     <IconButton
       variant='outline'
       colorScheme='whiteAlpha'

@@ -554,19 +554,33 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       );
       const buyTokenObject = {
         from: walletAddress,
-        value: web3.utils.toWei(etherPriceWithFee.toString(), "ether"), //paymentData.fixedPrice,
+        value: web3.utils.toWei(etherPriceWithFee.toString(), "ether"), //paymentData.price,
         gasPrice: gasPrice,
       };
       const gasLimit = await goBlockchainContract.methods
         .buyToken(paymentData.tokenId, 1)
         .estimateGas(buyTokenObject);
-      // TODO: 
-        const result = await goBlockchainContract.methods
-        .buyToken(paymentData.tokenId, 1)
-        .send({
-          ...buyTokenObject,
-          gas: infuraW3instance?.utils.toHex(gasLimit),
-        });
+      // // TODO: 
+      //   const result = await goBlockchainContract.methods
+      //   .buyToken(paymentData.tokenId, 1)
+      //   .send({
+      //     ...buyTokenObject,
+      //     gas: infuraW3instance?.utils.toHex(gasLimit),
+      //   });
+      const axiosUrl = "http://localhost:8001/payments/crypto/getContract/";
+      const axiosConfig = {
+        headers: {
+          authorization: "4e20c35f-b99d-49c4-a0d1-283af6654e05",
+        },
+      };
+      const contractData = await axios.get(axiosUrl, axiosConfig);
+      console.log("[DEBUG] contractData", contractData);
+
+      const transactionParams = [paymentData.tokenId, paymentData.fixedPrice];
+
+      const result = await goBlockchainContract.methods[
+        contractData.data.result.payableMintOrTransferMethodName
+      ](...transactionParams).send(buyTokenObject);
       emitNotificationModal({
         type: PAYMENT_STEPS.PROCESSING,
       });
