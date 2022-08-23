@@ -230,35 +230,36 @@ export const PaymentModal = ({
   }, [walletAddress]);
 
   const [stripePromise, setStripePromise] = useState(null as any);
-
+  const { emitNotificationModal } = useNotification();
+  
   useEffect(() => {
     userWalletAddress = walletAddress || paymentData.walletAddress;
     console.log("[DEBUG] WALLETADRESS 1", userWalletAddress);
     if (walletIsConnected) {
       axios
-        .get(`${WALLPAY_API_URL}/payments/credit_card/getStripeParams`, {
-          headers: {
-            authorization: sdkPrivateKey,
-          },
+      .get(`${WALLPAY_API_URL}/payments/credit_card/getStripeParams`, {
+        headers: {
+          authorization: sdkPrivateKey,
+        },
         })
         .then(({ data }) => {
           const {
             stripeParams: { clientAccountId, goPublicKey },
           } = data as any;
-
+          
           setStripePromise(
             loadStripe(goPublicKey, {
               stripeAccount: clientAccountId,
             })
-          );
-        })
-        .catch((error: any) => {
-          console.error("Error loading stripe", error);
-        });
-    }
-  }, []);
-
-  const { emitNotificationModal } = useNotification();
+            );
+          })
+          .catch((error: any) => {
+            console.error("Error loading stripe", error);
+          });
+        }
+      }, []);
+      
+      
   const {
     sellOffers,
     setSellOffers,
@@ -895,9 +896,7 @@ export const PaymentModal = ({
   }, [countDown, step]);
 
   function toTime(seconds) {
-    var date = new Date();
-    date.setSeconds(seconds);
-    return date.toISOString().substr(14, 5);
+    return new Date(seconds * 1000).toISOString().slice(14, 19);
   }
 
   const handleTermsIsChecked = () => setTermsIsChecked(!termsIsChecked);
