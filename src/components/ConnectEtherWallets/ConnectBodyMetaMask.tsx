@@ -240,7 +240,7 @@ export const ConnectBodyMetaMask = () => {
 
               <Box borderTop="1px solid #DFDFDF" w="100%" mt={{ base: "32px" }} />
               <Box mt="26px">
-                <Text
+                {/* <Text
                   fontSize="20px"
                   fontWeight="700"
                   lineHeight="23px"
@@ -248,7 +248,7 @@ export const ConnectBodyMetaMask = () => {
                   textAlign="center"
                 >
                   {t('saldo')}
-                </Text>
+                </Text> */}
                 <Tooltip
                   hasArrow
                   mr="10px"

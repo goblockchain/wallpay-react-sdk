@@ -52,7 +52,7 @@ import pix_full from "../../assets/pix_full.png";
 import axios from "axios";
 import { useTranslation } from "next-export-i18n";
 import { FormatPrice, sleep } from "../../utils";
-import { theme } from '../../styles/theme';
+import { theme } from "../../styles/theme";
 import { WALLPAY_API_URL, STRIPE_SECRET_KEY } from "../../config";
 
 type PaymentData = {
@@ -84,7 +84,6 @@ const symbolImages = {
   ethereum: eth,
   polygon: polygon,
 };
-
 
 interface ButtonModalProps {
   color: string;
@@ -191,7 +190,11 @@ const PixCopyAndPaste = ({ copyFn }: PixCopyAndPasteProps) => {
 };
 
 let shouldCancelPixRequests = false;
-export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentModalProps) => {
+export const PaymentModal = ({
+  onClose,
+  paymentData,
+  sdkPrivateKey,
+}: PaymentModalProps) => {
   const {
     onOpen: onSelectOpen,
     onClose: onSelectClose,
@@ -223,32 +226,34 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
 
   useEffect(() => {
     userWalletAddress = walletAddress || paymentData.walletAddress;
-    console.log("[DEBUG] WALLETADRESS 2", userWalletAddress)
-  }, [walletAddress])
+    console.log("[DEBUG] WALLETADRESS 2", userWalletAddress);
+  }, [walletAddress]);
 
   const [stripePromise, setStripePromise] = useState(null as any);
 
   useEffect(() => {
     userWalletAddress = walletAddress || paymentData.walletAddress;
-    console.log("[DEBUG] WALLETADRESS 1", userWalletAddress)
+    console.log("[DEBUG] WALLETADRESS 1", userWalletAddress);
     if (walletIsConnected) {
-      axios.get(`${WALLPAY_API_URL}/payments/credit_card/getStripeParams`, {
-        headers: {
-          authorization: sdkPrivateKey,
-        }
-      }).then(({ data }) => {
-        const {
-          stripeParams: {
-            clientAccountId, goPublicKey,
+      axios
+        .get(`${WALLPAY_API_URL}/payments/credit_card/getStripeParams`, {
+          headers: {
+            authorization: sdkPrivateKey,
           },
-        } = data as any;
-  
-        setStripePromise(loadStripe(goPublicKey, {
-          stripeAccount: clientAccountId,
-        }));
-      })
+        })
+        .then(({ data }) => {
+          const {
+            stripeParams: { clientAccountId, goPublicKey },
+          } = data as any;
+
+          setStripePromise(
+            loadStripe(goPublicKey, {
+              stripeAccount: clientAccountId,
+            })
+          );
+        })
         .catch((error: any) => {
-          console.error('Error loading stripe', error);
+          console.error("Error loading stripe", error);
         });
     }
   }, []);
@@ -319,48 +324,30 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
   const handlePixPayment = async () => {
     try {
       setIPaying(true);
-      let postData = {};
-      if (userEmail !== "") {
-        postData = {
-          storeName: config.title.toLocaleLowerCase(),
-          clientName: userName,
-          currency: blockchainInfo?.SYMBOL,
-          walletAddress: userWalletAddress,
-          contractAddress: config.contractAddress,
-          email: userEmail,
-          fiat: config.currency,
-          hasFixedPrice: paymentData.hasFixedPrice,
-          item: {
-            amount: paymentData.amount,
-            price: paymentData.totalPrice.toString(),
-            description: `${config.title} - ${paymentData.itemName} NFT`,
-            tokenId: paymentData.tokenId,
-          },
-        };
-      } else {
-        postData = {
-          storeName: config.title.toLocaleLowerCase(),
-          currency: blockchainInfo?.SYMBOL,
-          walletAddress: userWalletAddress,
-          contractAddress: config.contractAddress,
-          clientName: userName,
-          hasFixedPrice: paymentData.hasFixedPrice,
-          item: {
-            amount: paymentData.amount,
-            price: paymentData.totalPrice.toString(),
-            description: `${config.title} - ${paymentData.itemName} NFT`,
-            tokenId: paymentData.tokenId,
-          },
-          fiat: config.currency,
-        };
-      }
-      console.log("[DEBUG] PIX POSTDATA ", postData);
+      let postData = {
+        storeName: config.title.toLocaleLowerCase(),
+        currency: blockchainInfo?.SYMBOL,
+        walletAddress: userWalletAddress,
+        contractAddress: config.contractAddress,
+        email: userEmail,
+        clientName: userName,
+        hasFixedPrice: paymentData.hasFixedPrice,
+        item: {
+          amount: paymentData.amount,
+          price: paymentData.totalPrice.toString(),
+          description: `${config.title} - ${paymentData.itemName} NFT`,
+          tokenId: paymentData.tokenId,
+        },
+        fiat: config.currency,
+      };
+
       const { data } = await axios.post(
         `${WALLPAY_API_URL}/payments/pix`,
         postData,
         {
           headers: {
-            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+            "x-simple-access-token": process.env
+              .NEXT_PUBLIC_API_AUTH_CODE as string,
             authorization: sdkPrivateKey,
           },
         }
@@ -394,27 +381,31 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
   };
 
   useEffect(() => {
-    axios.post(`${WALLPAY_API_URL}/keys/validateKey`, {
-      clientKey: sdkPrivateKey,
-    }, {
-      headers: {
-        authorization: sdkPrivateKey,
-      }
-    })
+    axios
+      .post(
+        `${WALLPAY_API_URL}/keys/validateKey`,
+        {
+          clientKey: sdkPrivateKey,
+        },
+        {
+          headers: {
+            authorization: sdkPrivateKey,
+          },
+        }
+      )
       .then(({ data }) => {
         const { paymentMethods: clientPaymentMethods } = data.data as Partial<{
-          paymentMethods: string[],
+          paymentMethods: string[];
         }>;
 
         setPaymentMethods(clientPaymentMethods || paymentMethods);
       })
       .catch((error: any) => {
-        console.error('Error loading payment methods', error);
+        console.error("Error loading payment methods", error);
       });
   }, []);
 
   useEffect(() => {
-
     console.log("step", step);
   }, [step]);
 
@@ -520,7 +511,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         },
         {
           headers: {
-            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+            "x-simple-access-token": process.env
+              .NEXT_PUBLIC_API_AUTH_CODE as string,
             authorization: sdkPrivateKey,
           },
         }
@@ -536,7 +528,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       `${WALLPAY_API_URL}/payments/pix/transaction/${idPaymentProvider}`,
       {
         headers: {
-          "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+          "x-simple-access-token": process.env
+            .NEXT_PUBLIC_API_AUTH_CODE as string,
           authorization: sdkPrivateKey,
         },
       }
@@ -551,47 +544,30 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       emitNotificationModal({
         type: PAYMENT_STEPS.IN_PROGRESS,
       });
-      let postData = {};
       let hasEmail = false;
-      if (userEmail !== "") {
-        hasEmail = true;
-        postData = {
-          storeName: config.title.toLocaleLowerCase(),
-          currency: blockchainInfo?.SYMBOL,
-          walletAddress: userWalletAddress,
-          contractAddress: config.contractAddress,
-          email: userEmail,
-          clientName: userName,
-          item: {
-            amount: paymentData.amount,
-            price: paymentData.totalPrice.toString(),
-            description: `${config.title} - ${paymentData.itemName} NFT`,
-            tokenId: paymentData.tokenId,
-          },
-          fiat: config.currency,
-        };
-      } else {
-        hasEmail = false;
-        postData = {
-          storeName: config.title.toLocaleLowerCase(),
-          currency: blockchainInfo?.SYMBOL,
-          walletAddress: userWalletAddress,
-          contractAddress: config.contractAddress,
-          item: {
-            amount: paymentData.amount,
-            price: paymentData.totalPrice.toString(),
-            description: `${config.title} - ${paymentData.itemName} NFT`,
-            tokenId: paymentData.tokenId,
-          },
-          fiat: config.currency,
-        };
-      }
+      hasEmail = true;
+      let postData = {
+        storeName: config.title.toLocaleLowerCase(),
+        currency: blockchainInfo?.SYMBOL,
+        walletAddress: userWalletAddress,
+        contractAddress: config.contractAddress,
+        email: userEmail,
+        clientName: userName,
+        item: {
+          amount: paymentData.amount,
+          price: paymentData.totalPrice.toString(),
+          description: `${config.title} - ${paymentData.itemName} NFT`,
+          tokenId: paymentData.tokenId,
+        },
+        fiat: config.currency,
+      };
       const { data } = await axios.post(
         `${WALLPAY_API_URL}/payments/crypto`,
         postData,
         {
           headers: {
-            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+            "x-simple-access-token": process.env
+              .NEXT_PUBLIC_API_AUTH_CODE as string,
             authorization: sdkPrivateKey,
           },
         }
@@ -612,7 +588,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       const gasLimit = await goBlockchainContract.methods
         .buyToken(paymentData.tokenId, 1)
         .estimateGas(buyTokenObject);
-      // // TODO: 
+      // // TODO:
       //   const result = await goBlockchainContract.methods
       //   .buyToken(paymentData.tokenId, 1)
       //   .send({
@@ -651,7 +627,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         },
         {
           headers: {
-            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+            "x-simple-access-token": process.env
+              .NEXT_PUBLIC_API_AUTH_CODE as string,
             authorization: sdkPrivateKey,
           },
         }
@@ -701,7 +678,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       `${WALLPAY_API_URL}/payments/credit_card/transaction/${idTransaction}`,
       {
         headers: {
-          "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+          "x-simple-access-token": process.env
+            .NEXT_PUBLIC_API_AUTH_CODE as string,
           authorization: sdkPrivateKey,
         },
       }
@@ -801,7 +779,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         },
         {
           headers: {
-            "x-simple-access-token": process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
+            "x-simple-access-token": process.env
+              .NEXT_PUBLIC_API_AUTH_CODE as string,
             authorization: sdkPrivateKey,
           },
         }
@@ -1031,8 +1010,6 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                   mr="-10px"
                   mt="20px"
                 >
-                  {/* If para o cartão de crédito só aparecer para o NFT 2
-                  Corrigir no futuro */}
                   {paymentMethods.includes("credit_card") && (
                     <PopoverBody
                       p="20px"
@@ -1102,22 +1079,9 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                 </PopoverContent>
               </Popover>
             </Center>
-            {paymentType === "Crypto" && showEmailInput && (
+            {paymentType === "Crypto" && (
               <>
-                <Flex w="100%" justifyContent="flex-end">
-                  <Input
-                    w="100%"
-                    mt="10px"
-                    h="60px"
-                    border="1px solid #DFDFDF"
-                    borderRadius="10px"
-                    placeholder={t("type_email_optional")}
-                    type="email"
-                    value={userEmail}
-                    onChange={(e) => setUserEmail(e.target.value)}
-                  />
-                </Flex>
-                <Flex w="100%" justifyContent="flex-end">
+                {/* <Flex w="100%" justifyContent="flex-end">
                   <Text fontSize="16px" mt="5px" mr="2px">
                     {t("saldo2")}:{" "}
                     <FormatPrice
@@ -1125,39 +1089,29 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                       currency={blockchainInfo?.SYMBOL}
                     />
                   </Text>
-                </Flex>
+                </Flex> */}
               </>
-            )}
-            {paymentType === "Crypto" && !showEmailInput && (
-              <Flex w="100%" justifyContent="flex-end">
-                <Text fontSize="16px" mt="5px" mr="2px">
-                  {t("saldo2")}:{" "}
-                  <FormatPrice
-                    amount={walletBalance}
-                    currency={blockchainInfo?.SYMBOL}
-                  />
-                </Text>
-              </Flex>
             )}
 
-            {["Pix", "Credit"].includes(paymentType) && showEmailInput && (
-              <>
-                <Flex w="100%" justifyContent="flex-end">
-                  <Input
-                    w="100%"
-                    mt="10px"
-                    h="60px"
-                    border="1px solid #DFDFDF"
-                    borderRadius="10px"
-                    placeholder={t("type_email_required")}
-                    required
-                    type="email"
-                    value={userEmail}
-                    onChange={(e) => setUserEmail(e.target.value)}
-                  />
-                </Flex>
-              </>
-            )}
+            {["Pix", "Credit", "Crypto"].includes(paymentType) &&
+              showEmailInput && (
+                <>
+                  <Flex w="100%" justifyContent="flex-end">
+                    <Input
+                      w="100%"
+                      mt="10px"
+                      h="60px"
+                      border="1px solid #DFDFDF"
+                      borderRadius="10px"
+                      placeholder={t("type_email_required")}
+                      required
+                      type="email"
+                      value={userEmail}
+                      onChange={(e) => setUserEmail(e.target.value)}
+                    />
+                  </Flex>
+                </>
+              )}
             <Box mt="63px" />
             {FEE > 0 && (
               <>
@@ -1302,7 +1256,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                 disabled={
                   !termsIsChecked ||
                   paymentType == "Selecionar" ||
-                  (paymentType === "Pix" && !validator.isEmail(userEmail)) ||
+                  !validator.isEmail(userEmail) ||
                   iPaying == true
                 }
                 onClick={choosePaymentType}
@@ -1328,12 +1282,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
               <Text fontWeight={500} fontSize={"16px"} textAlign="center">
                 {t("processed_by")}
               </Text>
-              <Image
-                src={wallpayLogo}
-                alt="Wallpay Logo"
-                mx="10px"
-                w="120px"
-              />
+              <Image src={wallpayLogo} alt="Wallpay Logo" mx="10px" w="120px" />
             </Center>
           </Box>
         </PaymentModalBody>
@@ -1489,12 +1438,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
             <Text fontWeight={500} fontSize={"16px"} textAlign="center">
               {t("processed_by")}
             </Text>
-            <Image
-              src={wallpayLogo}
-              alt="Wallpay Logo"
-              mx="10px"
-              w="120px"
-            />
+            <Image src={wallpayLogo} alt="Wallpay Logo" mx="10px" w="120px" />
           </Center>
         </PaymentModalBody>
       )}
