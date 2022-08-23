@@ -7,11 +7,12 @@ import * as useStoreHooks from "./hooks/useStore";
 import * as useWalletsHooks from "./hooks/useWallets";
 import HandleConfirmCredit from './components/ConfirmCredit';
 import axios from "axios";
-
+import { sdkConfig, loadSdkConfig } from './utils/load';
+import React from "react";
 
 // TODO: receive router here to avoid dependency of nextjs
 // const buildElements = async (sdkPrivateKey: string) => {
-const buildElements = ({
+const buildSDK = ({
   sdkPrivateKey,
   creditCardConfirmUrl,
   config,
@@ -31,8 +32,18 @@ const buildElements = ({
       paymentData={props.paymentData}
       sdkPrivateKey={sdkPrivateKey}
     />),
-    PaymentProvider: ({ children }) => (
-      <useConfigHooks.ConfigProvider config={config}>
+    PaymentProvider: ({ children }) => {
+      const [isLoaded, setIsLoaded] = React.useState(false);
+
+      React.useEffect(() => {
+        loadSdkConfig(sdkPrivateKey).then(() => {
+          setIsLoaded(true);
+        }).catch((error) => {
+          throw error;
+        });
+      }, []);
+
+      return (isLoaded && <useConfigHooks.ConfigProvider config={config}>
         <useNotificationHooks.NotificationProvider>
           <useEthereumHooks.EthereumProvider>
             <useWalletsHooks.WalletsProvider>
@@ -46,8 +57,8 @@ const buildElements = ({
             </useWalletsHooks.WalletsProvider>
           </useEthereumHooks.EthereumProvider>
         </useNotificationHooks.NotificationProvider>
-      </useConfigHooks.ConfigProvider>
-    ),
+      </useConfigHooks.ConfigProvider>)
+    },
     ...useConfigHooks,
     ...useEthereumHooks,
     ...useNotificationHooks,
@@ -60,4 +71,4 @@ const buildElements = ({
   };
 };
 
-export default buildElements;
+export default buildSDK;
