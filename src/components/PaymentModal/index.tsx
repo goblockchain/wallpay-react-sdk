@@ -54,6 +54,7 @@ import { useTranslation } from "next-export-i18n";
 import { FormatPrice, sleep } from "../../utils";
 import { theme } from '../../styles/theme';
 import { WALLPAY_API_URL, STRIPE_SECRET_KEY } from "../../config";
+import { sdkConfig } from "../../utils/load";
 
 type PaymentData = {
   itemName: any;
@@ -196,6 +197,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     onToggle: onSelectToggle,
     isOpen: isSelectOpen,
   } = useDisclosure();
+
+  console.log('sdkConfig @ PaymentModal', sdkConfig);
 
   const {
     isOpen: isOpenPixNotification,
