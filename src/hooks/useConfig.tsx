@@ -3,7 +3,7 @@ import { LOGIN_TYPE } from '@toruslabs/torus-embed'
 
 import { WalletProviders } from './useWallets';
 
-type Config = {
+export type Config = {
   apiProvider: boolean
   walletProviders: WalletProviders[]
   socialLogin: boolean

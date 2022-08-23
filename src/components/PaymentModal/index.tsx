@@ -217,13 +217,30 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     walletIsConnected,
   } = useWallets();
 
-  let stripePromise;
-  if (walletIsConnected) {
-    stripePromise = loadStripe(STRIPE_SECRET_KEY, {
-      stripeAccount: 'acct_1LXrofPR5Eq6G1Er', // puxar do backend
-    }); 
-    // stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY as string);
-  }
+  const [stripePromise, setStripePromise] = useState(null as any);
+
+  useEffect(() => {
+    if (walletIsConnected) {
+      axios.get(`${WALLPAY_API_URL}/payments/credit_card/getStripeParams`, {
+        headers: {
+          authorization: sdkPrivateKey,
+        }
+      }).then(({ data }) => {
+        const {
+          stripeParams: {
+            clientAccountId, goPublicKey,
+          },
+        } = data as any;
+  
+        setStripePromise(loadStripe(goPublicKey, {
+          stripeAccount: clientAccountId,
+        }));
+      })
+        .catch((error: any) => {
+          console.error('Error loading stripe', error);
+        });
+    }
+  }, []);
 
   const { emitNotificationModal } = useNotification();
   const {
@@ -276,6 +293,8 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     }
     return info;
   });
+
+  const [paymentMethods, setPaymentMethods] = useState([] as string[]);
 
   const calcDueDate = () => {
     let date = new Date();
@@ -363,6 +382,27 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
   };
 
   useEffect(() => {
+    axios.post(`${WALLPAY_API_URL}/keys/validateKey`, {
+      clientKey: sdkPrivateKey,
+    }, {
+      headers: {
+        authorization: sdkPrivateKey,
+      }
+    })
+      .then(({ data }) => {
+        const { paymentMethods: clientPaymentMethods } = data.data as Partial<{
+          paymentMethods: string[],
+        }>;
+
+        setPaymentMethods(clientPaymentMethods || paymentMethods);
+      })
+      .catch((error: any) => {
+        console.error('Error loading payment methods', error);
+      });
+  }, []);
+
+  useEffect(() => {
+
     console.log("step", step);
   }, [step]);
 
@@ -567,7 +607,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       //     ...buyTokenObject,
       //     gas: infuraW3instance?.utils.toHex(gasLimit),
       //   });
-      const axiosUrl = "http://localhost:8001/payments/crypto/getContract/";
+      const axiosUrl = `${WALLPAY_API_URL}/payments/crypto/getContract/`;
       const axiosConfig = {
         headers: {
           authorization: "4e20c35f-b99d-49c4-a0d1-283af6654e05",
@@ -980,7 +1020,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                 >
                   {/* If para o cartão de crédito só aparecer para o NFT 2
                   Corrigir no futuro */}
-                  {paymentData.tokenId == 2 && (
+                  {paymentMethods.includes("credit_card") && (
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Credit")}
@@ -1002,46 +1042,50 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                       </Center>
                     </PopoverBody>
                   )}
-                  <PopoverBody
-                    p="20px"
-                    onClick={() => handlePaymentSelect("Pix")}
-                  >
-                    <Center
-                      flexDir="row"
-                      justifyContent="start"
-                      cursor="pointer"
+                  {paymentMethods.includes("pix") && (
+                    <PopoverBody
+                      p="20px"
+                      onClick={() => handlePaymentSelect("Pix")}
                     >
-                      <Image src={pix} mr="17px" />
-                      <Text
-                        fontSize="14px"
-                        fontWeight="400px"
-                        fontFamily="Roboto"
-                        color="#454545"
+                      <Center
+                        flexDir="row"
+                        justifyContent="start"
+                        cursor="pointer"
                       >
-                        BRL - Pix
-                      </Text>
-                    </Center>
-                  </PopoverBody>
-                  <PopoverBody
-                    p="20px"
-                    onClick={() => handlePaymentSelect("Crypto")}
-                  >
-                    <Center
-                      flexDir="row"
-                      justifyContent="start"
-                      cursor="pointer"
+                        <Image src={pix} mr="17px" />
+                        <Text
+                          fontSize="14px"
+                          fontWeight="400px"
+                          fontFamily="Roboto"
+                          color="#454545"
+                        >
+                          BRL - Pix
+                        </Text>
+                      </Center>
+                    </PopoverBody>
+                  )}
+                  {paymentMethods.includes("crypto") && (
+                    <PopoverBody
+                      p="20px"
+                      onClick={() => handlePaymentSelect("Crypto")}
                     >
-                      <Image src={getSymbolImage()} mr="17px" h="23px" />
-                      <Text
-                        fontSize="14px"
-                        fontWeight="400px"
-                        fontFamily="Roboto"
-                        color="#454545"
+                      <Center
+                        flexDir="row"
+                        justifyContent="start"
+                        cursor="pointer"
                       >
-                        {blockchainInfo?.SYMBOL}
-                      </Text>
-                    </Center>
-                  </PopoverBody>
+                        <Image src={getSymbolImage()} mr="17px" h="23px" />
+                        <Text
+                          fontSize="14px"
+                          fontWeight="400px"
+                          fontFamily="Roboto"
+                          color="#454545"
+                        >
+                          {blockchainInfo?.SYMBOL}
+                        </Text>
+                      </Center>
+                    </PopoverBody>
+                  )}
                 </PopoverContent>
               </Popover>
             </Center>
@@ -1201,7 +1245,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                     currency={blockchainInfo?.SYMBOL}
                   />
                 )}
-                {paymentType == "Pix" && (
+                {["Pix", "Credit"].includes(paymentType) && (
                   <FormatPrice
                     amount={paymentData.PriceBRL}
                     currency={config.currency}
@@ -1291,7 +1335,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
           <Text>Cripto</Text>
         </Box>
       )}
-      {step === "confirmPaymentCredit" && (
+      {step === "confirmPaymentCredit" && stripePromise && (
         <Box p="50px">
           <Elements
             options={{
