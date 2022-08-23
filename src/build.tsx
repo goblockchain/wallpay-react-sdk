@@ -8,24 +8,22 @@ import * as useWalletsHooks from "./hooks/useWallets";
 import HandleConfirmCredit from './components/ConfirmCredit';
 import axios from "axios";
 
-const validateKey = async (sdkPrivateKey: string) => {
-  try {
-    await axios.post('http://localhost:8001/keys/validateKey');
-    return true;
-  } catch (error) {
-    console.error('Error validating keys', error);
-
-    return false;
-  }
-};
 
 // TODO: receive router here to avoid dependency of nextjs
-const buildElements = async (sdkPrivateKey: string) => {
-  const isKeyValid = await validateKey(sdkPrivateKey);
+// const buildElements = async (sdkPrivateKey: string) => {
+const buildElements = ({
+  sdkPrivateKey,
+  creditCardConfirmUrl,
+  config,
+}: {
+  sdkPrivateKey: string;
+  creditCardConfirmUrl: string;
+  config: useConfigHooks.Config
+}) => {
+  // const isKeyValid = await validateKey(sdkPrivateKey);
 
-  if (!isKeyValid) throw new Error('Invalid Wallpay private key provided.');
+  // if (!isKeyValid) throw new Error('Invalid Wallpay private key provided.');
 
-  // TODO: verify how to pass along the private key
   return {
     ...usePaymentHooks,
     PaymentModal: (props: any) => (<PaymentModal
@@ -33,9 +31,23 @@ const buildElements = async (sdkPrivateKey: string) => {
       paymentData={props.paymentData}
       sdkPrivateKey={sdkPrivateKey}
     />),
-    PaymentProvider: ({ children }) => (<usePaymentHooks.PaymentProvider
-      sdkPrivateKey={sdkPrivateKey}
-    >{children}</usePaymentHooks.PaymentProvider>),
+    PaymentProvider: ({ children }) => (
+      <useConfigHooks.ConfigProvider config={config}>
+        <useNotificationHooks.NotificationProvider>
+          <useEthereumHooks.EthereumProvider>
+            <useWalletsHooks.WalletsProvider>
+              <useStoreHooks.StoreProvider>
+                <usePaymentHooks.PaymentProvider
+                  sdkPrivateKey={sdkPrivateKey}
+                >
+                  {children}
+                </usePaymentHooks.PaymentProvider>
+              </useStoreHooks.StoreProvider>
+            </useWalletsHooks.WalletsProvider>
+          </useEthereumHooks.EthereumProvider>
+        </useNotificationHooks.NotificationProvider>
+      </useConfigHooks.ConfigProvider>
+    ),
     ...useConfigHooks,
     ...useEthereumHooks,
     ...useNotificationHooks,
