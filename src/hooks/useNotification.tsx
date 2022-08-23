@@ -331,7 +331,7 @@ export const NotificationProvider = ({ children }) => {
                     <>
                       {notificationData.progressImg !== undefined ? (
                         <Image
-                          src={notificationData.progressImg?.src}
+                          src={notificationData.progressImg}
                           w="100%"
                           borderRadius="15px"
                         />
