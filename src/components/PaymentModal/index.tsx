@@ -59,9 +59,11 @@ type PaymentData = {
   itemName: any;
   itemId: number;
   tokenId: number;
-  fixedPrice: number;
-  PriceBRL: number;
+  totalPrice: number;
   itemImage: string;
+  amount: number;
+  hasFixedPrice: boolean;
+  walletAddress: string;
 };
 
 type PurchaseInfo = {
@@ -217,9 +219,18 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
     walletIsConnected,
   } = useWallets();
 
+  let userWalletAddress = paymentData.walletAddress;
+
+  useEffect(() => {
+    userWalletAddress = walletAddress || paymentData.walletAddress;
+    console.log("[DEBUG] WALLETADRESS 2", userWalletAddress)
+  }, [walletAddress])
+
   const [stripePromise, setStripePromise] = useState(null as any);
 
   useEffect(() => {
+    userWalletAddress = walletAddress || paymentData.walletAddress;
+    console.log("[DEBUG] WALLETADRESS 1", userWalletAddress)
     if (walletIsConnected) {
       axios.get(`${WALLPAY_API_URL}/payments/credit_card/getStripeParams`, {
         headers: {
@@ -312,37 +323,38 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       if (userEmail !== "") {
         postData = {
           storeName: config.title.toLocaleLowerCase(),
+          clientName: userName,
           currency: blockchainInfo?.SYMBOL,
-          walletAddress: walletAddress,
+          walletAddress: userWalletAddress,
           contractAddress: config.contractAddress,
           email: userEmail,
-          clientName: userName,
-          hasFixedPrice: true,
+          fiat: config.currency,
+          hasFixedPrice: paymentData.hasFixedPrice,
           item: {
-            amount: 1,
-            price: '10000',
+            amount: paymentData.amount,
+            price: paymentData.totalPrice.toString(),
             description: `${config.title} - ${paymentData.itemName} NFT`,
             tokenId: paymentData.tokenId,
           },
-          fiat: config.currency,
         };
       } else {
         postData = {
           storeName: config.title.toLocaleLowerCase(),
           currency: blockchainInfo?.SYMBOL,
-          walletAddress: walletAddress,
+          walletAddress: userWalletAddress,
           contractAddress: config.contractAddress,
           clientName: userName,
-          hasFixedPrice: true,
+          hasFixedPrice: paymentData.hasFixedPrice,
           item: {
-            amount: 1,
-            price: '10000',
+            amount: paymentData.amount,
+            price: paymentData.totalPrice.toString(),
             description: `${config.title} - ${paymentData.itemName} NFT`,
             tokenId: paymentData.tokenId,
           },
           fiat: config.currency,
         };
       }
+      console.log("[DEBUG] PIX POSTDATA ", postData);
       const { data } = await axios.post(
         `${WALLPAY_API_URL}/payments/pix`,
         postData,
@@ -487,7 +499,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
 
           setPurchased(newlyPurchased);
           setSellOffers(sellOffersWithNewlyPurchased);
-          await setNewBalance({ web3, address: walletAddress });
+          //await setNewBalance({ web3, address: userWalletAddress });
           setHasStoreNFTpurchased(true);
           //await updateUserNfts();
         }
@@ -546,13 +558,13 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         postData = {
           storeName: config.title.toLocaleLowerCase(),
           currency: blockchainInfo?.SYMBOL,
-          walletAddress: walletAddress,
+          walletAddress: userWalletAddress,
           contractAddress: config.contractAddress,
           email: userEmail,
           clientName: userName,
           item: {
-            amount: 1,
-            price: paymentData.fixedPrice.toString(),
+            amount: paymentData.amount,
+            price: paymentData.totalPrice.toString(),
             description: `${config.title} - ${paymentData.itemName} NFT`,
             tokenId: paymentData.tokenId,
           },
@@ -563,11 +575,11 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         postData = {
           storeName: config.title.toLocaleLowerCase(),
           currency: blockchainInfo?.SYMBOL,
-          walletAddress: walletAddress,
+          walletAddress: userWalletAddress,
           contractAddress: config.contractAddress,
           item: {
-            amount: 1,
-            price: paymentData.fixedPrice.toString(),
+            amount: paymentData.amount,
+            price: paymentData.totalPrice.toString(),
             description: `${config.title} - ${paymentData.itemName} NFT`,
             tokenId: paymentData.tokenId,
           },
@@ -593,7 +605,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
         await infuraW3instance?.eth.getGasPrice()
       );
       const buyTokenObject = {
-        from: walletAddress,
+        from: userWalletAddress,
         value: web3.utils.toWei(etherPriceWithFee.toString(), "ether"), //paymentData.price,
         gasPrice: gasPrice,
       };
@@ -610,13 +622,14 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       const axiosUrl = `${WALLPAY_API_URL}/payments/crypto/getContract/`;
       const axiosConfig = {
         headers: {
+          // TODO: Arrumar isso aqui
           authorization: "4e20c35f-b99d-49c4-a0d1-283af6654e05",
         },
       };
       const contractData = await axios.get(axiosUrl, axiosConfig);
       console.log("[DEBUG] contractData", contractData);
 
-      const transactionParams = [paymentData.tokenId, paymentData.fixedPrice];
+      const transactionParams = [paymentData.tokenId, paymentData.totalPrice];
 
       const result = await goBlockchainContract.methods[
         contractData.data.result.payableMintOrTransferMethodName
@@ -650,9 +663,9 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
       );
       sellOffersWithNewlyPurchased[newlyPurchasedIndex].purchased = true;
       setSellOffers(sellOffersWithNewlyPurchased);
-      await setNewBalance({ web3, address: walletAddress });
+      //await setNewBalance({ web3, address: userWalletAddress });
       setHasStoreNFTpurchased(true);
-      await updateUserNfts();
+      //await updateUserNfts();
 
       console.log(
         "sellOffers With Newly Purchased",
@@ -755,7 +768,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
 
           setPurchased(newlyPurchased);
           setSellOffers(sellOffersWithNewlyPurchased);
-          await setNewBalance({ web3, address: walletAddress });
+          //await setNewBalance({ web3, address: userWalletAddress });
           setHasStoreNFTpurchased(true);
           //await updateUserNfts();
         }
@@ -775,12 +788,12 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
           storeName: config.title,
           currency: blockchainInfo?.SYMBOL,
           email: userEmail,
-          walletAddress: walletAddress,
+          walletAddress: userWalletAddress,
           contractAddress: config.contractAddress,
-          hasFixedPrice: true,
+          hasFixedPrice: paymentData.hasFixedPrice,
           item: {
-            amount: 1,
-            price: '10000',
+            amount: paymentData.amount,
+            price: paymentData.totalPrice.toString(),
             description: `${paymentData.itemName}`,
             tokenId: paymentData.tokenId,
           },
@@ -820,19 +833,19 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
   const FEE = 0;
 
   const etherPriceWithFee = useMemo(() => {
-    const priceToBN = new BigNumber(paymentData.fixedPrice);
+    const priceToBN = new BigNumber(paymentData.totalPrice);
     const feeToBN = new BigNumber(FEE);
     return priceToBN.plus(priceToBN.times(feeToBN)).toNumber();
-  }, [paymentData.fixedPrice]);
+  }, [paymentData.totalPrice]);
 
   // conversor da taxa da go dapartil visual para o cliente
   const fiatPriceWithFee = useMemo(() => {
-    const priceToBN = new BigNumber(paymentData.PriceBRL);
+    const priceToBN = new BigNumber(paymentData.totalPrice);
     const feeToBN = new BigNumber(0.1);
     return Number(
       priceToBN.plus(priceToBN.times(feeToBN)).toNumber().toFixed(2)
     );
-  }, [paymentData.PriceBRL]);
+  }, [paymentData.totalPrice]);
 
   const choosePaymentType = () => {
     if (paymentType === "Crypto") {
@@ -1168,15 +1181,15 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                     fontStyle="normal"
                     color="#454545"
                   >
-                    {paymentType !== "Pix" && (
+                    {["Crypto"].includes(paymentType) && (
                       <FormatPrice
-                        amount={paymentData.fixedPrice}
+                        amount={paymentData.totalPrice}
                         currency={blockchainInfo?.SYMBOL}
                       />
                     )}
-                    {paymentType == "Pix" && (
+                    {["Pix", "Credit"].includes(paymentType) && (
                       <FormatPrice
-                        amount={paymentData.PriceBRL}
+                        amount={paymentData.totalPrice}
                         currency={config.currency}
                       />
                     )}
@@ -1239,7 +1252,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                 fontStyle="normal"
                 color="#454545"
               >
-                {paymentType !== "Pix" && (
+                {["Crypto"].includes(paymentType) && (
                   <FormatPrice
                     amount={etherPriceWithFee}
                     currency={blockchainInfo?.SYMBOL}
@@ -1247,7 +1260,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                 )}
                 {["Pix", "Credit"].includes(paymentType) && (
                   <FormatPrice
-                    amount={paymentData.PriceBRL}
+                    amount={paymentData.totalPrice}
                     currency={config.currency}
                   />
                 )}
@@ -1356,11 +1369,13 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
           >
             <CheckoutForm
               purchaseInfo={{
-                amount: paymentData.fixedPrice,
-                symbol: String(blockchainInfo?.SYMBOL),
-                fiatAmount: paymentData.PriceBRL,
+                fiatAmount: paymentData.totalPrice,
                 currency: config.currency,
-                total: paymentData.PriceBRL,
+
+                // Não estamos usando
+                amount: paymentData.totalPrice,
+                symbol: String(blockchainInfo?.SYMBOL),
+                total: paymentData.totalPrice,
               }}
               checkFn={handleTermsIsChecked}
               termsIsChecked={termsIsChecked}
@@ -1464,7 +1479,7 @@ export const PaymentModal = ({ onClose, paymentData, sdkPrivateKey }: PaymentMod
                 color="#454545"
               >
                 <FormatPrice
-                  amount={paymentData.PriceBRL}
+                  amount={paymentData.totalPrice}
                   currency={config.currency}
                 />
               </Text>

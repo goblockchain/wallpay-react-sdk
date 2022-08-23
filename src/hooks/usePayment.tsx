@@ -11,12 +11,14 @@ import { PaymentModal } from "../components/PaymentModal";
 import { theme } from '../styles/theme';
 
 type PaymentData = {
-  fiatPrice?: number;
-  price?: number;
-  itemId?: number;
-  tokenId?: number;
-  itemName?: string;
-  itemImage?: string;
+  itemName: any;
+  itemId: number;
+  tokenId: number;
+  totalPrice: number;
+  itemImage: string;
+  amount: number;
+  hasFixedPrice: boolean;
+  walletAddress: string;
 };
 
 type OnOpenPaymentModal = (paymentData: PaymentData) => void;
@@ -54,12 +56,14 @@ export const PaymentProvider = ({ children, sdkPrivateKey }) => {
             <PaymentModal
               onClose={onClose}
               paymentData={{
-                PriceBRL: Number(paymentData.fiatPrice),
-                fixedPrice: Number(paymentData.price),
+                totalPrice: Number(paymentData.totalPrice),
                 itemId: Number(paymentData.itemId),
                 tokenId: Number(paymentData.tokenId),
                 itemName: paymentData.itemName,
                 itemImage: String(paymentData.itemImage),
+                amount: paymentData.amount,
+                hasFixedPrice: paymentData.hasFixedPrice,
+                walletAddress: paymentData.walletAddress
               }}
               sdkPrivateKey={sdkPrivateKey}
             />
