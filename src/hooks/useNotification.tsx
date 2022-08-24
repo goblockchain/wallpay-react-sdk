@@ -381,7 +381,7 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
                     )}
 
                   {/* ANIMAÇÃO COMPRA COM SUCESSO */}
-                  {notificationData.nftImage !== undefined && showUserSpace && (
+                  {notificationData.nftImage !== undefined && (
                     <>
                       {notificationData.progressImg !== undefined && (
                         <Image
@@ -427,55 +427,57 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
                           </Text>
                         </Box>
                       </Flex>
-                      <Center mt="50px">
-                        <Text
-                          textAlign="center"
-                          fontSize="18px"
-                          fontWeight="400"
-                          color="#717171"
-                          fontFamily="'Roboto', sans-serif"
-                        >
-                          {t("redirecting")}
-                        </Text>
-                      </Center>
-                      <Center mt="20px" flexWrap={{ base: "wrap", sm: "nowrap" }}>
-                        <Link href={{ pathname: userSpaceUrl, query: query }}>
+                      {showUserSpace && <>
+                        <Center mt="50px">
+                          <Text
+                            textAlign="center"
+                            fontSize="18px"
+                            fontWeight="400"
+                            color="#717171"
+                            fontFamily="'Roboto', sans-serif"
+                          >
+                            {t("redirecting")}
+                          </Text>
+                        </Center>
+                        <Center mt="20px" flexWrap={{ base: "wrap", sm: "nowrap" }}>
+                          <Link href={{ pathname: userSpaceUrl, query: query }}>
+                            <Button
+                              minWidth="190px"
+                              h="60px"
+                              m="10px"
+                              borderRadius="45px"
+                              border="solid 1px #DFDFDF"
+                              color="#454545"
+                              fontSize="22px"
+                              backgroundColor="white"
+                              fontWeight="400"
+                              _hover={{ backgroundColor: "white" }}
+                              _active={{ backgroundColor: "white" }}
+                              _focus={{ backgroundColor: "white", outline: "none" }}
+                              onClick={() => handleGoNowButton()}
+                            >
+                              {t("go_now")}
+                            </Button>
+                          </Link>
                           <Button
                             minWidth="190px"
                             h="60px"
                             m="10px"
                             borderRadius="45px"
                             border="solid 1px #DFDFDF"
-                            color="#454545"
+                            color="red"
                             fontSize="22px"
                             backgroundColor="white"
                             fontWeight="400"
                             _hover={{ backgroundColor: "white" }}
                             _active={{ backgroundColor: "white" }}
                             _focus={{ backgroundColor: "white", outline: "none" }}
-                            onClick={() => handleGoNowButton()}
+                            onClick={() => handleCancelButton()}
                           >
-                            {t("go_now")}
+                            {t("not_now")}
                           </Button>
-                        </Link>
-                        <Button
-                          minWidth="190px"
-                          h="60px"
-                          m="10px"
-                          borderRadius="45px"
-                          border="solid 1px #DFDFDF"
-                          color="red"
-                          fontSize="22px"
-                          backgroundColor="white"
-                          fontWeight="400"
-                          _hover={{ backgroundColor: "white" }}
-                          _active={{ backgroundColor: "white" }}
-                          _focus={{ backgroundColor: "white", outline: "none" }}
-                          onClick={() => handleCancelButton()}
-                        >
-                          {t("not_now")}
-                        </Button>
-                      </Center>
+                        </Center>
+                      </>}
                     </>
                   )}
                 </Flex>
