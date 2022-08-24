@@ -811,7 +811,7 @@ export const PaymentModal = ({
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Credit")}
-                      _hover={{ bgColor: "#efefef", borderRadius: "10px" }}
+                      _hover={{ bgColor: "#efefef", borderRadius: "6px" }}
                     >
                       <Center
                         flexDir="row"
@@ -835,7 +835,7 @@ export const PaymentModal = ({
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Pix")}
-                      _hover={{ bgColor: "#efefef", borderRadius: "10px" }}
+                      _hover={{ bgColor: "#efefef", borderRadius: "6px" }}
                     >
                       <Center
                         flexDir="row"
@@ -859,7 +859,7 @@ export const PaymentModal = ({
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Crypto")}
-                      _hover={{ bgColor: "#efefef", borderRadius: "10px" }}
+                      _hover={{ bgColor: "#efefef", borderRadius: "6px" }}
                     >
                       <Center
                         flexDir="row"
