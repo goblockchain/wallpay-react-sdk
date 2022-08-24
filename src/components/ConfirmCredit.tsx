@@ -3,9 +3,10 @@ import { PAYMENT_STEPS } from '../enums';
 import { useNotification } from '../hooks/useNotification';
 import { redeemToken } from '../utils/api';
 
-function HandleConfirmCredit({ sdkPrivateKey, router }: {
+function HandleConfirmCredit({ sdkPrivateKey, router, imageURL }: {
   sdkPrivateKey: string;
   router: any;
+  imageURL: string;
 }) {
   const { emitNotificationModal } = useNotification();
 
@@ -21,6 +22,7 @@ function HandleConfirmCredit({ sdkPrivateKey, router }: {
         .then(() => {
           emitNotificationModal({
             type: PAYMENT_STEPS.SUCCESS,
+            image: imageURL,
           });
         });
     }
