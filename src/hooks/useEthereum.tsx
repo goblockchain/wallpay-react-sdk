@@ -1,12 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
 import axios from 'axios'
 
 import { useConfig } from './useConfig'
 import { NETWORKS } from '../enums'
-import goBlockchainAbi from '../abis/goBlockchain.json'
+import { sdkConfig } from '../utils/load'
 import { cryptoCompare } from '../utils/api'
 
 type EthFiatRates = {
@@ -28,7 +27,7 @@ export const EthereumContext = createContext<IEthereumContext>({
   fiatRates: {},
 })
 
-export const EthereumProvider = ({ children }) => {
+export const EthereumProvider = ({ children, sdkPrivateKey }) => {
   const { config } = useConfig()
   const [infuraOptions] = useState<InfuraOptions>(() => {
     const getInfuraUrl = (): string | undefined => {
@@ -42,7 +41,11 @@ export const EthereumProvider = ({ children }) => {
     const infuraUrl = getInfuraUrl()
     if (config.apiProvider === true && infuraUrl !== undefined) {
       const infuraWeb3 = new Web3(new Web3.providers.HttpProvider(infuraUrl))
-      const infuraGoBlockchainContract = new infuraWeb3.eth.Contract(goBlockchainAbi as AbiItem[], config.contractAddress)
+
+      const infuraGoBlockchainContract = new infuraWeb3.eth.Contract(
+        sdkConfig.contractData?.abi,
+        sdkConfig.contractData?.contractAddress,
+      );
       return {
         web3: infuraWeb3,
         contract: infuraGoBlockchainContract

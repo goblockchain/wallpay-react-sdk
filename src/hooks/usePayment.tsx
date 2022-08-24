@@ -46,7 +46,7 @@ export interface IPaymentContext {
 
 const PaymentContext = createContext<IPaymentContext>({} as IPaymentContext);
 
-export const PaymentProvider = ({ children, sdkPrivateKey }) => {
+export const PaymentProvider = ({ children, sdkPrivateKey, creditCardConfirmUrl }) => {
   const [paymentData, setPaymentData] = useState<PaymentData>(
     {} as PaymentData
   );
@@ -105,6 +105,7 @@ export const PaymentProvider = ({ children, sdkPrivateKey }) => {
                   fiatUnitPrice: paymentData.fiatUnitPrice,
                 }}
                 sdkPrivateKey={sdkPrivateKey}
+                creditCardConfirmUrl={creditCardConfirmUrl}
               />
             </ModalBody>
           </ModalContent>

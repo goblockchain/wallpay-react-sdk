@@ -99,7 +99,7 @@ const LottieAnimation = (animation) => {
   );
 };
 
-export const NotificationProvider = ({ children }) => {
+export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) => {
   const [notificationData, setNotificationData] = useState<NotificationData>(
     {} as NotificationData
   );
@@ -255,7 +255,6 @@ export const NotificationProvider = ({ children }) => {
   }
 
   function handleGoNowButton() {
-    // router.push("/userSpace");
     setTimeout(() => {
       onClose();
     }, 2000);
@@ -382,7 +381,7 @@ export const NotificationProvider = ({ children }) => {
                     )}
 
                   {/* ANIMAÇÃO COMPRA COM SUCESSO */}
-                  {notificationData.nftImage !== undefined && (
+                  {notificationData.nftImage !== undefined && showUserSpace && (
                     <>
                       {notificationData.progressImg !== undefined && (
                         <Image
@@ -440,7 +439,7 @@ export const NotificationProvider = ({ children }) => {
                         </Text>
                       </Center>
                       <Center mt="20px" flexWrap={{ base: "wrap", sm: "nowrap" }}>
-                        <Link href={{ pathname: "/userSpace", query: query }}>
+                        <Link href={{ pathname: userSpaceUrl, query: query }}>
                           <Button
                             minWidth="190px"
                             h="60px"

@@ -17,6 +17,7 @@ import goBlockchainAbi from "../abis/goBlockchain.json";
 import { sleep } from "../utils";
 import { theme } from "../styles/theme";
 import { ConnectWalletsModal } from "../components/ConnectEtherWallets";
+import { sdkConfig } from "../utils/load";
 
 declare class WalletConnectWeb3Provider
   extends WalletConnectProvider
@@ -97,7 +98,7 @@ declare global {
   }
 }
 
-export const WalletsProvider = ({ children }) => {
+export const WalletsProvider = ({ children, sdkPrivateKey }) => {
   const [walletIsConnected, setWalletIsConnected] = useState(false);
   const [walletIsNotConnected, setWalletIsNotConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
@@ -324,10 +325,6 @@ export const WalletsProvider = ({ children }) => {
     const balanceFromWei = Web3.utils.fromWei(balance, "ether").slice(0, 6);
     return balanceFromWei;
   };
-
-  const getContract: GetContract = ({ web3, abi, contractAddress }) =>
-    new web3.eth.Contract(abi, contractAddress);
-
   const connectWallet: ConnectWallet = async ({ provider, loginType }) => {
     try {
       const {
@@ -357,12 +354,11 @@ export const WalletsProvider = ({ children }) => {
         };
       }
       const balance = await getBalance({ web3: web3 as Web3, address: address as string });
-      // rceber address e abi do backend pra instanciar o contrato
-      const goBlockchainContract = getContract({
-        web3: web3 as Web3,
-        abi: goBlockchainAbi as AbiItem[], // só precisa ser a abi só da funcao que vamos usar
-        contractAddress: config.contractAddress,
-      });
+
+      const goBlockchainContract = new (web3 as Web3).eth.Contract(
+        sdkConfig.contractData?.abi as AbiItem[],
+        sdkConfig.contractData?.contractAddress as string,
+      );
       subscribeToEthereumProviderEvents(ethereumProvider);
       setWalletAddress(address as string);
       setWalletBalance(balance);

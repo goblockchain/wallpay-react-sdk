@@ -5,15 +5,20 @@ import * as useNotificationHooks from "./hooks/useNotification";
 import * as usePaymentHooks from "./hooks/usePayment";
 import * as useWalletsHooks from "./hooks/useWallets";
 import HandleConfirmCredit from "./components/ConfirmCredit";
-import { loadSdkConfig } from "./utils/load";
+import { loadSdkConfig, sdkConfig } from "./utils/load";
+import { Config } from "./hooks/useConfig";
 import React from "react";
 
 const buildSDK = ({
   sdkPrivateKey,
   creditCardConfirmUrl,
+  showUserSpace = false,
+  userSpaceUrl,
 }: {
   sdkPrivateKey: string;
-  creditCardConfirmUrl: string;
+  creditCardConfirmUrl?: string;
+  showUserSpace?: boolean;
+  userSpaceUrl?: string;
 }) => {
   return {
     ...usePaymentHooks,
@@ -27,17 +32,11 @@ const buildSDK = ({
     ),
     PaymentProvider: ({ children }) => {
       const [isLoaded, setIsLoaded] = React.useState(false);
-      const [storeConfig, setStoreConfig] = React.useState(
-        {} as useConfigHooks.Config
-      );
 
       React.useEffect(() => {
         loadSdkConfig(sdkPrivateKey)
-          .then(({ config }) => {
+          .then(() => {
             setIsLoaded(true);
-            if (config) {
-              setStoreConfig(config);
-            }
           })
           .catch((error) => {
             throw error;
@@ -45,13 +44,13 @@ const buildSDK = ({
       }, []);
 
       return (
-        isLoaded &&
-        storeConfig && (
-          <useConfigHooks.ConfigProvider config={storeConfig}>
-            <useNotificationHooks.NotificationProvider>
-              <useEthereumHooks.EthereumProvider>
-                <useWalletsHooks.WalletsProvider>
+        isLoaded && (
+          <useConfigHooks.ConfigProvider config={sdkConfig.config as Config}>
+            <useNotificationHooks.NotificationProvider showUserSpace={showUserSpace} userSpaceUrl={userSpaceUrl}>
+              <useEthereumHooks.EthereumProvider sdkPrivateKey={sdkPrivateKey}>
+                <useWalletsHooks.WalletsProvider sdkPrivateKey={sdkPrivateKey}>
                   <usePaymentHooks.PaymentProvider
+                    creditCardConfirmUrl={creditCardConfirmUrl}
                     sdkPrivateKey={sdkPrivateKey}
                   >
                     {children}

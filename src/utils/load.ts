@@ -1,6 +1,7 @@
 import axios from "axios";
 import { WALLPAY_API_URL } from "../config";
 import { Config } from "../hooks/useConfig";
+import { getContract } from "./api";
 
 export const sdkConfig = {} as Partial<{
   config: Config;
@@ -9,6 +10,11 @@ export const sdkConfig = {} as Partial<{
     clientAccountId: string;
     goPublicKey: string;
   };
+  contractData: {
+    abi: any;
+    contractAddress: any;
+    payableMintOrTransferMethodName: any;
+  }
 }>;
 
 const validateKey = async (sdkPrivateKey: string) => {
@@ -58,6 +64,7 @@ const getStripeParams = async (sdkPrivateKey: string) => {
 export const loadSdkConfig = async (sdkPrivateKey: string) => {
   const storeInfo = await validateKey(sdkPrivateKey);
   const stripeParams = await getStripeParams(sdkPrivateKey);
+  const contractData = await getContract(sdkPrivateKey);
 
   const configParams: Config = {
     apiProvider: true,
@@ -75,6 +82,9 @@ export const loadSdkConfig = async (sdkPrivateKey: string) => {
   sdkConfig.config = configParams;
   sdkConfig.paymentMethods = storeInfo.paymentMethods;
   sdkConfig.stripeParams = stripeParams;
-  console.log("[DEBUG] Config params", sdkConfig);
-  return sdkConfig;
+  sdkConfig.contractData = {
+    abi: contractData.result.abi,
+    contractAddress: contractData.contractAddress,
+    payableMintOrTransferMethodName: contractData.result.payableMintOrTransferMethodName
+  };
 };
