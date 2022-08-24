@@ -3,7 +3,6 @@ import * as useConfigHooks from "./hooks/useConfig";
 import * as useEthereumHooks from "./hooks/useEthereum";
 import * as useNotificationHooks from "./hooks/useNotification";
 import * as usePaymentHooks from "./hooks/usePayment";
-import * as useStoreHooks from "./hooks/useStore";
 import * as useWalletsHooks from "./hooks/useWallets";
 import HandleConfirmCredit from './components/ConfirmCredit';
 import { loadSdkConfig } from './utils/load';
@@ -41,13 +40,11 @@ const buildSDK = ({
         <useNotificationHooks.NotificationProvider>
           <useEthereumHooks.EthereumProvider>
             <useWalletsHooks.WalletsProvider>
-              <useStoreHooks.StoreProvider>
-                <usePaymentHooks.PaymentProvider
-                  sdkPrivateKey={sdkPrivateKey}
-                >
-                  {children}
-                </usePaymentHooks.PaymentProvider>
-              </useStoreHooks.StoreProvider>
+              <usePaymentHooks.PaymentProvider
+                sdkPrivateKey={sdkPrivateKey}
+              >
+                {children}
+              </usePaymentHooks.PaymentProvider>
             </useWalletsHooks.WalletsProvider>
           </useEthereumHooks.EthereumProvider>
         </useNotificationHooks.NotificationProvider>
@@ -56,10 +53,10 @@ const buildSDK = ({
     ...useConfigHooks,
     ...useEthereumHooks,
     ...useNotificationHooks,
-    ...useStoreHooks,
     ...useWalletsHooks,
     HandleConfirmCredit: (props: any) => (<HandleConfirmCredit
       router={props.router}
+      imageURL={props.imageURL}
       sdkPrivateKey={sdkPrivateKey}
     />),
   };

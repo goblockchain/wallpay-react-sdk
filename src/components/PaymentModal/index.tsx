@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { UserInfo } from "@toruslabs/torus-embed";
 import {
   Button,
   Image,
@@ -26,23 +25,19 @@ import {
   Progress,
   Show,
   Hide,
-  ChakraProvider,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import BigNumber from "bignumber.js";
 import { PaymentModalBody, CheckoutForm } from "./components";
 import validator from "validator";
 import wallpayLogo from "../../assets/wallpay.png";
-import { PAYMENT_STEPS, NETWORKS, BlockchainInfo } from "../../enums";
+import { PAYMENT_STEPS, NETWORKS } from "../../enums";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 
 import { useNotification } from "../../hooks/useNotification";
-import { SellOffer, useStore } from "../../hooks/useStore";
 import { useWallets } from "../../hooks/useWallets";
 import { useConfig } from "../../hooks/useConfig";
 import { useEthereum } from "../../hooks/useEthereum";
-import { redeemToken } from "../../utils/api";
 import eth from "../../assets/eth.png";
 import card from "../../assets/card.png";
 import polygon from "../../assets/polygon-wallet.png";
@@ -52,8 +47,7 @@ import pix_full from "../../assets/pix_full.png";
 import axios from "axios";
 import { useTranslation } from "next-export-i18n";
 import { FormatPrice, sleep } from "../../utils";
-import { theme } from "../../styles/theme";
-import { WALLPAY_API_URL, STRIPE_SECRET_KEY } from "../../config";
+import { WALLPAY_API_URL } from "../../config";
 import { sdkConfig } from "../../utils/load";
 
 type PaymentData = {
@@ -250,14 +244,6 @@ export const PaymentModal = ({
       );
     }
   }, []);
-
-
-  const {
-    sellOffers,
-    setSellOffers,
-    setHasStoreNFTpurchased,
-    setPurchased,
-  } = useStore();
   const { config } = useConfig();
   const [qrCodeImg, setQrCodeImg] = useState<string>("");
   const [paymentProvider, setPaymentProvider] = useState<string>("");
@@ -419,30 +405,6 @@ export const PaymentModal = ({
             image: paymentData.itemImage,
           });
           clearInterval(interval);
-          const sellOffersWithNewlyPurchased = sellOffers;
-          const newlyPurchasedIndex = sellOffersWithNewlyPurchased.findIndex(
-            (offer) => offer.tokenId === paymentData.tokenId.toString()
-          );
-
-          sellOffersWithNewlyPurchased[newlyPurchasedIndex].purchased = true;
-          const newlyPurchased = sellOffersWithNewlyPurchased.filter(
-            (sellOffer: SellOffer) => sellOffer.purchased
-          );
-
-          const nftIndex = newlyPurchased.findIndex(
-            (offer) => offer.tokenId === paymentData.tokenId.toString()
-          );
-
-          newlyPurchased[nftIndex].userQuantity = newlyPurchased[nftIndex]
-            .userQuantity
-            ? +(newlyPurchased[nftIndex].userQuantity || 0) + 1
-            : 1;
-
-          setPurchased(newlyPurchased);
-          setSellOffers(sellOffersWithNewlyPurchased);
-          //await setNewBalance({ web3, address: userWalletAddress });
-          setHasStoreNFTpurchased(true);
-          //await updateUserNfts();
         }
       }, 2000);
       return () => clearInterval(interval);
@@ -561,14 +523,6 @@ export const PaymentModal = ({
           },
         }
       );
-
-      const sellOffersWithNewlyPurchased = sellOffers;
-      const newlyPurchasedIndex = sellOffersWithNewlyPurchased.findIndex(
-        (offer) => offer.tokenId === paymentData.tokenId.toString()
-      );
-      sellOffersWithNewlyPurchased[newlyPurchasedIndex].purchased = true;
-      setSellOffers(sellOffersWithNewlyPurchased);
-      setHasStoreNFTpurchased(true);
     } catch (error: any) {
       if (error.code === 4001) {
         emitNotificationModal({
@@ -915,20 +869,6 @@ export const PaymentModal = ({
                 </PopoverContent>
               </Popover>
             </Center>
-            {paymentType === "Crypto" && (
-              <>
-                {/* <Flex w="100%" justifyContent="flex-end">
-                  <Text fontSize="16px" mt="5px" mr="2px">
-                    {t("saldo2")}:{" "}
-                    <FormatPrice
-                      amount={walletBalance}
-                      currency={blockchainInfo?.SYMBOL}
-                    />
-                  </Text>
-                </Flex> */}
-              </>
-            )}
-
             {["Pix", "Credit", "Crypto"].includes(paymentType) &&
               showEmailInput && (
                 <>
