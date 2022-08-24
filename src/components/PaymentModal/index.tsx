@@ -54,11 +54,12 @@ type PaymentData = {
   itemName: any;
   itemId: number;
   tokenId: number;
-  totalPrice: number;
+  unitPrice: number;
   itemImage: string;
   amount: number;
   hasFixedPrice: boolean;
   walletAddress: string;
+  fiatUnitPrice: number;
 };
 
 type PurchaseInfo = {
@@ -317,7 +318,7 @@ export const PaymentModal = ({
         hasFixedPrice: paymentData.hasFixedPrice,
         item: {
           amount: paymentData.amount,
-          price: paymentData.totalPrice.toString(),
+          price: paymentData.fiatUnitPrice.toString(),
           description: `${config.title} - ${paymentData.itemName} NFT`,
           tokenId: paymentData.tokenId,
         },
@@ -465,7 +466,7 @@ export const PaymentModal = ({
         clientName: userName,
         item: {
           amount: paymentData.amount,
-          price: paymentData.totalPrice.toString(),
+          price: paymentData.unitPrice.toString(),
           description: `${config.title} - ${paymentData.itemName} NFT`,
           tokenId: paymentData.tokenId,
         },
@@ -504,7 +505,7 @@ export const PaymentModal = ({
         contractData.data.contractAddress
       );
 
-      const transactionParams = [paymentData.tokenId, paymentData.totalPrice];
+      const transactionParams = [paymentData.tokenId, paymentData.unitPrice];
 
       await contract.methods[
         contractData.data.result.payableMintOrTransferMethodName
@@ -576,7 +577,7 @@ export const PaymentModal = ({
           hasFixedPrice: paymentData.hasFixedPrice,
           item: {
             amount: paymentData.amount,
-            price: paymentData.totalPrice.toString(),
+            price: paymentData.fiatUnitPrice.toString(),
             description: `${paymentData.itemName}`,
             tokenId: paymentData.tokenId,
           },
@@ -610,19 +611,19 @@ export const PaymentModal = ({
   const FEE = 0;
 
   const etherPriceWithFee = useMemo(() => {
-    const priceToBN = new BigNumber(paymentData.totalPrice);
+    const priceToBN = new BigNumber(paymentData.unitPrice);
     const feeToBN = new BigNumber(FEE);
     return priceToBN.plus(priceToBN.times(feeToBN)).toNumber();
-  }, [paymentData.totalPrice]);
+  }, [paymentData.unitPrice]);
 
   // conversor da taxa da go dapartil visual para o cliente
   const fiatPriceWithFee = useMemo(() => {
-    const priceToBN = new BigNumber(paymentData.totalPrice);
+    const priceToBN = new BigNumber(paymentData.unitPrice);
     const feeToBN = new BigNumber(0.1);
     return Number(
       priceToBN.plus(priceToBN.times(feeToBN)).toNumber().toFixed(2)
     );
-  }, [paymentData.totalPrice]);
+  }, [paymentData.unitPrice]);
 
   const choosePaymentType = () => {
     if (paymentType === "Crypto") {
@@ -927,13 +928,13 @@ export const PaymentModal = ({
                   >
                     {["Crypto"].includes(paymentType) && (
                       <FormatPrice
-                        amount={paymentData.totalPrice}
+                        amount={paymentData.unitPrice}
                         currency={blockchainInfo?.SYMBOL}
                       />
                     )}
                     {["Pix", "Credit"].includes(paymentType) && (
                       <FormatPrice
-                        amount={paymentData.totalPrice}
+                        amount={paymentData.fiatUnitPrice}
                         currency={config.currency}
                       />
                     )}
@@ -1004,7 +1005,7 @@ export const PaymentModal = ({
                 )}
                 {["Pix", "Credit"].includes(paymentType) && (
                   <FormatPrice
-                    amount={paymentData.totalPrice}
+                    amount={paymentData.fiatUnitPrice}
                     currency={config.currency}
                   />
                 )}
@@ -1113,13 +1114,13 @@ export const PaymentModal = ({
           >
             <CheckoutForm
               purchaseInfo={{
-                fiatAmount: paymentData.totalPrice,
+                fiatAmount: paymentData.fiatUnitPrice,
                 currency: config.currency,
 
                 // Não estamos usando
-                amount: paymentData.totalPrice,
+                amount: paymentData.unitPrice,
                 symbol: String(blockchainInfo?.SYMBOL),
-                total: paymentData.totalPrice,
+                total: paymentData.unitPrice,
               }}
               checkFn={handleTermsIsChecked}
               termsIsChecked={termsIsChecked}
@@ -1231,7 +1232,7 @@ export const PaymentModal = ({
                 color="#454545"
               >
                 <FormatPrice
-                  amount={paymentData.totalPrice}
+                  amount={paymentData.fiatUnitPrice}
                   currency={config.currency}
                 />
               </Text>
