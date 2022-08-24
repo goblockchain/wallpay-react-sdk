@@ -150,7 +150,13 @@ const PixCopyAndPaste = ({ copyFn }: PixCopyAndPasteProps) => {
             h="60px"
             _hover={{ opacity: 0.9 }}
           >
-            <Text ml="15px" fontWeight="400" fontSize="16px" color="#454545" fontFamily="'Roboto', sans-serif">
+            <Text
+              ml="15px"
+              fontWeight="400"
+              fontSize="16px"
+              color="#454545"
+              fontFamily="'Roboto', sans-serif"
+            >
               {copyText}
             </Text>
           </Center>
@@ -175,7 +181,13 @@ const PixCopyAndPaste = ({ copyFn }: PixCopyAndPasteProps) => {
             h="60px"
             _hover={{ opacity: 0.9 }}
           >
-            <Text ml="15px" fontWeight="400" fontSize="16px" color="#454545" fontFamily="'Roboto', sans-serif">
+            <Text
+              ml="15px"
+              fontWeight="400"
+              fontSize="16px"
+              color="#454545"
+              fontFamily="'Roboto', sans-serif"
+            >
               {copyText}
             </Text>
           </Center>
@@ -198,7 +210,6 @@ export const PaymentModal = ({
     onToggle: onSelectToggle,
     isOpen: isSelectOpen,
   } = useDisclosure();
-
 
   const {
     isOpen: isOpenPixNotification,
@@ -230,10 +241,7 @@ export const PaymentModal = ({
   const { emitNotificationModal } = useNotification();
 
   useEffect(() => {
-    const {
-      paymentMethods: clientPaymentMethods,
-      stripeParams,
-    } = sdkConfig;
+    const { paymentMethods: clientPaymentMethods, stripeParams } = sdkConfig;
     if (walletIsConnected && stripeParams) {
       userWalletAddress = walletAddress || paymentData.walletAddress;
       setPaymentMethods(clientPaymentMethods || paymentMethods);
@@ -408,8 +416,7 @@ export const PaymentModal = ({
         }
       }, 2000);
       return () => clearInterval(interval);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const cancelPayment = async (paymentId) => {
@@ -426,8 +433,7 @@ export const PaymentModal = ({
           },
         }
       );
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const getPixPaymentStatus = async () => {
@@ -587,7 +593,6 @@ export const PaymentModal = ({
       setClientSecret(data.clientSecret);
       setStep("confirmPaymentCredit");
       idTransaction = data.transaction_id;
-
     } catch (error: any) {
       onClose();
       emitNotificationModal({
@@ -787,6 +792,8 @@ export const PaymentModal = ({
                     p="0px"
                     _hover={{ bg: "0" }}
                     _focus={{ outline: "none" }}
+                    border="none"
+                    cursor="pointer"
                   >
                     <Image src={Vector} />
                   </Button>
@@ -804,6 +811,7 @@ export const PaymentModal = ({
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Credit")}
+                      _hover={{ bgColor: "#efefef", borderRadius: "10px" }}
                     >
                       <Center
                         flexDir="row"
@@ -816,6 +824,7 @@ export const PaymentModal = ({
                           fontWeight="400px"
                           fontFamily="'Roboto', sans-serif"
                           color="#454545"
+                          margin={0}
                         >
                           BRL - {t("credit")}
                         </Text>
@@ -826,6 +835,7 @@ export const PaymentModal = ({
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Pix")}
+                      _hover={{ bgColor: "#efefef", borderRadius: "10px" }}
                     >
                       <Center
                         flexDir="row"
@@ -838,6 +848,7 @@ export const PaymentModal = ({
                           fontWeight="400px"
                           fontFamily="'Roboto', sans-serif"
                           color="#454545"
+                          margin={0}
                         >
                           BRL - Pix
                         </Text>
@@ -848,6 +859,7 @@ export const PaymentModal = ({
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Crypto")}
+                      _hover={{ bgColor: "#efefef", borderRadius: "10px" }}
                     >
                       <Center
                         flexDir="row"
@@ -860,6 +872,7 @@ export const PaymentModal = ({
                           fontWeight="400px"
                           fontFamily="'Roboto', sans-serif"
                           color="#454545"
+                          margin={0}
                         >
                           {blockchainInfo?.SYMBOL}
                         </Text>
@@ -1055,7 +1068,12 @@ export const PaymentModal = ({
               </Button>
             </Box>
             <Center mt="40px" flexWrap="wrap">
-              <Text fontWeight={500} fontSize={"16px"} textAlign="center" fontFamily="'Roboto', sans-serif">
+              <Text
+                fontWeight={500}
+                fontSize={"16px"}
+                textAlign="center"
+                fontFamily="'Roboto', sans-serif"
+              >
                 {t("processed_by")}
               </Text>
               <Image src={wallpayLogo} alt="Wallpay Logo" mx="10px" w="120px" />
@@ -1105,7 +1123,6 @@ export const PaymentModal = ({
               checkFn={handleTermsIsChecked}
               termsIsChecked={termsIsChecked}
               sdkPrivateKey={sdkPrivateKey}
-              
             />
           </Elements>
         </Box>
@@ -1158,9 +1175,15 @@ export const PaymentModal = ({
               display={{ base: "block", md: "none" }}
             >
               <Text fontFamily="'Roboto', sans-serif">{t("copy_pix")}</Text>
-              <Text fontFamily="'Roboto', sans-serif" mt="8px">{t("acess_banco")}</Text>
-              <Text fontFamily="'Roboto', sans-serif" mt="8px">{t("pagar_pix")}</Text>
-              <Text fontFamily="'Roboto', sans-serif" mt="8px">{t("copie_cole")}</Text>
+              <Text fontFamily="'Roboto', sans-serif" mt="8px">
+                {t("acess_banco")}
+              </Text>
+              <Text fontFamily="'Roboto', sans-serif" mt="8px">
+                {t("pagar_pix")}
+              </Text>
+              <Text fontFamily="'Roboto', sans-serif" mt="8px">
+                {t("copie_cole")}
+              </Text>
             </Box>
             <PixCopyAndPaste copyFn={onCopy} />
             <Text
@@ -1214,7 +1237,12 @@ export const PaymentModal = ({
             </Flex>
           </Box>
           <Center mt="40px" flexWrap="wrap">
-            <Text fontWeight={500} fontSize={"16px"} textAlign="center" fontFamily="'Roboto', sans-serif">
+            <Text
+              fontWeight={500}
+              fontSize={"16px"}
+              textAlign="center"
+              fontFamily="'Roboto', sans-serif"
+            >
               {t("processed_by")}
             </Text>
             <Image src={wallpayLogo} alt="Wallpay Logo" mx="10px" w="120px" />
