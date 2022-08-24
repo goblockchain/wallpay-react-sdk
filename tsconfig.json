@@ -1,0 +1,64 @@
+{
+//   "compilerOptions": {
+//     "target": "es6",
+//     "lib": [
+//       "dom",
+//       "dom.iterable",
+//       "esnext"
+//     ],
+//     "esModuleInterop": true,
+//     "module": "esnext",
+//     "moduleResolution": "node",
+//     "jsx": "preserve",
+//     "rootDir": "src",
+//     "baseUrl": "src",
+//     "paths": {
+//       "@/*": [
+//         "*"
+//       ]
+//     },
+//     "allowJs": true,
+//     "resolveJsonModule": true,
+//     "skipLibCheck": true,
+//     "strict": false,
+//     "forceConsistentCasingInFileNames": true,
+//     "noEmit": true,
+//     "isolatedModules": true,
+//     "incremental": true
+//   },
+//   "include": [
+//     "next-env.d.ts",
+//     "goblockchain.d.ts",
+//     "src"
+//   ],
+//   "exclude": [
+//     "src/main/test/cypress"
+//   ]
+  "compilerOptions": {
+    "rootDir": "src",
+    // Default
+    "target": "ESNext", 
+    "esModuleInterop": true, 
+    "forceConsistentCasingInFileNames": true,
+    "strict": true, 
+    "skipLibCheck": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "noImplicitAny": false,
+
+    // Added
+    "jsx": "react-jsx", 
+    "module": "ESNext",  
+    "declaration": true,
+    "declarationDir": "types",
+    "sourceMap": true,
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "emitDeclarationOnly": false,
+    "resolveJsonModule": true,
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ], 
+}
