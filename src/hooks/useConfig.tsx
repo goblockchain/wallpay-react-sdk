@@ -12,9 +12,7 @@ export type Config = {
   networkType: "mainnet" | "testnet";
   blockchain: "ethereum" | "polygon";
   contractAddress: string;
-  erc1155contractAddress: string;
   currency: "BRL" | "USD";
-  walletAddressCreator: string;
   mainColor: string;
 };
 
