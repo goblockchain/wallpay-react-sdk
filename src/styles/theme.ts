@@ -4,15 +4,16 @@ export const theme = extendTheme({
   styles: {
     global: {
       "html, body": {
+        fontFamily: null,
         height: "100%",
       },
       body: {
+        fontFamily: null,
         display: "flex",
         flexDirection: "column",
       },
       "#__next": {
         flex: 1,
-
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -77,7 +78,7 @@ export const theme = extendTheme({
     danger: "#EF7A7C",
   },
   fonts: {
-    heading: "Roboto",
-    body: "Roboto",
+    heading: "'Roboto', sans-serif",
+    body: "'Roboto', sans-serif",
   },
 });

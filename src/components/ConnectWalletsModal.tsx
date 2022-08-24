@@ -52,11 +52,11 @@ export const ConnectWalletsModal = ({
   const { config } = useConfig();
   const { t } = useTranslation();
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent
-          fontFamily="Roboto"
+          fontFamily="'Roboto', sans-serif"
           borderRadius="15px"
           maxWidth="600px"
           p="50px"
@@ -81,7 +81,7 @@ export const ConnectWalletsModal = ({
                 fontWeight="700"
                 lineHeight="64px"
                 color="#454545"
-                fontFamily="Roboto"
+                fontFamily="'Roboto', sans-serif"
               >
                 {t("Login")}
               </ModalHeader>
@@ -92,6 +92,7 @@ export const ConnectWalletsModal = ({
                   lineHeight="25px"
                   textAlign="center"
                   color="#454545"
+                  fontFamily="'Roboto', sans-serif"
                 >
                   {t("Login_about")}
                 </Text>
@@ -124,6 +125,7 @@ export const ConnectWalletsModal = ({
                     fontSize="22px"
                     fontWeight="300"
                     lineHeight="25px"
+                    fontFamily="'Roboto', sans-serif"
                   >
                     {t("or")}
                   </Text>
@@ -158,7 +160,7 @@ export const ConnectWalletsModal = ({
                 fontWeight="700"
                 lineHeight="64px"
                 color="#454545"
-                fontFamily="Roboto"
+                fontFamily="'Roboto', sans-serif"
               >
                 {t("conectando")}
               </ModalHeader>
@@ -177,7 +179,7 @@ export const ConnectWalletsModal = ({
                   textAlign="center"
                   color="#454545"
                   mb="41px"
-                  fontFamily="Roboto"
+                  fontFamily="'Roboto', sans-serif"
                 >
                   {t("aguardando_carteira_conectar")}
                 </Text>

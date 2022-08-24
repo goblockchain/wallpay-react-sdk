@@ -31,7 +31,7 @@ export const ConnectProviderButton = ({
   }
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Button
         p='0'
         h='70px'
@@ -56,7 +56,7 @@ export const ConnectProviderButton = ({
             maxW="36px"
           />
           <Text ml="10px"
-            fontFamily="Roboto"
+            fontFamily="'Roboto', sans-serif"
             fontSize="20px"
             fontWeight='400'
             color="#454545"

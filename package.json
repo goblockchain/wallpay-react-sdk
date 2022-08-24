@@ -1,6 +1,6 @@
 {
   "name": "wallpay-react-sdk",
-  "version": "0.0.1",
+  "version": "0.1.0-alpha.0",
   "description": "Wallpay React SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -10,14 +10,16 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "yarn run clean && yarn run rollup -c",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "publish": "yarn run build && np",
+    "test": "echo \"No test specified\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/goblockchain/wallpay-react-sdk.git"
   },
   "author": "GoBlockchain <@goblockchain>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/goblockchain/wallpay-react-sdk/issues"
   },
@@ -61,6 +63,7 @@
     "jest": "^27.3.1",
     "next": "^12.2.3",
     "next-export-i18n": "^2.0.3",
+    "np": "^7.6.2",
     "react-icons": "^4.2.0",
     "react-lottie": "^1.2.3",
     "rimraf": "^2.6.2",

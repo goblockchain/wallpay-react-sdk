@@ -1,12 +1,10 @@
 import axios from "axios";
-// const BASE_URL = 'https://raffleapi.financebit.co/api/v1';
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+import { WALLPAY_API_URL } from "../config";
 
 export const redeemToken = async (payload, sdkPrivateKey) => {
   try {
-    return await axios.post(`${BASE_URL}/payments/credit_card/confirm`, payload, {
+    return await axios.post(`${WALLPAY_API_URL}/payments/credit_card/confirm`, payload, {
       headers: {
-        'x-simple-access-token': process.env.NEXT_PUBLIC_API_AUTH_CODE as string,
         authorization: sdkPrivateKey,
       }
     });
@@ -15,3 +13,9 @@ export const redeemToken = async (payload, sdkPrivateKey) => {
     return error;
   }
 };
+
+export const cryptoCompare = async (symbol, currency) => {
+  
+  return axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=${currency}&api_key=${process.env.NEXT_PUBLIC_CRYPTOCOMPARE_API_KEY}`)
+
+}

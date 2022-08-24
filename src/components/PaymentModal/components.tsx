@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Box,
@@ -17,6 +17,7 @@ import closeblack from "../../assets/closeblack.png";
 import { useTranslation } from "next-export-i18n";
 import { useNotification } from "../../hooks/useNotification";
 import { theme } from "../../styles/theme";
+import { FormatPrice } from "../../utils";
 
 interface PaymentModalBodyProps {
   children: React.ReactNode;
@@ -41,6 +42,8 @@ interface CheckoutFormProps {
   purchaseInfo: PurchaseInfo;
   termsIsChecked: boolean;
   checkFn: () => void;
+  sdkPrivateKey: string;
+  creditCardConfirmUrl?: string;
 }
 
 const PaymentDetailsInfo = ({
@@ -50,8 +53,8 @@ const PaymentDetailsInfo = ({
   symbol,
 }: PurchaseInfo) => (
   <Box>
-    <Text fontWeight="400" color="#a19d9d">
-      {amount} {symbol}
+    <Text fontWeight="400" color="#a19d9d" fontFamily="'Roboto', sans-serif">
+      <FormatPrice amount={amount} currency={symbol} />
     </Text>
     {/* <Text fontWeight="400">
       {fiatAmount} {currency}
@@ -59,12 +62,15 @@ const PaymentDetailsInfo = ({
   </Box>
 );
 
-export const PaymentModalBody = ({ children, onClosePaymentModal, title, }: PaymentModalBodyProps) => {
-
+export const PaymentModalBody = ({
+  children,
+  onClosePaymentModal,
+  title,
+}: PaymentModalBodyProps) => {
   const { t } = useTranslation();
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <Flex
         direction="column"
         alignItems="center"
@@ -76,7 +82,11 @@ export const PaymentModalBody = ({ children, onClosePaymentModal, title, }: Paym
         p="38px 50px"
       >
         <Flex justifyContent="space-between" alignItems="center" w="100%">
-          <Text fontSize="22px" color="#454545">
+          <Text
+            fontSize="22px"
+            color="#454545"
+            fontFamily="'Roboto', sans-serif"
+          >
             {" "}
             {title ? title : t("payment_title")}
           </Text>
@@ -98,10 +108,9 @@ export const PaymentDetails = ({
 }: PaymentDetailsProps) => {
   const { t } = useTranslation();
   const renderPaymentInfo = () => {
-
     if (paymentType === "credit") {
       return (
-        <ChakraProvider theme={theme}>
+        <ChakraProvider resetCSS={false} theme={theme}>
           <PaymentDetailsInfo
             amount={purchaseInfo.fiatAmount}
             symbol={purchaseInfo.currency}
@@ -113,7 +122,7 @@ export const PaymentDetails = ({
     }
 
     return (
-      <ChakraProvider theme={theme}>
+      <ChakraProvider resetCSS={false} theme={theme}>
         <PaymentDetailsInfo
           amount={purchaseInfo.amount}
           symbol={purchaseInfo.symbol}
@@ -125,14 +134,16 @@ export const PaymentDetails = ({
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Box mt="25px" fontSize="18px"
+    <ChakraProvider resetCSS={false} theme={theme}>
+      <Box
+        mt="25px"
+        fontSize="18px"
         lineHeight="21px"
         fontWeight="700"
         color="#454545"
       >
         <Flex w="100%" justifyContent="space-between">
-          <Text>{t('total_value')}</Text>
+          <Text>{t("total_value")}</Text>
           {renderPaymentInfo()}
         </Flex>
       </Box>
@@ -140,8 +151,10 @@ export const PaymentDetails = ({
   );
 };
 
-
-export const CheckoutForm = ({ purchaseInfo }: CheckoutFormProps) => {
+export const CheckoutForm = ({
+  purchaseInfo,
+  creditCardConfirmUrl,
+}: CheckoutFormProps) => {
   const { emitNotificationModal } = useNotification();
   const stripe = useStripe();
   const elements = useElements();
@@ -158,30 +171,24 @@ export const CheckoutForm = ({ purchaseInfo }: CheckoutFormProps) => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/nft?hash=2`,
+        return_url: creditCardConfirmUrl || window.location.href,
       },
     });
-    // if (error.type === "card_error" || error.type === "validation_error") {
-    //   emitNotificationModal({
-    //     message: {
-    //       secondaryText: error.message,
-    //     },
-    //   });
-    // } else {
-    //   emitNotificationModal({});
-    // }
     setIsLoading(false);
   };
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <form id="payment-form" onSubmit={handleSubmit}>
         <PaymentElement id="payment-element" />
       </form>
       <Box mt="28px" h="1px" w="100%" bgColor="#DFDFDF" />
       <PaymentDetails paymentType="credit" purchaseInfo={purchaseInfo} />
-      <Button w="100%" h="60px"
-        bg="#454545" mt="29px"
+      <Button
+        w="100%"
+        h="60px"
+        bg="#454545"
+        mt="29px"
         borderRadius="45px"
         type="submit"
         isLoading={isLoading}
@@ -192,9 +199,8 @@ export const CheckoutForm = ({ purchaseInfo }: CheckoutFormProps) => {
         lineHeight="23px"
         fontWeight="400"
       >
-        {t('continue')}
+        {t("continue")}
       </Button>
     </ChakraProvider>
   );
 };
-

@@ -11,7 +11,7 @@ interface CloseButtonProps {
 
 export const CloseButton = ({ closeFn, color, ...rest }: CloseButtonProps & Partial<IconButtonProps>) => {
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS={false} theme={theme}>
       <IconButton
         variant='unstyled'
         colorScheme=''
