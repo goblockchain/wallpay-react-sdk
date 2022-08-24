@@ -13,3 +13,19 @@ export const redeemToken = async (payload, sdkPrivateKey) => {
     return error;
   }
 };
+
+export const getContract = async (sdkPrivateKey) => {
+  try {
+    const axiosUrl = `${WALLPAY_API_URL}/payments/crypto/getContract/`;
+    const axiosConfig = {
+      headers: {
+        authorization: sdkPrivateKey,
+      },
+    };
+    const contractData = await axios.get(axiosUrl, axiosConfig);
+    return contractData.data;
+  } catch (error) {
+    console.log("getContract ERROR: ", error);
+    throw error;
+  }
+}
