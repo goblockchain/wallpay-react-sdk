@@ -10,12 +10,14 @@ function HandleConfirmCredit({ sdkPrivateKey, router }: {
   const { emitNotificationModal } = useNotification();
 
   useEffect(() => {
-    console.log('router.query @ ConfirmCredit', router.query);
     if (router.query.payment_intent !== undefined) {
       emitNotificationModal({
         type: PAYMENT_STEPS.IN_PROGRESS,
       });
-      redeemToken(router.query, sdkPrivateKey)
+      redeemToken({
+        ...router.query,
+        stripeId: router.query.payment_intent,
+      }, sdkPrivateKey)
         .then(() => {
           emitNotificationModal({
             type: PAYMENT_STEPS.SUCCESS,
