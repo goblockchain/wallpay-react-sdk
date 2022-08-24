@@ -203,7 +203,6 @@ export const PaymentModal = ({
     isOpen: isSelectOpen,
   } = useDisclosure();
 
-  console.log('sdkConfig @ PaymentModal', sdkConfig);
 
   const {
     isOpen: isOpenPixNotification,
@@ -229,46 +228,32 @@ export const PaymentModal = ({
 
   useEffect(() => {
     userWalletAddress = walletAddress || paymentData.walletAddress;
-    console.log("[DEBUG] WALLETADRESS 2", userWalletAddress);
   }, [walletAddress]);
 
   const [stripePromise, setStripePromise] = useState(null as any);
   const { emitNotificationModal } = useNotification();
-  
+
   useEffect(() => {
-    userWalletAddress = walletAddress || paymentData.walletAddress;
-    console.log("[DEBUG] WALLETADRESS 1", userWalletAddress);
-    if (walletIsConnected) {
-      axios
-      .get(`${WALLPAY_API_URL}/payments/credit_card/getStripeParams`, {
-        headers: {
-          authorization: sdkPrivateKey,
-        },
+    const {
+      paymentMethods: clientPaymentMethods,
+      stripeParams,
+    } = sdkConfig;
+    if (walletIsConnected && stripeParams) {
+      userWalletAddress = walletAddress || paymentData.walletAddress;
+      setPaymentMethods(clientPaymentMethods || paymentMethods);
+      setStripePromise(
+        loadStripe(stripeParams?.goPublicKey, {
+          stripeAccount: stripeParams?.clientAccountId,
         })
-        .then(({ data }) => {
-          const {
-            stripeParams: { clientAccountId, goPublicKey },
-          } = data as any;
-          
-          setStripePromise(
-            loadStripe(goPublicKey, {
-              stripeAccount: clientAccountId,
-            })
-            );
-          })
-          .catch((error: any) => {
-            console.error("Error loading stripe", error);
-          });
-        }
-      }, []);
-      
-      
+      );
+    }
+  }, []);
+
+
   const {
     sellOffers,
     setSellOffers,
-    updateUserNfts,
     setHasStoreNFTpurchased,
-    purchased,
     setPurchased,
   } = useStore();
   const { config } = useConfig();
@@ -284,11 +269,10 @@ export const PaymentModal = ({
 
   const [clientSecret, setClientSecret] = useState("");
 
-  // const [iuguId, setIuguId] = useState<string>("");
   let idPaymentProvider = "";
   let idTransaction = "";
 
-  const { hasCopied, onCopy } = useClipboard(qrCodeTxt);
+  const { onCopy } = useClipboard(qrCodeTxt);
   const { t } = useTranslation();
 
   const [step, setStep] = useState<
@@ -350,13 +334,10 @@ export const PaymentModal = ({
         postData,
         {
           headers: {
-            "x-simple-access-token": process.env
-              .NEXT_PUBLIC_API_AUTH_CODE as string,
             authorization: sdkPrivateKey,
           },
         }
       );
-      // if (data.status === "qr_code_created") {
       setQrCodeImg(data.pix.qrcode);
       setPaymentProvider(data.paymentProvider);
       setQrCodeTxt(data.pix.qrcode_text);
@@ -364,15 +345,11 @@ export const PaymentModal = ({
       setPixDataId(data.paymentId);
       setStep("pix");
       calcDueDate();
-      //updateUserNfts();
-      // TODO: remover linha abaixo. Apenas para simulação
       setTimeout(async () => {
-        // makePixPayment();
         waitPixPayment();
       }, 2000);
       // }
     } catch (error) {
-      console.log(error);
     } finally {
       setIPaying(false);
     }
@@ -384,39 +361,9 @@ export const PaymentModal = ({
     onClose();
   };
 
-  useEffect(() => {
-    axios
-      .post(
-        `${WALLPAY_API_URL}/keys/validateKey`,
-        {
-          clientKey: sdkPrivateKey,
-        },
-        {
-          headers: {
-            authorization: sdkPrivateKey,
-          },
-        }
-      )
-      .then(({ data }) => {
-        const { paymentMethods: clientPaymentMethods } = data.data as Partial<{
-          paymentMethods: string[];
-        }>;
-
-        setPaymentMethods(clientPaymentMethods || paymentMethods);
-      })
-      .catch((error: any) => {
-        console.error("Error loading payment methods", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    console.log("step", step);
-  }, [step]);
-
   let paymentStatus = "";
 
   const waitPixPayment = async () => {
-    console.log("waitPixPayment");
     let tries = 0;
     let firstModal = false;
     let firstModalProcessing = false;
@@ -425,7 +372,6 @@ export const PaymentModal = ({
         tries += 1;
 
         if (tries >= Math.ceil(TIME_TO_PAY / 2)) {
-          console.log("TIMEOUT DO PAGAMENTO");
           onClose();
           emitNotificationModal({
             type: PAYMENT_STEPS.TIMEOUT,
@@ -440,7 +386,6 @@ export const PaymentModal = ({
         if (paymentStatus !== "succeeded") {
           const { data } = await getPixPaymentStatus();
           paymentStatus = data.data.status;
-          console.log("STATUS: ", paymentStatus);
         }
 
         if (paymentStatus === "pending") {
@@ -466,7 +411,6 @@ export const PaymentModal = ({
         }
 
         if (paymentStatus === "succeeded") {
-          console.log("CAIU O PAGAMENTO");
           onClose();
           emitNotificationModal({
             type: PAYMENT_STEPS.SUCCESS,
@@ -501,7 +445,6 @@ export const PaymentModal = ({
       }, 2000);
       return () => clearInterval(interval);
     } catch (error) {
-      console.log("waitPix", error);
     }
   };
 
@@ -511,19 +454,15 @@ export const PaymentModal = ({
         `${WALLPAY_API_URL}/payments/crypto/${paymentId}`,
         {
           status: "cancelled",
-          auth: "Das4a-OPhjkFASkj", // hardcoded
+          auth: "Das4a-OPhjkFASkj",
         },
         {
           headers: {
-            "x-simple-access-token": process.env
-              .NEXT_PUBLIC_API_AUTH_CODE as string,
             authorization: sdkPrivateKey,
           },
         }
       );
-      console.log("notPaidData", notPaidData);
     } catch (error) {
-      console.log("cancelPayment", error);
     }
   };
 
@@ -532,8 +471,6 @@ export const PaymentModal = ({
       `${WALLPAY_API_URL}/payments/pix/transaction/${idPaymentProvider}`,
       {
         headers: {
-          "x-simple-access-token": process.env
-            .NEXT_PUBLIC_API_AUTH_CODE as string,
           authorization: sdkPrivateKey,
         },
       }
@@ -570,15 +507,11 @@ export const PaymentModal = ({
         postData,
         {
           headers: {
-            "x-simple-access-token": process.env
-              .NEXT_PUBLIC_API_AUTH_CODE as string,
             authorization: sdkPrivateKey,
           },
         }
       );
 
-      console.log("cryptoData", data);
-      console.log("postData", postData);
       cryptoDataId = data._id;
 
       const gasPrice = infuraW3instance?.utils.toHex(
@@ -592,26 +525,17 @@ export const PaymentModal = ({
       const gasLimit = await goBlockchainContract.methods
         .buyToken(paymentData.tokenId, 1)
         .estimateGas(buyTokenObject);
-      // // TODO:
-      //   const result = await goBlockchainContract.methods
-      //   .buyToken(paymentData.tokenId, 1)
-      //   .send({
-      //     ...buyTokenObject,
-      //     gas: infuraW3instance?.utils.toHex(gasLimit),
-      //   });
       const axiosUrl = `${WALLPAY_API_URL}/payments/crypto/getContract/`;
       const axiosConfig = {
         headers: {
-          // TODO: Arrumar isso aqui
           authorization: sdkPrivateKey,
         },
       };
       const contractData = await axios.get(axiosUrl, axiosConfig);
-      console.log("[DEBUG] contractData", contractData);
 
       const transactionParams = [paymentData.tokenId, paymentData.totalPrice];
 
-      const result = await goBlockchainContract.methods[
+      await goBlockchainContract.methods[
         contractData.data.result.payableMintOrTransferMethodName
       ](...transactionParams).send(buyTokenObject);
       emitNotificationModal({
@@ -623,7 +547,7 @@ export const PaymentModal = ({
         image: paymentData.itemImage,
       });
 
-      const paidData = await axios.put(
+      await axios.put(
         `${WALLPAY_API_URL}/payments/crypto/${data._id}`,
         {
           status: "paid",
@@ -631,8 +555,6 @@ export const PaymentModal = ({
         },
         {
           headers: {
-            "x-simple-access-token": process.env
-              .NEXT_PUBLIC_API_AUTH_CODE as string,
             authorization: sdkPrivateKey,
           },
         }
@@ -644,19 +566,13 @@ export const PaymentModal = ({
       );
       sellOffersWithNewlyPurchased[newlyPurchasedIndex].purchased = true;
       setSellOffers(sellOffersWithNewlyPurchased);
-      //await setNewBalance({ web3, address: userWalletAddress });
       setHasStoreNFTpurchased(true);
-      //await updateUserNfts();
 
-      console.log(
         "sellOffers With Newly Purchased",
         sellOffersWithNewlyPurchased
       );
-      console.log("newly Purchased Index INDEX DA NFT", newlyPurchasedIndex);
-      console.log("sellOffers", sellOffers);
     } catch (error: any) {
       if (error.code === 4001) {
-        console.log(error);
         emitNotificationModal({
           message: {
             primaryText: t("txt_fail"),
@@ -664,7 +580,6 @@ export const PaymentModal = ({
           },
         });
       } else {
-        console.log(error);
         emitNotificationModal({
           message: {
             secondaryText: t("txt_not_concl"),
@@ -682,83 +597,10 @@ export const PaymentModal = ({
       `${WALLPAY_API_URL}/payments/credit_card/transaction/${idTransaction}`,
       {
         headers: {
-          "x-simple-access-token": process.env
-            .NEXT_PUBLIC_API_AUTH_CODE as string,
           authorization: sdkPrivateKey,
         },
       }
     );
-  };
-
-  const waitCreditPayment = async () => {
-    console.log("waitCreditPayment");
-    let firstModal = false;
-    let firstModalProcessing = false;
-    try {
-      const interval = setInterval(async () => {
-        if (paymentStatus !== "succeeded") {
-          const { data } = await getCreditPaymentStatus();
-          paymentStatus = data.status;
-          console.log("STATUS: ", paymentStatus);
-        }
-
-        if (paymentStatus === "pending") {
-          if (!firstModal) {
-            onClose();
-            emitNotificationModal({
-              type: PAYMENT_STEPS.IN_PROGRESS,
-            });
-            firstModal = true;
-          }
-        }
-
-        if (paymentStatus === "processing") {
-          if (!firstModalProcessing) {
-            onClose();
-            emitNotificationModal({
-              type: PAYMENT_STEPS.PROCESSING,
-            });
-            firstModalProcessing = true;
-          }
-        }
-
-        if (paymentStatus === "succeeded") {
-          onClose();
-          emitNotificationModal({
-            type: PAYMENT_STEPS.SUCCESS,
-            image: paymentData.itemImage,
-          });
-          clearInterval(interval);
-          const sellOffersWithNewlyPurchased = sellOffers;
-          const newlyPurchasedIndex = sellOffersWithNewlyPurchased.findIndex(
-            (offer) => offer.tokenId === paymentData.tokenId.toString()
-          );
-
-          sellOffersWithNewlyPurchased[newlyPurchasedIndex].purchased = true;
-          const newlyPurchased = sellOffersWithNewlyPurchased.filter(
-            (sellOffer: SellOffer) => sellOffer.purchased
-          );
-
-          const nftIndex = newlyPurchased.findIndex(
-            (offer) => offer.tokenId === paymentData.tokenId.toString()
-          );
-
-          newlyPurchased[nftIndex].userQuantity = newlyPurchased[nftIndex]
-            .userQuantity
-            ? +(newlyPurchased[nftIndex].userQuantity || 0) + 1
-            : 1;
-
-          setPurchased(newlyPurchased);
-          setSellOffers(sellOffersWithNewlyPurchased);
-          //await setNewBalance({ web3, address: userWalletAddress });
-          setHasStoreNFTpurchased(true);
-          //await updateUserNfts();
-        }
-      }, 2000);
-      return () => clearInterval(interval);
-    } catch (error) {
-      console.log("waitCredit", error);
-    }
   };
 
   const handleCreditPayment = async () => {
@@ -783,24 +625,18 @@ export const PaymentModal = ({
         },
         {
           headers: {
-            "x-simple-access-token": process.env
-              .NEXT_PUBLIC_API_AUTH_CODE as string,
             authorization: sdkPrivateKey,
           },
         }
       );
-      console.log("data: ", data);
       if (!data.clientSecret) {
         throw new Error("Erro ao gerar o pagamento");
       }
-      //setPostReturn(data);
       setClientSecret(data.clientSecret);
       setStep("confirmPaymentCredit");
       idTransaction = data.transaction_id;
 
-      // waitCreditPayment();
     } catch (error: any) {
-      console.log(error);
       onClose();
       emitNotificationModal({
         message: {
@@ -867,7 +703,6 @@ export const PaymentModal = ({
   let tested = false;
   useEffect(() => {
     if (step === "paymentType" && !tested) {
-      console.log("paymentData", paymentData);
       testShowEmailInput();
       tested = true;
     }
@@ -895,7 +730,6 @@ export const PaymentModal = ({
         type: PAYMENT_STEPS.TIMEOUT,
       });
     }
-    console.log(paymentStatus);
   }, [countDown, step]);
 
   function toTime(seconds) {

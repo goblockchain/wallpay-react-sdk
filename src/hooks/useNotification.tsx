@@ -32,11 +32,6 @@ import process_fail from "../assets/progress/process_fail.svg";
 import transf_succ from "../assets/progress/transf_succ.svg";
 import { theme } from "../styles/theme";
 import Link from "next/link";
-import router from "next/router";
-
-// import badstatus from "../../public/bad-status.png";
-// import success from "../../public/success-status.png";
-// import erro from "../../public/error-status.png";
 
 type NotificationData = {
   borderColor?: string;
@@ -255,31 +250,7 @@ export const NotificationProvider = ({ children }) => {
     setNotificationData(data);
   };
 
-  // // const [startTimer, setStartTimer] = useState<boolean>(false);
-  // let startTimer = false;
-  // let timer = null;
-
-
-  // useEffect(() => {
-  //   if (startTimer) {
-  //     let timeout = setTimeout(() => {
-  //       router.push("/userSpace");
-  //     }, 9000);
-  //     startTimer = false;
-  //     timer = timeout;
-  //     console.log("started timer", timeout);
-  //     return () => clearTimeout(timeout);
-  //   }
-  // }, []);
-
-  // function cancelSetTimerPush(timer) {
-  //   console.log("canceled timer", timer);
-  //   clearTimeout(timer);
-  // }
-
   function handleCancelButton() {
-    // console.log("canceling timer", timer);
-    // cancelSetTimerPush(timer);
     onClose();
   }
 

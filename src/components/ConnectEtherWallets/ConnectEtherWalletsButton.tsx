@@ -26,7 +26,7 @@ export const ConnectEtherWalletsButton = ({ handleOpenWalletModal, ...rest }: Co
         {...rest}
       >
         <Text color="#FFFFFF"
-          fontFamily='Roboto'
+          fontFamily="'Roboto', sans-serif"
           fontStyle='normal'
           fontSize='18px'
           fontWeight='700'

@@ -6,12 +6,9 @@ import * as usePaymentHooks from "./hooks/usePayment";
 import * as useStoreHooks from "./hooks/useStore";
 import * as useWalletsHooks from "./hooks/useWallets";
 import HandleConfirmCredit from './components/ConfirmCredit';
-import axios from "axios";
-import { sdkConfig, loadSdkConfig } from './utils/load';
+import { loadSdkConfig } from './utils/load';
 import React from "react";
 
-// TODO: receive router here to avoid dependency of nextjs
-// const buildElements = async (sdkPrivateKey: string) => {
 const buildSDK = ({
   sdkPrivateKey,
   creditCardConfirmUrl,
@@ -21,10 +18,6 @@ const buildSDK = ({
   creditCardConfirmUrl: string;
   config: useConfigHooks.Config
 }) => {
-  // const isKeyValid = await validateKey(sdkPrivateKey);
-
-  // if (!isKeyValid) throw new Error('Invalid Wallpay private key provided.');
-
   return {
     ...usePaymentHooks,
     PaymentModal: (props: any) => (<PaymentModal
