@@ -491,23 +491,16 @@ export const PaymentModal = ({
         value: web3.utils.toWei(etherPriceWithFee.toString(), "ether"), //paymentData.price,
         gasPrice: gasPrice,
       };
-      const axiosUrl = `${WALLPAY_API_URL}/payments/crypto/getContract/`;
-      const axiosConfig = {
-        headers: {
-          authorization: sdkPrivateKey,
-        },
-      };
-      const contractData = await axios.get(axiosUrl, axiosConfig);
 
       const contract = new web3.eth.Contract(
-        contractData.data.abi,
-        contractData.data.contractAddress
+        sdkConfig.contractData?.abi,
+        sdkConfig.contractData?.contractAddress,
       );
 
       const transactionParams = [paymentData.tokenId, paymentData.totalPrice];
 
       await contract.methods[
-        contractData.data.result.payableMintOrTransferMethodName
+        sdkConfig.contractData?.payableMintOrTransferMethodName
       ](...transactionParams).send(buyTokenObject);
       emitNotificationModal({
         type: PAYMENT_STEPS.PROCESSING,
@@ -549,17 +542,6 @@ export const PaymentModal = ({
         await cancelPayment(cryptoDataId);
       }
     }
-  };
-
-  const getCreditPaymentStatus = async () => {
-    return await axios.get(
-      `${WALLPAY_API_URL}/payments/credit_card/transaction/${idTransaction}`,
-      {
-        headers: {
-          authorization: sdkPrivateKey,
-        },
-      }
-    );
   };
 
   const handleCreditPayment = async () => {
@@ -1124,6 +1106,7 @@ export const PaymentModal = ({
               checkFn={handleTermsIsChecked}
               termsIsChecked={termsIsChecked}
               sdkPrivateKey={sdkPrivateKey}
+              creditCardConfirmUrl={creditCardConfirmUrl}
             />
           </Elements>
         </Box>
