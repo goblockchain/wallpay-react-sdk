@@ -423,7 +423,7 @@ export const PaymentModal = ({
   const cancelPayment = async (paymentId) => {
     try {
       const notPaidData = await axios.put(
-        `${WALLPAY_API_URL}/payments/crypto/${paymentId}`,
+        `${WALLPAY_API_URL}/payments/crypto/transaction/${paymentId}`,
         {
           status: "cancelled",
           auth: "Das4a-OPhjkFASkj",
@@ -519,7 +519,7 @@ export const PaymentModal = ({
       });
 
       await axios.put(
-        `${WALLPAY_API_URL}/payments/crypto/${data._id}`,
+        `${WALLPAY_API_URL}/payments/crypto/transaction/${data._id}`,
         {
           status: "paid",
           auth: "Das4a-OPhjkFASkj",
@@ -812,7 +812,7 @@ export const PaymentModal = ({
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Credit")}
-                      _hover={{ bgColor: "#efefef", borderRadius: "10px" }}
+                      _hover={{ bgColor: "#efefef", borderRadius: "6px" }}
                     >
                       <Center
                         flexDir="row"
@@ -836,7 +836,7 @@ export const PaymentModal = ({
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Pix")}
-                      _hover={{ bgColor: "#efefef", borderRadius: "10px" }}
+                      _hover={{ bgColor: "#efefef", borderRadius: "6px" }}
                     >
                       <Center
                         flexDir="row"
@@ -860,7 +860,7 @@ export const PaymentModal = ({
                     <PopoverBody
                       p="20px"
                       onClick={() => handlePaymentSelect("Crypto")}
-                      _hover={{ bgColor: "#efefef", borderRadius: "10px" }}
+                      _hover={{ bgColor: "#efefef", borderRadius: "6px" }}
                     >
                       <Center
                         flexDir="row"
