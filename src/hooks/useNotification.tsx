@@ -342,6 +342,7 @@ export const NotificationProvider = ({ children }) => {
                           lineHeight="26px"
                           fontWeight="700"
                           textAlign="center"
+                          fontFamily="'Roboto', sans-serif"
                         >
                           {notificationData.heading}
                         </Text>
@@ -354,6 +355,7 @@ export const NotificationProvider = ({ children }) => {
                         color="#A19D9D"
                         fontWeight="700"
                         textAlign="center"
+                        fontFamily="'Roboto', sans-serif"
                       >
                         {notificationData.primaryText}
                       </Text>
@@ -363,6 +365,7 @@ export const NotificationProvider = ({ children }) => {
                         lineHeight="21px"
                         color="#454545"
                         mt="27px"
+                        fontFamily="'Roboto', sans-serif"
                       >
                         {notificationData.secondaryText}
                       </Text>
@@ -379,6 +382,7 @@ export const NotificationProvider = ({ children }) => {
                           lineHeight="26px"
                           fontWeight="700"
                           textAlign="center"
+                          fontFamily="'Roboto', sans-serif"
                         >
                           {notificationData.heading}
                         </Text>
@@ -389,6 +393,7 @@ export const NotificationProvider = ({ children }) => {
                           color="#A19D9D"
                           fontWeight="700"
                           textAlign="center"
+                          fontFamily="'Roboto', sans-serif"
                         >
                           {notificationData.primaryText}
                         </Text>
@@ -398,6 +403,7 @@ export const NotificationProvider = ({ children }) => {
                           lineHeight="21px"
                           color="#454545"
                           mt="27px"
+                          fontFamily="'Roboto', sans-serif"
                         >
                           {notificationData.secondaryText}
                         </Text>
@@ -434,6 +440,7 @@ export const NotificationProvider = ({ children }) => {
                             color="#454545"
                             fontWeight="700"
                             textAlign={{ base: "center", sm: "left" }}
+                            fontFamily="'Roboto', sans-serif"
                           >
                             {notificationData.primaryText}
                           </Text>
@@ -444,6 +451,7 @@ export const NotificationProvider = ({ children }) => {
                             mt="20px"
                             fontWeight="400"
                             textAlign={{ base: "center", sm: "left" }}
+                            fontFamily="'Roboto', sans-serif"
                           >
                             {notificationData.secondaryText}
                           </Text>
@@ -455,6 +463,7 @@ export const NotificationProvider = ({ children }) => {
                           fontSize="18px"
                           fontWeight="400"
                           color="#717171"
+                          fontFamily="'Roboto', sans-serif"
                         >
                           {t("redirecting")}
                         </Text>
@@ -502,7 +511,7 @@ export const NotificationProvider = ({ children }) => {
                 </Flex>
               </Box>
               <Center mb="40px" flexWrap="wrap">
-                <Text fontWeight={500} fontSize={"16px"} textAlign="center">
+                <Text fontWeight={500} fontSize={"16px"} textAlign="center" fontFamily="'Roboto', sans-serif">
                   {t("processed_by")}
                 </Text>
                 <Image

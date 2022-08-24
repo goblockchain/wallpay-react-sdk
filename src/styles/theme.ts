@@ -14,7 +14,6 @@ export const theme = extendTheme({
       },
       "#__next": {
         flex: 1,
-
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -79,7 +78,7 @@ export const theme = extendTheme({
     danger: "#EF7A7C",
   },
   fonts: {
-    heading: "Roboto",
-    body: "Roboto",
+    heading: "'Roboto', sans-serif",
+    body: "'Roboto', sans-serif",
   },
 });

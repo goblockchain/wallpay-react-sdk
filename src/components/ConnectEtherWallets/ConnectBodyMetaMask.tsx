@@ -118,7 +118,7 @@ export const ConnectBodyMetaMask = () => {
               src={String(socialLoginVerifier) !== '' ? socialLoginVerifierImageSrc[socialLoginVerifier] : walletProvidersImageSrc[walletProvider]}
               mr="10px" h="25px"
             />
-            <Text fontSize="18px" fontWeight='700' lineHeight="21px" ml="5px" color="#FFFFFF" >
+            <Text fontSize="18px" fontWeight='700' lineHeight="21px" ml="5px" color="#FFFFFF" fontFamily="'Roboto', sans-serif">
               {String(walletAddress).substring(0, 5) + '...' + String(walletAddress).substring(38)}
             </Text>
           </Button>
@@ -133,7 +133,7 @@ export const ConnectBodyMetaMask = () => {
             borderRadius="15px"
             bg="#FFF"
             border="0"
-            fontFamily="roboto"
+            fontFamily="'Roboto', sans-serif"
             boxShadow={"0px 6px 23px rgba(0, 0, 0, 0.15)"}
             _focus={{
               boxShadow: "0px 6px 23px rgba(0, 0, 0, 0.15)",
@@ -151,6 +151,7 @@ export const ConnectBodyMetaMask = () => {
                   fontWeight="400"
                   color="#454545"
                   textAlign="left"
+                  fontFamily="'Roboto', sans-serif"
                 >
                   WallPay
                 </Text>
@@ -190,6 +191,7 @@ export const ConnectBodyMetaMask = () => {
                       fontSize="18px"
                       fontWeight="400"
                       lineHeight="21px"
+                      fontFamily="'Roboto', sans-serif"
                     >
                       {String(walletAddress).substring(0, 5) +
                         "..." +
@@ -267,7 +269,7 @@ export const ConnectBodyMetaMask = () => {
                     justifyContent="space-between"
                   >
                     <Flex>
-                      <Text fontSize="20px" fontWeight="light" color="#454545">
+                      <Text fontSize="20px" fontWeight="light" color="#454545" fontFamily="'Roboto', sans-serif">
                         {walletBalance}
                       </Text>
                       <Text
@@ -275,6 +277,7 @@ export const ConnectBodyMetaMask = () => {
                         fontSize="20px"
                         fontWeight="medium"
                         color="#454545"
+                        fontFamily="'Roboto', sans-serif"
                       >
                         {blockchainInfo.SYMBOL}
                       </Text>
@@ -294,7 +297,7 @@ export const ConnectBodyMetaMask = () => {
                   w="100%"
                   onClick={handleDisconnectMetamask}
                   lineHeight="22px"
-                  fontFamily="Roboto"
+                  fontFamily="'Roboto', sans-serif"
                   textColor="#FFFFFF"
                   borderRadius="45px"
                   bg="#454545"

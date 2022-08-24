@@ -56,7 +56,7 @@ export const ConnectProviderButton = ({
             maxW="36px"
           />
           <Text ml="10px"
-            fontFamily="Roboto"
+            fontFamily="'Roboto', sans-serif"
             fontSize="20px"
             fontWeight='400'
             color="#454545"

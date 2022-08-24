@@ -155,7 +155,7 @@ const PixCopyAndPaste = ({ copyFn }: PixCopyAndPasteProps) => {
             h="60px"
             _hover={{ opacity: 0.9 }}
           >
-            <Text ml="15px" fontWeight="400" fontSize="16px" color="#454545">
+            <Text ml="15px" fontWeight="400" fontSize="16px" color="#454545" fontFamily="'Roboto', sans-serif">
               {copyText}
             </Text>
           </Center>
@@ -180,7 +180,7 @@ const PixCopyAndPaste = ({ copyFn }: PixCopyAndPasteProps) => {
             h="60px"
             _hover={{ opacity: 0.9 }}
           >
-            <Text ml="15px" fontWeight="400" fontSize="16px" color="#454545">
+            <Text ml="15px" fontWeight="400" fontSize="16px" color="#454545" fontFamily="'Roboto', sans-serif">
               {copyText}
             </Text>
           </Center>
@@ -603,7 +603,7 @@ export const PaymentModal = ({
       const axiosConfig = {
         headers: {
           // TODO: Arrumar isso aqui
-          authorization: "4e20c35f-b99d-49c4-a0d1-283af6654e05",
+          authorization: sdkPrivateKey,
         },
       };
       const contractData = await axios.get(axiosUrl, axiosConfig);
@@ -915,6 +915,7 @@ export const PaymentModal = ({
               color="#454545"
               textAlign="left"
               mt="30px"
+              fontFamily="'Roboto', sans-serif"
             >
               {t("payment_type")}
             </Text>
@@ -936,7 +937,7 @@ export const PaymentModal = ({
                     <Text
                       fontSize="14px"
                       fontWeight="400px"
-                      fontFamily="Roboto"
+                      fontFamily="'Roboto', sans-serif"
                       color="#454545"
                     >
                       BRL - Pix
@@ -951,7 +952,7 @@ export const PaymentModal = ({
                     <Text
                       fontSize="14px"
                       fontWeight="400px"
-                      fontFamily="Roboto"
+                      fontFamily="'Roboto', sans-serif"
                       color="#454545"
                     >
                       {blockchainInfo?.SYMBOL}
@@ -966,7 +967,7 @@ export const PaymentModal = ({
                     <Text
                       fontSize="14px"
                       fontWeight="400px"
-                      fontFamily="Roboto"
+                      fontFamily="'Roboto', sans-serif"
                       color="#454545"
                     >
                       BRL - {t("credit")}
@@ -981,6 +982,7 @@ export const PaymentModal = ({
                     fontWeight="400"
                     fontSize="16px"
                     color="#A19D9D"
+                    fontFamily="'Roboto', sans-serif"
                   >
                     {" "}
                     {t("select")}
@@ -1026,7 +1028,7 @@ export const PaymentModal = ({
                         <Text
                           fontSize="14px"
                           fontWeight="400px"
-                          fontFamily="Roboto"
+                          fontFamily="'Roboto', sans-serif"
                           color="#454545"
                         >
                           BRL - {t("credit")}
@@ -1048,7 +1050,7 @@ export const PaymentModal = ({
                         <Text
                           fontSize="14px"
                           fontWeight="400px"
-                          fontFamily="Roboto"
+                          fontFamily="'Roboto', sans-serif"
                           color="#454545"
                         >
                           BRL - Pix
@@ -1070,7 +1072,7 @@ export const PaymentModal = ({
                         <Text
                           fontSize="14px"
                           fontWeight="400px"
-                          fontFamily="Roboto"
+                          fontFamily="'Roboto', sans-serif"
                           color="#454545"
                         >
                           {blockchainInfo?.SYMBOL}
@@ -1122,7 +1124,7 @@ export const PaymentModal = ({
                     fontSize="16px"
                     fontWeight="700"
                     lineHeight="19px"
-                    fontFamily="Roboto"
+                    fontFamily="'Roboto', sans-serif"
                     fontStyle="normal"
                     color="#454545"
                   >
@@ -1133,7 +1135,7 @@ export const PaymentModal = ({
                     fontSize="16px"
                     fontWeight="700"
                     lineHeight="19px"
-                    fontFamily="Roboto"
+                    fontFamily="'Roboto', sans-serif"
                     fontStyle="normal"
                     color="#454545"
                   >
@@ -1157,7 +1159,7 @@ export const PaymentModal = ({
                     fontSize="16px"
                     fontWeight="700"
                     lineHeight="19px"
-                    fontFamily="Roboto"
+                    fontFamily="'Roboto', sans-serif"
                     fontStyle="normal"
                     color="#454545"
                   >
@@ -1168,7 +1170,7 @@ export const PaymentModal = ({
                     fontSize="16px"
                     fontWeight="700"
                     lineHeight="19px"
-                    fontFamily="Roboto"
+                    fontFamily="'Roboto', sans-serif"
                     fontStyle="normal"
                     color="#A19D9D"
                   >
@@ -1181,7 +1183,7 @@ export const PaymentModal = ({
                   fontSize="16px"
                   fontWeight="700"
                   lineHeight="19px"
-                  fontFamily="Roboto"
+                  fontFamily="'Roboto', sans-serif"
                   fontStyle="normal"
                   color="#009FE3"
                 >
@@ -1195,7 +1197,7 @@ export const PaymentModal = ({
                 fontSize="18px"
                 fontWeight="700"
                 lineHeight="21px"
-                fontFamily="Roboto"
+                fontFamily="'Roboto', sans-serif"
                 color="#454545"
               >
                 {t("total_value")}
@@ -1204,7 +1206,7 @@ export const PaymentModal = ({
                 fontSize="20px"
                 fontWeight="700"
                 lineHeight="23px"
-                fontFamily="Roboto"
+                fontFamily="'Roboto', sans-serif"
                 fontStyle="normal"
                 color="#454545"
               >
@@ -1231,7 +1233,7 @@ export const PaymentModal = ({
                 <Box ml="10px">
                   <Text
                     fontWeight="400"
-                    fontFamily="Roboto"
+                    fontFamily="'Roboto', sans-serif"
                     fontSize="16px"
                     color="#9E9E9E"
                     flexWrap="wrap"
@@ -1281,7 +1283,7 @@ export const PaymentModal = ({
               </Button>
             </Box>
             <Center mt="40px" flexWrap="wrap">
-              <Text fontWeight={500} fontSize={"16px"} textAlign="center">
+              <Text fontWeight={500} fontSize={"16px"} textAlign="center" fontFamily="'Roboto', sans-serif">
                 {t("processed_by")}
               </Text>
               <Image src={wallpayLogo} alt="Wallpay Logo" mx="10px" w="120px" />
@@ -1296,7 +1298,7 @@ export const PaymentModal = ({
           borderRadius="15px"
           p="50px"
         >
-          <Text>Cripto</Text>
+          <Text fontFamily="'Roboto', sans-serif">Cripto</Text>
         </Box>
       )}
       {step === "confirmPaymentCredit" && stripePromise && (
@@ -1352,6 +1354,7 @@ export const PaymentModal = ({
               maxW="89%"
               m="0 auto"
               textAlign="center"
+              fontFamily="'Roboto', sans-serif"
             >
               {t("qr_code")}
             </Text>
@@ -1381,10 +1384,10 @@ export const PaymentModal = ({
               // maxW="89%"
               display={{ base: "block", md: "none" }}
             >
-              <Text>{t("copy_pix")}</Text>
-              <Text mt="8px">{t("acess_banco")}</Text>
-              <Text mt="8px">{t("pagar_pix")}</Text>
-              <Text mt="8px">{t("copie_cole")}</Text>
+              <Text fontFamily="'Roboto', sans-serif">{t("copy_pix")}</Text>
+              <Text fontFamily="'Roboto', sans-serif" mt="8px">{t("acess_banco")}</Text>
+              <Text fontFamily="'Roboto', sans-serif" mt="8px">{t("pagar_pix")}</Text>
+              <Text fontFamily="'Roboto', sans-serif" mt="8px">{t("copie_cole")}</Text>
             </Box>
             <PixCopyAndPaste copyFn={onCopy} />
             <Text
@@ -1394,6 +1397,7 @@ export const PaymentModal = ({
               fontSize="18px"
               lineHeight="21px"
               color="#454545"
+              fontFamily="'Roboto', sans-serif"
             >
               {t("pay_until")}: {toTime(countDown)}
             </Text>
@@ -1416,7 +1420,7 @@ export const PaymentModal = ({
                 fontSize="18px"
                 fontWeight="700"
                 lineHeight="21px"
-                fontFamily="Roboto"
+                fontFamily="'Roboto', sans-serif"
                 color="#454545"
               >
                 {t("total_value")}
@@ -1425,7 +1429,7 @@ export const PaymentModal = ({
                 fontSize="18px"
                 fontWeight="700"
                 lineHeight="21px"
-                fontFamily="Roboto"
+                fontFamily="'Roboto', sans-serif"
                 fontStyle="normal"
                 color="#454545"
               >
@@ -1437,7 +1441,7 @@ export const PaymentModal = ({
             </Flex>
           </Box>
           <Center mt="40px" flexWrap="wrap">
-            <Text fontWeight={500} fontSize={"16px"} textAlign="center">
+            <Text fontWeight={500} fontSize={"16px"} textAlign="center" fontFamily="'Roboto', sans-serif">
               {t("processed_by")}
             </Text>
             <Image src={wallpayLogo} alt="Wallpay Logo" mx="10px" w="120px" />
@@ -1461,6 +1465,7 @@ export const PaymentModal = ({
               fontSize="18px"
               textAlign="center"
               lineHeight="21px"
+              fontFamily="'Roboto', sans-serif"
             >
               {t("pix_attention")}
             </Text>

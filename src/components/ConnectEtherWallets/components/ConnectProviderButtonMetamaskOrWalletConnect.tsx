@@ -60,7 +60,7 @@ export const ConnectProviderButtonMetamaskOrWalletConnect = ({
           />
           <Center flexWrap="wrap" textAlign="center">
             <Text ml="10px"
-              fontFamily="Roboto"
+              fontFamily="'Roboto', sans-serif"
               fontSize="22px"
               fontWeight='400'
               color="#454545"
@@ -69,7 +69,7 @@ export const ConnectProviderButtonMetamaskOrWalletConnect = ({
               {t("connect_with")}
             </Text>
             <Text ml="5px"
-              fontFamily="Roboto"
+              fontFamily="'Roboto', sans-serif"
               fontSize="22px"
               fontWeight='400'
               color="#454545"

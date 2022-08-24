@@ -51,7 +51,7 @@ const PaymentDetailsInfo = ({
   symbol,
 }: PurchaseInfo) => (
   <Box>
-    <Text fontWeight="400" color="#a19d9d">
+    <Text fontWeight="400" color="#a19d9d" fontFamily="'Roboto', sans-serif">
       {amount} {symbol}
     </Text>
     {/* <Text fontWeight="400">
@@ -77,7 +77,7 @@ export const PaymentModalBody = ({ children, onClosePaymentModal, title, }: Paym
         p="38px 50px"
       >
         <Flex justifyContent="space-between" alignItems="center" w="100%">
-          <Text fontSize="22px" color="#454545">
+          <Text fontSize="22px" color="#454545" fontFamily="'Roboto', sans-serif">
             {" "}
             {title ? title : t("payment_title")}
           </Text>
