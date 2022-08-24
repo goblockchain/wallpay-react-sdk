@@ -223,7 +223,6 @@ export const PaymentModal = ({
   const {
     web3,
     walletBalance,
-    goBlockchainContract,
     walletAddress,
     setNewBalance,
     torusInstance,
@@ -492,9 +491,6 @@ export const PaymentModal = ({
         value: web3.utils.toWei(etherPriceWithFee.toString(), "ether"), //paymentData.price,
         gasPrice: gasPrice,
       };
-      const gasLimit = await goBlockchainContract.methods
-        .buyToken(paymentData.tokenId, 1)
-        .estimateGas(buyTokenObject);
       const axiosUrl = `${WALLPAY_API_URL}/payments/crypto/getContract/`;
       const axiosConfig = {
         headers: {
@@ -503,9 +499,14 @@ export const PaymentModal = ({
       };
       const contractData = await axios.get(axiosUrl, axiosConfig);
 
+      const contract = new web3.eth.Contract(
+        contractData.data.abi,
+        contractData.data.contractAddress
+      );
+
       const transactionParams = [paymentData.tokenId, paymentData.totalPrice];
 
-      await goBlockchainContract.methods[
+      await contract.methods[
         contractData.data.result.payableMintOrTransferMethodName
       ](...transactionParams).send(buyTokenObject);
       emitNotificationModal({
@@ -988,7 +989,7 @@ export const PaymentModal = ({
                 {t("total_value")}
               </Text>
               <Text
-                fontSize="20px"
+                fontSize="18px"
                 fontWeight="700"
                 lineHeight="23px"
                 fontFamily="'Roboto', sans-serif"
