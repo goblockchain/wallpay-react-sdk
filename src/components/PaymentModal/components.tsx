@@ -42,6 +42,7 @@ interface CheckoutFormProps {
   termsIsChecked: boolean;
   checkFn: () => void;
   sdkPrivateKey: string;
+  creditCardConfirmUrl?: string;
 }
 
 const PaymentDetailsInfo = ({
@@ -142,7 +143,7 @@ export const PaymentDetails = ({
 };
 
 
-export const CheckoutForm = ({ purchaseInfo }: CheckoutFormProps) => {
+export const CheckoutForm = ({ purchaseInfo, creditCardConfirmUrl }: CheckoutFormProps) => {
   const { emitNotificationModal } = useNotification();
   const stripe = useStripe();
   const elements = useElements();
@@ -159,19 +160,9 @@ export const CheckoutForm = ({ purchaseInfo }: CheckoutFormProps) => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: window.location.href, // TODO: receber url junto com privateKey do sdk
+        return_url: creditCardConfirmUrl || window.location.href,
       },
     });
-
-    // if (error.type === "card_error" || error.type === "validation_error") {
-    //   emitNotificationModal({
-    //     message: {
-    //       secondaryText: error.message,
-    //     },
-    //   });
-    // } else {
-    //   emitNotificationModal({});
-    // }
     setIsLoading(false);
   };
 

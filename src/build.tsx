@@ -24,6 +24,7 @@ const buildSDK = ({
       onClose={props.onClose}
       paymentData={props.paymentData}
       sdkPrivateKey={sdkPrivateKey}
+      creditCardConfirmUrl={creditCardConfirmUrl}
     />),
     PaymentProvider: ({ children }) => {
       const [isLoaded, setIsLoaded] = React.useState(false);

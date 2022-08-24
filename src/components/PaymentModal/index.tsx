@@ -79,6 +79,7 @@ interface PaymentModalProps {
   onClose: () => void;
   paymentData: PaymentData;
   sdkPrivateKey: string;
+  creditCardConfirmUrl?: string;
 }
 
 const symbolImages = {
@@ -195,6 +196,7 @@ export const PaymentModal = ({
   onClose,
   paymentData,
   sdkPrivateKey,
+  creditCardConfirmUrl,
 }: PaymentModalProps) => {
   const {
     onOpen: onSelectOpen,
@@ -1163,6 +1165,7 @@ export const PaymentModal = ({
               checkFn={handleTermsIsChecked}
               termsIsChecked={termsIsChecked}
               sdkPrivateKey={sdkPrivateKey}
+              
             />
           </Elements>
         </Box>
