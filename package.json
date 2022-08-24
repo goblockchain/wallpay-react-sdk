@@ -11,7 +11,7 @@
   "scripts": {
     "build": "yarn run clean && yarn run rollup -c",
     "clean": "rimraf dist",
-    "publish": "yarn run build && np",
+    "publish": "npm login && yarn run build && np",
     "test": "echo \"No test specified\""
   },
   "repository": {
