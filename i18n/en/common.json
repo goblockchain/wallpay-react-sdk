@@ -111,7 +111,7 @@
   "wait_modal": "Wait a moment",
   "wait_descr": "Please wait while we process your transaction",
   "done_modal": "Congratulations!",
-  "done_descr": "You have just acquired your NFT Hall of Fame! Within 48 hours, you will receive an email with instructions for withdrawing your other benefits.",
+  "done_descr": "You have just acquired your NFT!",
   "transfering": "Transfering...",
   "transfering_modal": "Payment has been made successfully",
   "transfering_descr": "We are now transfering your collectible",

@@ -6,6 +6,7 @@ import axios from 'axios'
 import { useConfig } from './useConfig'
 import { NETWORKS } from '../enums'
 import { sdkConfig } from '../utils/load'
+import { cryptoCompare } from '../utils/api'
 
 type EthFiatRates = {
   [key: string]: number
@@ -63,7 +64,8 @@ export const EthereumProvider = ({ children, sdkPrivateKey }) => {
       } else {
         symbol = NETWORKS.TESTNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain)?.SYMBOL as string
       }
-      const { data } = await axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=${config.currency}&api_key=${process.env.NEXT_PUBLIC_CRYPTOCOMPARE_API_KEY}`)
+      
+      const { data } = await cryptoCompare(symbol, config.currency);
       setFiatRates(data)
     }
     getFiatRates()

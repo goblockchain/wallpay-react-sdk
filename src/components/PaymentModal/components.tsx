@@ -17,6 +17,7 @@ import closeblack from "../../assets/closeblack.png";
 import { useTranslation } from "next-export-i18n";
 import { useNotification } from "../../hooks/useNotification";
 import { theme } from "../../styles/theme";
+import { FormatPrice } from "../../utils";
 
 interface PaymentModalBodyProps {
   children: React.ReactNode;
@@ -53,7 +54,7 @@ const PaymentDetailsInfo = ({
 }: PurchaseInfo) => (
   <Box>
     <Text fontWeight="400" color="#a19d9d" fontFamily="'Roboto', sans-serif">
-      {amount} {symbol}
+      <FormatPrice amount={amount} currency={symbol} />
     </Text>
     {/* <Text fontWeight="400">
       {fiatAmount} {currency}
@@ -61,8 +62,11 @@ const PaymentDetailsInfo = ({
   </Box>
 );
 
-export const PaymentModalBody = ({ children, onClosePaymentModal, title, }: PaymentModalBodyProps) => {
-
+export const PaymentModalBody = ({
+  children,
+  onClosePaymentModal,
+  title,
+}: PaymentModalBodyProps) => {
   const { t } = useTranslation();
 
   return (
@@ -78,7 +82,11 @@ export const PaymentModalBody = ({ children, onClosePaymentModal, title, }: Paym
         p="38px 50px"
       >
         <Flex justifyContent="space-between" alignItems="center" w="100%">
-          <Text fontSize="22px" color="#454545" fontFamily="'Roboto', sans-serif">
+          <Text
+            fontSize="22px"
+            color="#454545"
+            fontFamily="'Roboto', sans-serif"
+          >
             {" "}
             {title ? title : t("payment_title")}
           </Text>
@@ -100,7 +108,6 @@ export const PaymentDetails = ({
 }: PaymentDetailsProps) => {
   const { t } = useTranslation();
   const renderPaymentInfo = () => {
-
     if (paymentType === "credit") {
       return (
         <ChakraProvider resetCSS={false} theme={theme}>
@@ -128,13 +135,15 @@ export const PaymentDetails = ({
 
   return (
     <ChakraProvider resetCSS={false} theme={theme}>
-      <Box mt="25px" fontSize="18px"
+      <Box
+        mt="25px"
+        fontSize="18px"
         lineHeight="21px"
         fontWeight="700"
         color="#454545"
       >
         <Flex w="100%" justifyContent="space-between">
-          <Text>{t('total_value')}</Text>
+          <Text>{t("total_value")}</Text>
           {renderPaymentInfo()}
         </Flex>
       </Box>
@@ -142,8 +151,10 @@ export const PaymentDetails = ({
   );
 };
 
-
-export const CheckoutForm = ({ purchaseInfo, creditCardConfirmUrl }: CheckoutFormProps) => {
+export const CheckoutForm = ({
+  purchaseInfo,
+  creditCardConfirmUrl,
+}: CheckoutFormProps) => {
   const { emitNotificationModal } = useNotification();
   const stripe = useStripe();
   const elements = useElements();
@@ -173,8 +184,11 @@ export const CheckoutForm = ({ purchaseInfo, creditCardConfirmUrl }: CheckoutFor
       </form>
       <Box mt="28px" h="1px" w="100%" bgColor="#DFDFDF" />
       <PaymentDetails paymentType="credit" purchaseInfo={purchaseInfo} />
-      <Button w="100%" h="60px"
-        bg="#454545" mt="29px"
+      <Button
+        w="100%"
+        h="60px"
+        bg="#454545"
+        mt="29px"
         borderRadius="45px"
         type="submit"
         isLoading={isLoading}
@@ -185,9 +199,8 @@ export const CheckoutForm = ({ purchaseInfo, creditCardConfirmUrl }: CheckoutFor
         lineHeight="23px"
         fontWeight="400"
       >
-        {t('continue')}
+        {t("continue")}
       </Button>
     </ChakraProvider>
   );
 };
-

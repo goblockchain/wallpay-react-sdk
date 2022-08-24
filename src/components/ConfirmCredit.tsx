@@ -20,6 +20,7 @@ function HandleConfirmCredit({ sdkPrivateKey, router, imageURL }: {
         stripeId: router.query.payment_intent,
       }, sdkPrivateKey)
         .then(() => {
+          router.replace('/');
           emitNotificationModal({
             type: PAYMENT_STEPS.SUCCESS,
             image: imageURL,
