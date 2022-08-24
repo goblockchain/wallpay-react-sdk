@@ -47,19 +47,19 @@ import { useConfig } from "../../hooks/useConfig";
 import { CopyToClipboard } from "../CopyToClipboard";
 
 const walletProvidersImageSrc = {
-  metamask: metamaskWallet.src,
-  ["wallet-connect"]: walletConnectWallet.src,
+  metamask: metamaskWallet,
+  ["wallet-connect"]: walletConnectWallet,
 };
 
 const socialLoginVerifierImageSrc = {
-  google: googleWallet.src,
-  facebook: facebookWallet.src,
-  passwordless: torusWallet.src,
+  google: googleWallet,
+  facebook: facebookWallet,
+  passwordless: torusWallet,
 };
 
 const blockchainIcons = {
-  ethereum: ethWallet.src,
-  polygon: polygonWallet.src,
+  ethereum: ethWallet,
+  polygon: polygonWallet,
 };
 
 export const ConnectBodyMetaMask = () => {
