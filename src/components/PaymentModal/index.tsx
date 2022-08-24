@@ -567,10 +567,6 @@ export const PaymentModal = ({
       sellOffersWithNewlyPurchased[newlyPurchasedIndex].purchased = true;
       setSellOffers(sellOffersWithNewlyPurchased);
       setHasStoreNFTpurchased(true);
-
-        "sellOffers With Newly Purchased",
-        sellOffersWithNewlyPurchased
-      );
     } catch (error: any) {
       if (error.code === 4001) {
         emitNotificationModal({
