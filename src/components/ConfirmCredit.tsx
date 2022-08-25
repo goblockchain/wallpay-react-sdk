@@ -44,6 +44,10 @@ function HandleConfirmCredit({
         }
         // }
       } catch (error) {
+        // @ts-ignore
+        if(error.response.data.message.includes("E11000 duplicate key error")){
+          return;
+        }
         router.replace("/");
         anyerror = true;
         const primaryText = "Ocorreu um erro ao processar o pagamento";
