@@ -13,7 +13,6 @@ import { useConfig } from "./useConfig";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-export-i18n";
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import goBlockchainAbi from "../abis/goBlockchain.json";
 import { sleep } from "../utils";
 import { theme } from "../styles/theme";
 import { ConnectWalletsModal } from "../components/ConnectEtherWallets";
