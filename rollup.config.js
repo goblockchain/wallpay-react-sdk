@@ -51,7 +51,7 @@ export default [
       nodeResolverPlugin(),
       jsonPlugin(),
     ],
-    external: ["react", "react-dom", "@chakra-ui/react"],
+    external: ["react", "react-dom"],
   },
   {
     input: "dist/esm/index.d.ts",
