@@ -114,6 +114,8 @@
   "done_descr": "¡Acabas de adquirir tu NFT!",
   "transfering": "Transfiriendo",
   "transfering_modal": "Tudo está en camino",
+  "transfering_fail:": "¡Transacción no completada!",
+  "transfering_fail_descr": "Desafortunadamente, no tenemos la cantidad deseada de NFT en stock. Le reembolsaremos su pago.",
   "transfering_descr": "Estamonos transferiendo tu coleccionable a tu cuenta!",
   "timeout_modal": "¡Tiempo de espera agotado!",
   "timeout_descr": "No se ha podido procesar su transacción. Por favor, inténtelo de nuevo.",

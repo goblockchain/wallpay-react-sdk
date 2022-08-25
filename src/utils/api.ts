@@ -1,17 +1,16 @@
 import axios from "axios";
 import { WALLPAY_API_URL } from "../config";
 
-export const redeemToken = async (payload, sdkPrivateKey) => {
-  try {
-    return await axios.post(`${WALLPAY_API_URL}/payments/credit_card/confirm`, payload, {
+export const redeemToken = (payload, sdkPrivateKey) => {
+  return axios.post(
+    `${WALLPAY_API_URL}/payments/credit_card/confirm`,
+    payload,
+    {
       headers: {
         authorization: sdkPrivateKey,
-      }
-    });
-  } catch (error) {
-    console.log("redeemToken ERROR: ", error);
-    return error;
-  }
+      },
+    }
+  );
 };
 
 export const getContract = async (sdkPrivateKey) => {
@@ -28,10 +27,10 @@ export const getContract = async (sdkPrivateKey) => {
     console.log("getContract ERROR: ", error);
     throw error;
   }
-}
+};
 
 export const cryptoCompare = async (symbol, currency) => {
-  
-  return axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=${currency}&api_key=${process.env.NEXT_PUBLIC_CRYPTOCOMPARE_API_KEY}`)
-
-}
+  return axios.get(
+    `https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=${currency}&api_key=${process.env.NEXT_PUBLIC_CRYPTOCOMPARE_API_KEY}`
+  );
+};
