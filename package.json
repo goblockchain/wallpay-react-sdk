@@ -76,8 +76,5 @@
     "validator": "^13.7.0",
     "web3": "^1.7.4",
     "web3-eth-contract": "^1.7.4"
-  },
-  "dependencies": {
-    "wallpay-react-sdk": "^0.1.0-alpha.1"
   }
 }
