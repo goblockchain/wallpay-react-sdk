@@ -6,7 +6,7 @@
   "module": "dist/esm/index.js",
   "files": [
     "dist",
-    "src"
+    "i18n"
   ],
   "types": "dist/index.d.ts",
   "scripts": {
