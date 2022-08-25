@@ -122,6 +122,8 @@
   "transfering": "Transferindo...",
   "transfering_modal": "Tudo certo com o pagamento!",
   "transfering_descr": "Estamos transferindo o seu colecionável!",
+  "transfering_fail": "Ops! Algo deu errado!",
+  "transfering_fail_descr": "Infelizmente não temos a quantidade desejada de NFTs em estoque. Iremos estornar seu pagamento.",
   "timeout_modal": "Tempo de pagamento expirado",
   "timeout_descr": "O tempo para pagamento foi excedido. Por favor recarregue a página tente novamente.",
   "error": "Erro ao conectar!",

@@ -12,7 +12,7 @@ import {
   Spinner,
   Center,
   Button,
-  ChakraProvider
+  ChakraProvider,
 } from "@chakra-ui/react";
 import wallpayLogo from "../assets/wallpay.png";
 
@@ -30,6 +30,7 @@ import end_succ from "../assets/progress/end_succ.svg";
 import process_succ from "../assets/progress/process_succ.svg";
 import process_fail from "../assets/progress/process_fail.svg";
 import transf_succ from "../assets/progress/transf_succ.svg";
+import transf_fail from "../assets/progress/transf_fail.svg";
 import { theme } from "../styles/theme";
 import Link from "next/link";
 
@@ -99,7 +100,7 @@ const LottieAnimation = (animation) => {
   );
 };
 
-export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) => {
+export const NotificationProvider = ({ children, userSpaceUrl }) => {
   const [notificationData, setNotificationData] = useState<NotificationData>(
     {} as NotificationData
   );
@@ -114,7 +115,11 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
     image,
   }) => {
     if (isOpen === false) onOpen();
-    setNotificationModalData({ message: message as Message, type: type as string, image });
+    setNotificationModalData({
+      message: message as Message,
+      type: type as string,
+      image,
+    });
   };
 
   const setNotificationModalData = ({
@@ -147,7 +152,6 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
       case PAYMENT_STEPS.IN_PROGRESS:
         data = {
           progressImg: process_succ,
-          borderColor: config.mainColor,
           lottieSrc: processing,
           heading: t("process"),
           primaryText:
@@ -163,7 +167,6 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
         break;
       case PAYMENT_STEPS.SUCCESS:
         data = {
-          borderColor: "#8AC576",
           progressImg: end_succ,
           nftImage: image,
           heading: "Yeah!",
@@ -181,7 +184,6 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
 
       case PAYMENT_STEPS.SUCCESS_NO_EMAIL:
         data = {
-          borderColor: "#8AC576",
           progressImg: end_succ,
           nftImage: image,
           heading: "Yeah!",
@@ -199,7 +201,6 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
 
       case PAYMENT_STEPS.TIMEOUT:
         data = {
-          borderColor: "#E30000",
           progressImg: process_fail,
           lottieSrc: oops,
           heading: "Humm...",
@@ -217,7 +218,6 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
       case PAYMENT_STEPS.PROCESSING:
         data = {
           progressImg: transf_succ,
-          borderColor: config.mainColor,
           lottieSrc: processing,
           heading: t("transfering"),
           primaryText:
@@ -231,9 +231,24 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
           canClose: false,
         };
         break;
+      case PAYMENT_STEPS.FAIL_TRANSFER:
+        data = {
+          progressImg: transf_fail,
+          lottieSrc: oops,
+          heading: "Ops..",
+          primaryText:
+            message !== undefined && message.primaryText !== undefined
+              ? message.primaryText
+              : t("transfering_fail"),
+          secondaryText:
+            message !== undefined && message.secondaryText !== undefined
+              ? message.secondaryText
+              : t("transfering_fail_descr"),
+          canClose: false,
+        };
+        break;
       default:
         data = {
-          borderColor: "#E30000",
           lottieSrc: oops,
           heading: "Ops..",
           primaryText:
@@ -258,7 +273,6 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
     setTimeout(() => {
       onClose();
     }, 2000);
-
   }
 
   return (
@@ -271,7 +285,8 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
     >
       {children}
       <ChakraProvider resetCSS={false} theme={theme}>
-        <Modal isCentered
+        <Modal
+          isCentered
           isOpen={isOpen}
           onClose={onClose}
           closeOnOverlayClick={notificationData.canClose}
@@ -279,16 +294,7 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
           <ModalOverlay />
           <ModalContent borderRadius="15px" maxWidth="507px" mx="20px">
             <ModalBody p="0px" m="0px">
-              <Box
-                p="50px"
-                borderTop="6px solid"
-                borderColor={
-                  notificationData.borderColor === undefined
-                    ? "#FDC921"
-                    : notificationData.borderColor
-                }
-                borderRadius="15px"
-              >
+              <Box p="50px" borderRadius="15px">
                 <Flex
                   w="100%"
                   m="0 auto"
@@ -427,63 +433,81 @@ export const NotificationProvider = ({ children, showUserSpace, userSpaceUrl }) 
                           </Text>
                         </Box>
                       </Flex>
-                      {showUserSpace && <>
-                        <Center mt="50px">
-                          <Text
-                            textAlign="center"
-                            fontSize="18px"
-                            fontWeight="400"
-                            color="#717171"
-                            fontFamily="'Roboto', sans-serif"
+                      {userSpaceUrl && (
+                        <>
+                          <Center mt="50px">
+                            <Text
+                              textAlign="center"
+                              fontSize="18px"
+                              fontWeight="400"
+                              color="#717171"
+                              fontFamily="'Roboto', sans-serif"
+                            >
+                              {t("redirecting")}
+                            </Text>
+                          </Center>
+                          <Center
+                            mt="20px"
+                            flexWrap={{ base: "wrap", sm: "nowrap" }}
                           >
-                            {t("redirecting")}
-                          </Text>
-                        </Center>
-                        <Center mt="20px" flexWrap={{ base: "wrap", sm: "nowrap" }}>
-                          <Link href={{ pathname: userSpaceUrl, query: query }}>
+                            <Link
+                              href={{ pathname: userSpaceUrl, query: query }}
+                            >
+                              <Button
+                                minWidth="190px"
+                                h="60px"
+                                m="10px"
+                                borderRadius="45px"
+                                border="solid 1px #DFDFDF"
+                                color="#454545"
+                                fontSize="22px"
+                                backgroundColor="white"
+                                fontWeight="400"
+                                _hover={{ backgroundColor: "white" }}
+                                _active={{ backgroundColor: "white" }}
+                                _focus={{
+                                  backgroundColor: "white",
+                                  outline: "none",
+                                }}
+                                onClick={() => handleGoNowButton()}
+                              >
+                                {t("go_now")}
+                              </Button>
+                            </Link>
                             <Button
                               minWidth="190px"
                               h="60px"
                               m="10px"
                               borderRadius="45px"
                               border="solid 1px #DFDFDF"
-                              color="#454545"
+                              color="red"
                               fontSize="22px"
                               backgroundColor="white"
                               fontWeight="400"
                               _hover={{ backgroundColor: "white" }}
                               _active={{ backgroundColor: "white" }}
-                              _focus={{ backgroundColor: "white", outline: "none" }}
-                              onClick={() => handleGoNowButton()}
+                              _focus={{
+                                backgroundColor: "white",
+                                outline: "none",
+                              }}
+                              onClick={() => handleCancelButton()}
                             >
-                              {t("go_now")}
+                              {t("not_now")}
                             </Button>
-                          </Link>
-                          <Button
-                            minWidth="190px"
-                            h="60px"
-                            m="10px"
-                            borderRadius="45px"
-                            border="solid 1px #DFDFDF"
-                            color="red"
-                            fontSize="22px"
-                            backgroundColor="white"
-                            fontWeight="400"
-                            _hover={{ backgroundColor: "white" }}
-                            _active={{ backgroundColor: "white" }}
-                            _focus={{ backgroundColor: "white", outline: "none" }}
-                            onClick={() => handleCancelButton()}
-                          >
-                            {t("not_now")}
-                          </Button>
-                        </Center>
-                      </>}
+                          </Center>
+                        </>
+                      )}
                     </>
                   )}
                 </Flex>
               </Box>
               <Center mb="40px" flexWrap="wrap">
-                <Text fontWeight={500} fontSize={"16px"} textAlign="center" fontFamily="'Roboto', sans-serif">
+                <Text
+                  fontWeight={500}
+                  fontSize={"16px"}
+                  textAlign="center"
+                  fontFamily="'Roboto', sans-serif"
+                >
                   {t("processed_by")}
                 </Text>
                 <Image

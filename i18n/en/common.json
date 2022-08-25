@@ -115,6 +115,8 @@
   "transfering": "Transfering...",
   "transfering_modal": "Payment has been made successfully",
   "transfering_descr": "We are now transfering your collectible",
+  "transfering_fail": "Transfering failed",
+  "transfering_fail_desc": "Unfortunately, we do not have the desired quantity of NFTs in stock. We will refund your payment.",
   "timeout_modal": "Payment Timeout",
   "timeout_descr": "Your payment has timed out. Please refresh the page and try again.",
   "error": "Error connecting!",

@@ -16,24 +16,22 @@ import { useConfig } from "./useConfig";
 
 type PaymentDataProps = {
   itemName: any;
-  itemId: number;
   tokenId: number;
   unitPrice: number;
   itemImage: string;
   amount: number;
   hasFixedPrice: boolean;
-  walletAddress: string;
+  walletAddress?: string;
 };
 
 type PaymentData = {
   itemName: any;
-  itemId: number;
   tokenId: number;
   unitPrice: number;
   itemImage: string;
   amount: number;
   hasFixedPrice: boolean;
-  walletAddress: string;
+  walletAddress?: string;
   fiatUnitPrice: number;
 };
 
@@ -46,7 +44,11 @@ export interface IPaymentContext {
 
 const PaymentContext = createContext<IPaymentContext>({} as IPaymentContext);
 
-export const PaymentProvider = ({ children, sdkPrivateKey, creditCardConfirmUrl }) => {
+export const PaymentProvider = ({
+  children,
+  sdkPrivateKey,
+  creditCardConfirmUrl,
+}) => {
   const [paymentData, setPaymentData] = useState<PaymentData>(
     {} as PaymentData
   );
@@ -55,11 +57,7 @@ export const PaymentProvider = ({ children, sdkPrivateKey, creditCardConfirmUrl 
   const { config } = useConfig();
 
   const onOpenPaymentModal: OnOpenPaymentModal = async (paymentData) => {
-    console.log(
-      "[DEBUG] Params ",
-      paymentData.unitPrice,
-      fiatRates[config.currency]
-    );
+
     const fiatUnitPrice = parseInt(
       new BigNumber(paymentData.unitPrice)
         .multipliedBy(fiatRates[config.currency])
@@ -67,15 +65,9 @@ export const PaymentProvider = ({ children, sdkPrivateKey, creditCardConfirmUrl 
         .toFixed(0)
     );
 
-    console.log("[DEBUG] fiatUnitPrice ", fiatUnitPrice);
-
     setPaymentData({ ...paymentData, fiatUnitPrice });
     onOpen();
   };
-
-  useEffect(() => {
-    console.log("[DEBUG] paymentData ", paymentData);
-  }, [paymentData]);
 
   return (
     <PaymentContext.Provider
@@ -95,7 +87,6 @@ export const PaymentProvider = ({ children, sdkPrivateKey, creditCardConfirmUrl 
                 onClose={onClose}
                 paymentData={{
                   unitPrice: Number(paymentData.unitPrice),
-                  itemId: Number(paymentData.itemId),
                   tokenId: Number(paymentData.tokenId),
                   itemName: paymentData.itemName,
                   itemImage: String(paymentData.itemImage),

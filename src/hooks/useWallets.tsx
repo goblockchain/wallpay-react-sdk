@@ -20,7 +20,8 @@ import { sdkConfig } from "../utils/load";
 
 declare class WalletConnectWeb3Provider
   extends WalletConnectProvider
-  implements AbstractProvider {
+  implements AbstractProvider
+{
   sendAsync(
     payload: JsonRpcPayload,
     callback: (error: Error | null, result?: JsonRpcResponse) => void
@@ -93,7 +94,7 @@ export const WalletsContext = createContext<IWalletsContext>(
 );
 declare global {
   interface Window {
-    ethereum?: MetaMaskInpageProvider
+    ethereum?: MetaMaskInpageProvider;
   }
 }
 
@@ -197,9 +198,8 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
         disconnectWallet();
       } else {
         setWalletAddress(accounts[0]);
-
       }
-      setWalletIsNotConnected(true)
+      setWalletIsNotConnected(true);
     });
     provider.on("chainChanged", (chainId: any) => {
       const parsedChainId =
@@ -208,8 +208,9 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
         emitNotificationModal({
           type: ERRORS.WALLETS.WRONG_NETWORK.TYPE,
           message: {
-            secondaryText: `${changeSecundaryTextError()} ${config.blockchain
-              } ${config.networkType}`,
+            secondaryText: `${changeSecundaryTextError()} ${
+              config.blockchain
+            } ${config.networkType}`,
           },
         });
       }
@@ -234,10 +235,10 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
     onCloseWalletModal,
     loginType,
   }) => {
-
     let web3: Web3 = {} as Web3;
-    let address: string = '';
-    let ethereumProvider: WalletConnectProvider | any = {} as WalletConnectProvider;
+    let address: string = "";
+    let ethereumProvider: WalletConnectProvider | any =
+      {} as WalletConnectProvider;
     let torusInstance: Torus = {} as Torus;
     try {
       switch (provider) {
@@ -246,9 +247,9 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
             setLoadingWhenConnetWallet(true);
             try {
               web3 = new Web3(window.ethereum as any);
-              const metamaskReq = await window.ethereum.request({
+              const metamaskReq = (await window.ethereum.request({
                 method: "eth_requestAccounts",
-              }) as any[];
+              })) as any[];
               address = metamaskReq[0];
               ethereumProvider = window.ethereum;
             } catch (e) {
@@ -265,7 +266,8 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
                 1: "https://mainnet.infura.io/v3/0140c9b9de0345869bfaa2e5f010eb12",
                 4: "https://rinkeby.infura.io/v3/0140c9b9de0345869bfaa2e5f010eb12",
                 137: "https://polygon-mainnet.infura.io/v3/0140c9b9de0345869bfaa2e5f010eb12",
-                80001: "https://polygon-mumbai.infura.io/v3/0140c9b9de0345869bfaa2e5f010eb12",
+                80001:
+                  "https://polygon-mumbai.infura.io/v3/0140c9b9de0345869bfaa2e5f010eb12",
               },
               chainId: 4,
             });
@@ -291,7 +293,8 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
             torusInstance = torus;
             if (onCloseWalletModal !== undefined) onCloseWalletModal();
             const loginParams: TorusLoginParams = {};
-            if (loginType !== undefined && loginType !== 'passwordless') loginParams.verifier = loginType;
+            if (loginType !== undefined && loginType !== "passwordless")
+              loginParams.verifier = loginType;
             const [torusAddress] = await torus.login(loginParams);
             const torusProvider = torus.provider;
             address = torusAddress;
@@ -337,7 +340,7 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
         provider,
         onCloseWalletModal:
           provider === WALLET_PROVIDERS.WALLET_CONNECT ||
-            provider === WALLET_PROVIDERS.TORUS
+          provider === WALLET_PROVIDERS.TORUS
             ? onClose
             : undefined,
         loginType,
@@ -347,16 +350,20 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
       if (!isValidChain(Number(chainId))) {
         throw {
           type: ERRORS.WALLETS.WRONG_NETWORK.TYPE,
-          message: `${changeSecundaryTextError()} ${config.blockchain} ${config.networkType
-            }`,
+          message: `${changeSecundaryTextError()} ${config.blockchain} ${
+            config.networkType
+          }`,
           code: ERRORS.WALLETS.WRONG_NETWORK.CODE,
         };
       }
-      const balance = await getBalance({ web3: web3 as Web3, address: address as string });
+      const balance = await getBalance({
+        web3: web3 as Web3,
+        address: address as string,
+      });
 
       const goBlockchainContract = new (web3 as Web3).eth.Contract(
         sdkConfig.contractData?.abi as AbiItem[],
-        sdkConfig.contractData?.contractAddress as string,
+        sdkConfig.contractData?.contractAddress as string
       );
       subscribeToEthereumProviderEvents(ethereumProvider);
       setWalletAddress(address as string);
@@ -425,7 +432,7 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
   useEffect(() => {
     const reconnectWallet = async () => {
       const walletConnection = JSON.parse(
-        sessionStorage.getItem("@gotokens/walletConnection") as string,
+        sessionStorage.getItem("@gotokens/walletConnection") as string
       );
       if (walletConnection !== null) {
         if (walletConnection.provider === WALLET_PROVIDERS.METAMASK) {

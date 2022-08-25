@@ -52,13 +52,12 @@ import { sdkConfig } from "../../utils/load";
 
 type PaymentData = {
   itemName: any;
-  itemId: number;
   tokenId: number;
   unitPrice: number;
   itemImage: string;
   amount: number;
   hasFixedPrice: boolean;
-  walletAddress: string;
+  walletAddress?: string;
   fiatUnitPrice: number;
 };
 
@@ -231,7 +230,7 @@ export const PaymentModal = ({
     walletIsConnected,
   } = useWallets();
 
-  let userWalletAddress = paymentData.walletAddress;
+  let userWalletAddress = walletAddress || paymentData.walletAddress;
 
   useEffect(() => {
     userWalletAddress = walletAddress || paymentData.walletAddress;
@@ -366,11 +365,19 @@ export const PaymentModal = ({
     try {
       const interval = setInterval(async () => {
         tries += 1;
+        console.log("[DEBUG] paymentStatus", paymentStatus);
 
         if (tries >= Math.ceil(TIME_TO_PAY / 2)) {
           onClose();
           emitNotificationModal({
             type: PAYMENT_STEPS.TIMEOUT,
+          });
+          return clearInterval(interval);
+        }
+        if (paymentStatus === "canceled") {
+          onClose();
+          emitNotificationModal({
+            type: PAYMENT_STEPS.FAIL_TRANSFER,
           });
           return clearInterval(interval);
         }
@@ -489,20 +496,21 @@ export const PaymentModal = ({
       );
       const buyTokenObject = {
         from: userWalletAddress,
-        value: web3.utils.toWei(etherPriceWithFee.toString(), "ether"), //paymentData.price,
+        value: web3.utils.toWei(etherPriceWithFee.toString(), "ether"), //totalPrice,
         gasPrice: gasPrice,
       };
 
       const contract = new web3.eth.Contract(
         sdkConfig.contractData?.abi,
-        sdkConfig.contractData?.contractAddress,
+        sdkConfig.contractData?.contractAddress
       );
 
-      const transactionParams = [paymentData.tokenId, paymentData.unitPrice];
+      const transactionParams = [paymentData.tokenId, paymentData.amount];
 
-      await contract.methods[
+      const res = await contract.methods[
         sdkConfig.contractData?.payableMintOrTransferMethodName
       ](...transactionParams).send(buyTokenObject);
+
       emitNotificationModal({
         type: PAYMENT_STEPS.PROCESSING,
       });
@@ -582,7 +590,6 @@ export const PaymentModal = ({
       emitNotificationModal({
         message: {
           primaryText: error.message,
-          secondaryText: "Connect your wallet with Google then try again",
         },
       });
     } finally {
@@ -593,7 +600,9 @@ export const PaymentModal = ({
   const FEE = 0;
 
   const etherPriceWithFee = useMemo(() => {
-    const priceToBN = new BigNumber(paymentData.unitPrice);
+    const priceToBN = new BigNumber(
+      Number(paymentData.unitPrice) * paymentData.amount
+    );
     const feeToBN = new BigNumber(FEE);
     return priceToBN.plus(priceToBN.times(feeToBN)).toNumber();
   }, [paymentData.unitPrice]);
@@ -916,7 +925,9 @@ export const PaymentModal = ({
                     )}
                     {["Pix", "Credit"].includes(paymentType) && (
                       <FormatPrice
-                        amount={paymentData.fiatUnitPrice}
+                        amount={
+                          Number(paymentData.fiatUnitPrice) * paymentData.amount
+                        }
                         currency={config.currency}
                       />
                     )}
@@ -987,7 +998,9 @@ export const PaymentModal = ({
                 )}
                 {["Pix", "Credit"].includes(paymentType) && (
                   <FormatPrice
-                    amount={paymentData.fiatUnitPrice}
+                    amount={
+                      Number(paymentData.fiatUnitPrice) * paymentData.amount
+                    }
                     currency={config.currency}
                   />
                 )}
@@ -1066,12 +1079,7 @@ export const PaymentModal = ({
         </PaymentModalBody>
       )}
       {step === "cryptoCheckout" && (
-        <Box
-          borderTop="6px solid"
-          borderColor={config.mainColor}
-          borderRadius="15px"
-          p="50px"
-        >
+        <Box borderRadius="15px" p="50px">
           <Text fontFamily="'Roboto', sans-serif">Cripto</Text>
         </Box>
       )}
@@ -1096,7 +1104,8 @@ export const PaymentModal = ({
           >
             <CheckoutForm
               purchaseInfo={{
-                fiatAmount: paymentData.fiatUnitPrice,
+                fiatAmount:
+                  Number(paymentData.fiatUnitPrice) * paymentData.amount,
                 currency: config.currency,
 
                 // Não estamos usando
@@ -1215,7 +1224,9 @@ export const PaymentModal = ({
                 color="#454545"
               >
                 <FormatPrice
-                  amount={paymentData.fiatUnitPrice}
+                  amount={
+                    Number(paymentData.fiatUnitPrice) * paymentData.amount
+                  }
                   currency={config.currency}
                 />
               </Text>

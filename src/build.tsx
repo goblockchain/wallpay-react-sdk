@@ -12,12 +12,10 @@ import React from "react";
 const buildSDK = ({
   sdkPrivateKey,
   creditCardConfirmUrl,
-  showUserSpace = false,
   userSpaceUrl,
 }: {
   sdkPrivateKey: string;
   creditCardConfirmUrl?: string;
-  showUserSpace?: boolean;
   userSpaceUrl?: string;
 }) => {
   return {
@@ -46,7 +44,7 @@ const buildSDK = ({
       return (
         isLoaded && (
           <useConfigHooks.ConfigProvider config={sdkConfig.config as Config}>
-            <useNotificationHooks.NotificationProvider showUserSpace={showUserSpace} userSpaceUrl={userSpaceUrl}>
+            <useNotificationHooks.NotificationProvider userSpaceUrl={userSpaceUrl}>
               <useEthereumHooks.EthereumProvider sdkPrivateKey={sdkPrivateKey}>
                 <useWalletsHooks.WalletsProvider sdkPrivateKey={sdkPrivateKey}>
                   <usePaymentHooks.PaymentProvider
