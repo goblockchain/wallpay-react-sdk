@@ -2,8 +2,6 @@
 declare type PaymentData = {
     fiatPrice?: number;
     price?: number;
-    itemId?: number;
-    tokenId?: number;
     itemName?: string;
     itemImage?: string;
 };

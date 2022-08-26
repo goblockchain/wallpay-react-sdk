@@ -1,8 +1,6 @@
 /// <reference types="react" />
 export declare type PaymentData = {
     itemName: any;
-    itemId: number;
-    tokenId: number;
     fixedPrice: number;
     PriceBRL: number;
     itemImage: string;
