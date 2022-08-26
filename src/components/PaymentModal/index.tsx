@@ -52,7 +52,8 @@ import { sdkConfig } from "../../utils/load";
 
 type PaymentData = {
   itemName: any;
-  tokenId: number;
+  mintParams?: Object;
+  transferParams?: Object;
   unitPrice: number;
   itemImage: string;
   amount: number;
@@ -315,11 +316,11 @@ export const PaymentModal = ({
         email: userEmail,
         clientName: userName,
         hasFixedPrice: paymentData.hasFixedPrice,
+        mintOrTransferParams: paymentData.transferParams,
         item: {
           amount: paymentData.amount,
           price: paymentData.fiatUnitPrice.toString(),
           description: `${config.title} - ${paymentData.itemName} NFT`,
-          tokenId: paymentData.tokenId,
         },
         fiat: config.currency,
       };
@@ -462,8 +463,7 @@ export const PaymentModal = ({
       emitNotificationModal({
         type: PAYMENT_STEPS.IN_PROGRESS,
       });
-      let hasEmail = false;
-      hasEmail = true;
+      let hasEmail = true;
       let postData = {
         storeName: config.title.toLocaleLowerCase(),
         currency: blockchainInfo?.SYMBOL,
@@ -471,11 +471,11 @@ export const PaymentModal = ({
         contractAddress: config.contractAddress,
         email: userEmail,
         clientName: userName,
+        mintOrTransferParams: paymentData.mintParams,
         item: {
           amount: paymentData.amount,
           price: paymentData.unitPrice.toString(),
           description: `${config.title} - ${paymentData.itemName} NFT`,
-          tokenId: paymentData.tokenId,
         },
         fiat: config.currency,
       };
@@ -505,9 +505,20 @@ export const PaymentModal = ({
         sdkConfig.contractData?.contractAddress
       );
 
-      const transactionParams = [paymentData.tokenId, paymentData.amount];
+      const databaseParams: any[] =
+        sdkConfig.contractData?.payableMintOrTransferMethodParams || [];
+      let databaseKeys: string[] = [];
+      for (let i = 0; i < databaseParams.length; i++) {
+        databaseKeys.push(databaseParams[i]?.name);
+      }
 
-      const res = await contract.methods[
+      const frontParams = paymentData.mintParams || {};
+      let transactionParams: string[] = [];
+      for (let key of databaseKeys) {
+        transactionParams.push(frontParams[key]);
+      }
+
+      await contract.methods[
         sdkConfig.contractData?.payableMintOrTransferMethodName
       ](...transactionParams).send(buyTokenObject);
 
@@ -562,14 +573,15 @@ export const PaymentModal = ({
           storeName: config.title,
           currency: blockchainInfo?.SYMBOL,
           email: userEmail,
+          clientName: userName,
           walletAddress: userWalletAddress,
           contractAddress: config.contractAddress,
           hasFixedPrice: paymentData.hasFixedPrice,
+          mintOrTransferParams: paymentData.transferParams,
           item: {
             amount: paymentData.amount,
             price: paymentData.fiatUnitPrice.toString(),
-            description: `${paymentData.itemName}`,
-            tokenId: paymentData.tokenId,
+            description: `${config.title} - ${paymentData.itemName} NFT`,
           },
           fiat: config.currency,
         },
