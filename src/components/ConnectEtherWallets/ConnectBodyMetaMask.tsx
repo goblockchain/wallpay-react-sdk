@@ -27,7 +27,7 @@ import {
 import { useRouter } from "next/router";
 
 // import { useWallets, useConfig } from "../../hooks";
-import { useTranslation, useLanguageQuery } from "next-export-i18n";
+import { t } from "../../i18n";
 
 // import { CopyToClipboard } from "..";
 import { BlockchainInfo, NETWORKS } from "../../enums";
@@ -72,8 +72,6 @@ export const ConnectBodyMetaMask = () => {
   } = useWallets();
 
   const { config } = useConfig();
-  const { t } = useTranslation()
-  const [query] = useLanguageQuery();
 
   const { onCopy } = useClipboard(walletAddress);
   const router = useRouter();
@@ -214,7 +212,7 @@ export const ConnectBodyMetaMask = () => {
                     label={t('user_area')}
                     shouldWrapChildren
                     bg={"#454545"}
-                  > <Link href={{ pathname: '/userSpace', query: query }}>
+                  > <Link href={{ pathname: '/userSpace' }}>
                       <IconButton
                         mr="10px"
                         variant="outline"

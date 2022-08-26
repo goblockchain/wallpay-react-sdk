@@ -14,7 +14,7 @@ import {
 } from "@stripe/react-stripe-js";
 
 import closeblack from "../../assets/closeblack.png";
-import { useTranslation } from "next-export-i18n";
+import { t } from "../../i18n";
 import { useNotification } from "../../hooks/useNotification";
 import { theme } from "../../styles/theme";
 import { FormatPrice } from "../../utils";
@@ -67,8 +67,6 @@ export const PaymentModalBody = ({
   onClosePaymentModal,
   title,
 }: PaymentModalBodyProps) => {
-  const { t } = useTranslation();
-
   return (
     <ChakraProvider resetCSS={false} theme={theme}>
       <Flex

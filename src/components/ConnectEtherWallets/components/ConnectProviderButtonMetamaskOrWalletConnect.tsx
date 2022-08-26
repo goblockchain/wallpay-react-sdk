@@ -8,7 +8,7 @@ import {
   ChakraProvider
 } from '@chakra-ui/react'
 import { LOGIN_TYPE } from '@toruslabs/torus-embed';
-import { useTranslation } from 'next-export-i18n';
+import { t } from '../../../i18n';
 
 import { ConnectWalletInput, WalletProviders } from '../../../hooks/useWallets';
 import { theme } from '../../../styles/theme';
@@ -25,8 +25,6 @@ export const ConnectProviderButtonMetamaskOrWalletConnect = ({
   walletProvider,
   loginType
 }: ConnectProviderButtonProps) => {
-
-  const { t } = useTranslation();
 
   const walletProvidersNames = {
     metamask: 'Metamask',
