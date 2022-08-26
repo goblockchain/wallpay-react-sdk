@@ -14,7 +14,8 @@ export const sdkConfig = {} as Partial<{
     abi: any;
     contractAddress: any;
     payableMintOrTransferMethodName: any;
-  }
+    payableMintOrTransferMethodParams: any;
+  };
 }>;
 
 const validateKey = async (sdkPrivateKey: string) => {
@@ -85,6 +86,9 @@ export const loadSdkConfig = async (sdkPrivateKey: string) => {
   sdkConfig.contractData = {
     abi: contractData.result.abi,
     contractAddress: contractData.contractAddress,
-    payableMintOrTransferMethodName: contractData.result.payableMintOrTransferMethodName
+    payableMintOrTransferMethodName:
+      contractData.result.payableMintOrTransferMethodName,
+    payableMintOrTransferMethodParams:
+      contractData.result.payableMintOrTransferMethodParams,
   };
 };

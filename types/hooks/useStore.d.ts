@@ -1,7 +1,5 @@
 /// <reference types="react" />
 export declare type SellOffer = {
-    itemId: number;
-    tokenId: string;
     name: string;
     nftCover: string;
     quantity: number;

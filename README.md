@@ -40,8 +40,6 @@ const {
   paymentData={{
     PriceBRL: paymentData.fiatPrice,
     fixedPrice: paymentData.price,
-    itemId: paymentData.itemId,
-    tokenId: paymentData.tokenId,
     itemName: paymentData.itemName,
     itemImage: paymentData.itemImage,
   }}

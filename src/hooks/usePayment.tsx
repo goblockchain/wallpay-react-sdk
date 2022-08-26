@@ -16,7 +16,8 @@ import { useConfig } from "./useConfig";
 
 type PaymentDataProps = {
   itemName: any;
-  tokenId: number;
+  mintParams?: Object;
+  transferParams?: Object;
   unitPrice: number;
   itemImage: string;
   amount: number;
@@ -25,8 +26,9 @@ type PaymentDataProps = {
 };
 
 type PaymentData = {
+  mintParams?: Object;
+  transferParams?: Object;
   itemName: any;
-  tokenId: number;
   unitPrice: number;
   itemImage: string;
   amount: number;
@@ -57,7 +59,6 @@ export const PaymentProvider = ({
   const { config } = useConfig();
 
   const onOpenPaymentModal: OnOpenPaymentModal = async (paymentData) => {
-
     const fiatUnitPrice = parseInt(
       new BigNumber(paymentData.unitPrice)
         .multipliedBy(fiatRates[config.currency])
@@ -87,13 +88,14 @@ export const PaymentProvider = ({
                 onClose={onClose}
                 paymentData={{
                   unitPrice: Number(paymentData.unitPrice),
-                  tokenId: Number(paymentData.tokenId),
                   itemName: paymentData.itemName,
                   itemImage: String(paymentData.itemImage),
                   amount: paymentData.amount,
                   hasFixedPrice: paymentData.hasFixedPrice,
-                  walletAddress: paymentData.walletAddress,
                   fiatUnitPrice: paymentData.fiatUnitPrice,
+                  walletAddress: paymentData.walletAddress,
+                  mintParams: paymentData.mintParams,
+                  transferParams: paymentData.transferParams,
                 }}
                 sdkPrivateKey={sdkPrivateKey}
                 creditCardConfirmUrl={creditCardConfirmUrl}
