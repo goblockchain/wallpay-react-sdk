@@ -47,7 +47,7 @@ const buildSDK = ({
       }, []);
 
       return (
-        isLoaded && (
+        isLoaded ? <></> : (
           <useConfigHooks.ConfigProvider config={sdkConfig.config as Config}>
             <useNotificationHooks.NotificationProvider userSpaceUrl={userSpaceUrl}>
               <useEthereumHooks.EthereumProvider sdkPrivateKey={sdkPrivateKey}>
