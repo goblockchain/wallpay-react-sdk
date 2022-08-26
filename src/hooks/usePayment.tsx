@@ -91,7 +91,7 @@ export const PaymentProvider = ({
                   itemName: paymentData.itemName,
                   itemImage: String(paymentData.itemImage),
                   amount: paymentData.amount,
-                  hasFixedPrice: paymentData.hasFixedPrice,
+                  hasFixedPrice: true,
                   fiatUnitPrice: paymentData.fiatUnitPrice,
                   walletAddress: paymentData.walletAddress,
                   mintParams: paymentData.mintParams,

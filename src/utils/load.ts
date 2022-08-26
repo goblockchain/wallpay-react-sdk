@@ -64,7 +64,6 @@ const getStripeParams = async (sdkPrivateKey: string) => {
 
 export const loadSdkConfig = async (sdkPrivateKey: string) => {
   const storeInfo = await validateKey(sdkPrivateKey);
-  const stripeParams = await getStripeParams(sdkPrivateKey);
   const contractData = await getContract(sdkPrivateKey);
 
   const configParams: Config = {
@@ -82,7 +81,11 @@ export const loadSdkConfig = async (sdkPrivateKey: string) => {
 
   sdkConfig.config = configParams;
   sdkConfig.paymentMethods = storeInfo.paymentMethods;
-  sdkConfig.stripeParams = stripeParams;
+
+  if (storeInfo.paymentMethods.includes("credit_card")) {
+    const stripeParams = await getStripeParams(sdkPrivateKey);
+    sdkConfig.stripeParams = stripeParams;
+  }
   sdkConfig.contractData = {
     abi: contractData.result.abi,
     contractAddress: contractData.contractAddress,

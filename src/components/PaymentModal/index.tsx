@@ -241,15 +241,24 @@ export const PaymentModal = ({
   const { emitNotificationModal } = useNotification();
 
   useEffect(() => {
-    const { paymentMethods: clientPaymentMethods, stripeParams } = sdkConfig;
-    if (walletIsConnected && stripeParams) {
+    // const { paymentMethods: clientPaymentMethods, stripeParams } = sdkConfig;
+    const { paymentMethods: clientPaymentMethods } = sdkConfig;
+
+    let stripeParams;
+    if (clientPaymentMethods?.includes("credit_card")) {
+      stripeParams = sdkConfig.stripeParams;
+    }
+
+    if (walletIsConnected) {
       userWalletAddress = walletAddress || paymentData.walletAddress;
       setPaymentMethods(clientPaymentMethods || paymentMethods);
-      setStripePromise(
-        loadStripe(stripeParams?.goPublicKey, {
-          stripeAccount: stripeParams?.clientAccountId,
-        })
-      );
+      if (stripeParams) {
+        setStripePromise(
+          loadStripe(stripeParams?.goPublicKey, {
+            stripeAccount: stripeParams?.clientAccountId,
+          })
+        );
+      }
     }
   }, []);
   const { config } = useConfig();
@@ -366,7 +375,7 @@ export const PaymentModal = ({
     try {
       const interval = setInterval(async () => {
         tries += 1;
-        console.log("[DEBUG] paymentStatus", paymentStatus);
+        // console.log("[DEBUG] paymentStatus", paymentStatus);
 
         if (tries >= Math.ceil(TIME_TO_PAY / 2)) {
           onClose();

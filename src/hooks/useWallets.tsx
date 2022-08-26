@@ -159,16 +159,16 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
 
   const ErrToConnect = () => {
     if (asPath.includes("lang=br")) {
-      return "Parece que você não está conectado na Polygon Mainnet, por favor verifique sua conexão e tente novamente!";
+      return "Parece que você não está conectado na rede Ethereum, por favor verifique sua conexão e tente novamente!";
     }
     if (asPath.includes("lang=en")) {
-      return "It looks like you are not connected with Polygon Mainnet, please check your connection and try again!";
+      return "It looks like you are not connected with Ethereum Network, please check your connection and try again!";
     }
     if (asPath.includes("lang=es")) {
-      return "Parece que no está conectado con Polygon Mainnet, verifique su conexión e intente nuevamente.";
+      return "Parece que no está conectado con Ethereum Network, verifique su conexión e intente nuevamente.";
     }
     if (!asPath.includes("lang=")) {
-      return "Parece que você não está conectado na Polygon Mainnet, por favor verifique sua conexão e tente novamente!";
+      return "Parece que você não está conectado na rede Ethereum, por favor verifique sua conexão e tente novamente!";
     }
   };
 
