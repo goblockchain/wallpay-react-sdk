@@ -1,44 +1,6 @@
 {
   "welcome": "Bienvenido a la comunidad y el mercado de NFT",
   "about_stockCar": "Stock Car, la principal categoría del automovilismo nacional, sigue siendo cada vez más emocionante. Cada temporada, las novedades y los cambios están pensados ​​para que las disputas sean más encarnizadas y electrizantes, tanto para los pilotos como para el público.",
-  "faqItems": [
-    {
-      "title": "¿Qué es el Hall of Fame de #NFT?",
-      "content": "El Hall of Fame es la primera colección de NFT de Stock Car, un cartel que celebra todos los autos y campeones de la categoría, desde 1979 hasta la actualidad, en un arte exclusivo firmado por Ararê Novaes, ilustrador gráfico y artista plástico, especialista en arte automotriz realista.El Opala campeón de 1979, de Paulo Gomes, el Opala Hidroplas de Zeca Giaffone, que ganó en 1987, el Omega ganador de 1996, de Ingo Hoffmann, el Vectra con estructura tubular, que se llevó Chico Serra al podio en el debut, en 2000, el Chevrolet Astra de Giuliano Losacco que venció en 2005, el Mitsubishi Lancer que debutó en 2006 con el título de Cacá Bueno.Todos los autos campeones más icónicos están en esta obra exclusiva de Ararê Novaes, quien pintó cada uno de ellos con la técnica realista, especialmente para la pieza.<br/><br/>En edición limitada, existen tres categorías con diferentes prestaciones y características.<br/><br/><br/>HALL OF FAME - SIGNATURE<br/>Cantidad: 100 | Precio: R$ 3.600 <br/>• 1 NFT Hall of Fame serie exclusiva autografiada por Ingo Hoffmann;<br/>• 1 póster impreso;<br/>• 1 insignia de caja para las carreras de 2022;<br/>• 200 R$ en crédito de la tienda Stock Car;<br/>• Meet & Greet con Ingo Hoffmann;<br/><br/><br/>HALL OF FAME - LIMITED<br/>Cantidad: 350 | Precio: R$ 550<br/>• 1 serie limitada NFT Hall of Fame con marco dorado;<br/>• 1 póster impreso;<br/>• 2 entradas para las gradas de Stock Car;<br/><br/><br/>"
-    },
-    {
-      "title": "¿Cómo recibo mi cartel impreso y otros beneficios?",
-      "content": "Cada categoría de NFT otorgará o no a su Adquiriente el derecho a utilizar los beneficios, con redención permitida a partir del 22.08.2022 con un plazo de 90 días para la redención."
-    },
-    {
-      "title": "¿Puedo pagar con Pix?",
-      "content": "Si, si tienes una cuenta brasileña! Aún no está familiarizado con el mundo de blockchain y las criptomonedas, no se preocupe, puede iniciar sesión, realizar su compra a través de PIX y nuestra plataforma creará automáticamente una billetera digital para usted, ya conectada a Blockchain.<br/ > <br/>Si ya tiene una billetera digital como Metamask (o similar) y quiere pagar con criptomonedas, ¡también está bien! El Hall of Fame está en la red Polygon y se puede comprar con $MATIC."
-    },
-    {
-      "title": "¿Qué es una billetera digitales?",
-      "content": "Las billeteras digitales son herramientas que funcionan como un puente entre blockchain y dApp (aplicaciones descentralizadas). <br/> Esto significa que con una billetera podrá monitorear sus fondos disponibles, historial de transacciones y opciones de seguridad. <br/> Por ejemplo, usamos la cadena de bloques de Ethereum para registrar la propiedad de todos los activos digitales y artículos negociables. <br/> Su dirección de billetera pública es un identificador único para su billetera. <br/> Es como un número de cuenta bancaria, puede compartirlo libremente con otras personas y se usa para dirigir activos hacia y desde su billetera. <br/> Si no conoce muy bien el universo de Blockchain y cripto, não precisa se preocupar, no te preocupes pues puedes hacer el login con tu cuenta Facebook, Google y hacer el pago con PIX."
-    },
-    {
-      "title": "¿Puedo transferir NFT a otra billetera digital?",
-      "content": "Sí será posible."
-    },
-    {
-      "title": "¿Se puede revender el NFT?",
-      "content": "Sí, si desea intercambiar su NFT, puede revenderlo. En este caso, los NFT de Stock Car irán a un mercado secundario, dentro del propio mercado y podrá vender allí, o en otros mercados de NFT, como Opensea y Rarible."
-    },
-    {
-      "title": "¿Necesito instalar una aplicación para comprar?",
-      "content": "No se requiere la instalación de la aplicación, puede comprar y ver su colección desde un navegador web compatible con las principales computadoras y teléfonos inteligentes."
-    },
-    {
-      "title": "¿Cuál es la relación del Hall of Fame de la NFT con el Instituto Ingo Hoffmann?",
-      "content": "Un porcentaje de las ventas del Hall of Fame #1NFT se destinará al Instituto Ingo Hoffmann, creado por él, el mayor campeón en la historia del Stock Car.<br/><br/>El Instituto Ingo Hoffman fue fundado en 2005 para albergar a niños en cuidados intensivos contra el cáncer que no pueden ser mantenidos por sus familias fuera de sus hogares.<br/><br/>Ingo es de São Paulo pero tiene el apodo de Alemão. <br/><br/>Solo en Stock Car consiguió 12 títulos, 76 victorias y 60 poles. Fuera de los circuitos, Ingo también fue dos veces Campeón Brasileño de Rally Cross Country, Categoría Prototipos, y subcampeón absoluto. dos Sertões, la carrera todoterreno más grande y difícil de América Latina, también fue subcampeón."
-    },
-    {
-      "title": "¿Qué son las NFT?",
-      "content": "Los NFT son coleccionables digitales únicos que le permiten determinar digitalmente la autenticidad y la propiedad de un activo.<br/><br/>NFT significa ''Token no fungible'' no fungible'', de forma gratuita traducción) es una especie de certificado digital, un tipo de identidad, una firma que autentica la originalidad y exclusividad de un elemento digital, que puede ser una imagen, música, tarjetas de juego, memes, proyectos de diseño, manuscritos, fotos, videos, mensajes o incluso una publicación en las redes sociales.<br/><br/>Token es un criptoactivo, un activo digital registrado en una cadena de bloques, que se puede comprar, vender o intercambiar.<br/><br/>En otras palabras , NFT es un artículo digital que garantiza la posesión de un bien exclusivo, que ninguna otra persona tiene. Así, los NFT hacen que el artículo sea único en el mundo, generando interés en coleccionistas e inversores."
-    }
-  ],
   "view_opensea": "Ver en OpenSea",
   "view_rarible": "Ver en Rarible",
   "nft_title": "Título NFT",

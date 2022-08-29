@@ -8,16 +8,21 @@ import HandleConfirmCredit from "./components/ConfirmCredit";
 import { loadSdkConfig, sdkConfig } from "./utils/load";
 import { Config } from "./hooks/useConfig";
 import React from "react";
+import { setLanguage } from "./i18n";
 
 const buildSDK = ({
   sdkPrivateKey,
   creditCardConfirmUrl,
   userSpaceUrl,
+  defaultLanguage,
 }: {
   sdkPrivateKey: string;
   creditCardConfirmUrl?: string;
   userSpaceUrl?: string;
+  defaultLanguage: string;
 }) => {
+  setLanguage(defaultLanguage);
+
   return {
     ...usePaymentHooks,
     PaymentModal: (props: any) => (
@@ -42,7 +47,7 @@ const buildSDK = ({
       }, []);
 
       return (
-        isLoaded && (
+        isLoaded ? <></> : (
           <useConfigHooks.ConfigProvider config={sdkConfig.config as Config}>
             <useNotificationHooks.NotificationProvider userSpaceUrl={userSpaceUrl}>
               <useEthereumHooks.EthereumProvider sdkPrivateKey={sdkPrivateKey}>

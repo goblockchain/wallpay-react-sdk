@@ -16,7 +16,7 @@ import { ConnectProviderButton } from "./components";
 import { CloseButton } from "../CloseButton";
 import { ConnectProviderButtonMetamaskOrWalletConnect } from "../ConnectEtherWallets/components/ConnectProviderButtonMetamaskOrWalletConnect";
 import { useConfig } from "../../hooks/useConfig";
-import { useTranslation } from "next-export-i18n";
+import { t } from "../../i18n";
 
 import metamask from "../../assets/metamask.png";
 import walletConnect from "../../assets/walletconnect.png";
@@ -48,7 +48,6 @@ export const ConnectWalletsModal = ({
   isLoading,
 }: ConnectWalletsModalProps) => {
   const { config } = useConfig();
-  const { t } = useTranslation();
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
