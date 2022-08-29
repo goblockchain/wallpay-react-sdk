@@ -7,8 +7,10 @@ export const sdkConfig = {} as Partial<{
   config: Config;
   paymentMethods: string[];
   stripeParams: {
-    clientAccountId: string;
-    goPublicKey: string;
+    // clientAccountId: string;
+    clientPublicKey: string;
+    // clientSecretKey: string;
+    // goPublicKey: string;
   };
   contractData: {
     abi: any;
@@ -53,8 +55,10 @@ const getStripeParams = async (sdkPrivateKey: string) => {
     );
 
     return {
-      clientAccountId: stripeParams.clientAccountId,
-      goPublicKey: stripeParams.goPublicKey,
+      // clientAccountId: stripeParams.clientAccountId,
+      clientPublicKey: stripeParams.clientPublicKey,
+      // clientSecretKey: stripeParams.clientSecretKey,
+      // goPublicKey: stripeParams.goPublicKey,
     };
   } catch (error) {
     console.error("SDK Error while retireving stripe params", error);
