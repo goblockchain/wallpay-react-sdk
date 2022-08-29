@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, Button, ButtonProps, ChakraProvider } from '@chakra-ui/react'
 import { WalletIcon } from '../Icons'
-import { useTranslation } from "next-export-i18n";
+import { t } from "../../i18n";
 import { theme } from '../../styles/theme';
 
 
@@ -10,8 +10,6 @@ type ConnectEtherWalletsButtonProps = {
 }
 
 export const ConnectEtherWalletsButton = ({ handleOpenWalletModal, ...rest }: ConnectEtherWalletsButtonProps & ButtonProps) => {
-  const { t } = useTranslation();
-
   return (
     <ChakraProvider resetCSS={false} theme={theme}>
       <Button p="0px 38px"

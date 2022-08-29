@@ -1,48 +1,6 @@
 {
   "welcome": "Bem vindo a comunidade e marketplace de NFTs",
   "about_stockCar": "Stock Car, a principal categoria do automobilismo nacional, segue cada vez mais emocionante. A cada temporada, novidades e mudanças são pensadas para tornar as disputas mais acirradas e eletrizantes, tanto para os pilotos como para o público.",
-  "faqItems": [
-    {
-      "title": "O que é a #NFT Hall of Fame?",
-      "content": "O Hall of Fame é a primeira coleção de NFTs da Stock Car, um pôster que celebra todos os carros e campeões da categoria, desde 1979 até os dias de hoje, em uma arte exclusiva assinada por Ararê Novaes, ilustrador gráfico e artista plástico, especialista  em arte automotiva realista. O Opala campeão de 1979, de Paulo Gomes, o Opala Hidroplas de Zeca Giaffone, que venceu em 1987, o Ômega vencedor de 1996, de Ingo Hoffmann, o Vectra com estrutura tubular, que levou Chico Serra ao pódio na estreia, em 2000, o Chevrolet Astra de Giuliano Losacco que venceu em 2005, o Mitsubishi Lancer que estreou em 2006 com título de Cacá Bueno. Todos os carros campeões mais icônicos estão nesta obra exclusiva de Ararê Novaes, que pintou cada um deles com a técnica realista, especialmente para a peça.<br/><br/>Em edição limitada, são três categorias com benefícios e características distintas.<br/><br/><br/>HALL OF FAME - SIGNATURE<br/>Quantidade: 100 | Valor: R$ 3.600 <br/>• 1 NFT Hall of Fame série signature autografado por Ingo Hoffmann;<br/>• 1 Poster impresso;<br/>• 1 credencial Box para as corridas de 2022;<br/>• R$ 200 em crédito na loja Stock Car;<br/>• Meet & Greet com Ingo Hoffmann;<br/><br/>HALL OF FAME - LIMITED<br/>Quantidade: 350 | Valor: R$ 550<br/>• 1 NFT Hall of Fame série limited com moldura dourada;<br/>• 1 Poster Impresso;<br/>• 2 ingressos arquibancada Stock Car;<br/><br/>"
-    },
-    {
-      "title": "Como faço para receber meu poster impresso e os outros benefícios?",
-      "content": "Cada categoria de NFTs concederá ou não ao seu Adquirente o direito de uso de benefícios, com resgate permitido a partir de 22.08.2022 com prazo limite de 90 dias para o resgate."
-    },
-    {
-      "title": "Posso pagar com Pix?",
-      "content": "Se você ainda não é familiarizado com o universo da blockchain e criptomoedas, não precisa se preocupar, você poderá efetuar login, efetuar sua compra via PIX e nossa plataforma criará uma carteira digital automaticamente para você, já conectada com a Blockchain.<br/><br/>Caso você já possua uma carteira digital como a Metamask (ou similar) e quiser pagar com cripto, tudo bem também! O Hall of Fame está na rede Polygon e pode ser adquirido com $MATIC."
-    },
-    {
-      "title": "O que é uma carteira digital?",
-      "content": "As carteiras digitais são ferramentas que funcionam como uma ponte entre blockchain e dApp (aplicativos descentralizados). <br/> Isso significa que com uma carteira você poderá monitorar seus fundos disponíveis, histórico de transações e opções de segurança. <br/> Por exemplo, usamos o blockchain Ethereum para registrar a propriedade de todos os ativos digitais e itens negociáveis. <br/> Seu endereço de carteira pública é um identificador exclusivo para sua carteira. <br/> É como um número de conta bancária, você pode compartilhá-lo livremente com outras pessoas e é usado para direcionar ativos de e para sua carteira. <br/> Se você ainda não é familiarizado com o universo da blockchain e criptomoedas, não precisa se preocupar, você poderá efetuar login via Google ou FAcebool efetuar sua compra via PIX e nossa plataforma criará uma carteira digital automaticamente para você, já conectada com a Blockchain."
-    },
-    {
-      "title": "Posso transferir a NFT pra outra carteira digital?",
-      "content": "Sim, será possível transferir livremente."
-    },
-    {
-      "title": "Posso revender a NFT? ",
-      "content": "Sim, se desejar negociar sua NFT, você pode revendê-la. Nesse caso, as NFTs da Stock Car irão para um mercado secundário, dentro do próprio marketplace e você poderá vender por lá, ou em outros marketplaces de NFTs, como o Opensea e o Rarible."
-    },
-    {
-      "title": "Preciso instalar algum app para comprar?",
-      "content": "Não e necessário nenhuma instalação de aplicativo, você consegue comprar e ver sua coleção a partir de um navegador web compatível com os principais computadores e smartphones"
-    },
-    {
-      "title": "Qual a relação da NFT Hall of Fame com o Instituto Ingo Hoffmann?",
-      "content": "Uma porcentagem das vendas da #1NFT Hall of Fame será destinada ao Instituto Ingo Hoffmann, criado por ele, o maior campeão da história da Stock Car.<br/><br/>O Instituto Ingo Hoffman foi fundado em 2005 para abrigar crianças em tratamento intensivo contra o câncer e que não têm condições de serem mantidas por suas famílias fora de suas casas.<br/><br/>Ingo é paulistano mas tem o apelido de Alemão. É o maior vencedor do automobilismo nacional.<br/><br/>Só na Stock Car ele conquistou 12 títulos, 76 vitórias e 60 pole-positions. Fora dos autódromos, Ingo também foi bicampeão brasileiro de Rally Cross Country Categoria Protótipo e vice-campeão geral. No Rally dos Sertões, a maior e mais difícil prova off-Road da América Latina, ele também foi vice-campeão."
-    },
-    {
-      "title": "O que são NFTs?",
-      "content": "NFTs são itens colecionáveis digitais únicos, que permitem determinar autenticidade e a propriedade de um ativo de maneira digital.<br/><br/>NFT, sigla para ''Non-fungible Token'' (''Token não-fungível'', em tradução livre) é uma espécie de certificado digital, um tipo de identidade, uma assinatura que autentica a originalidade e a exclusividade de um item  digital, que pode ser uma imagem, música, cards de games, memes, projetos de designers, manuscritos, fotos, vídeos, mensagens ou até uma postagem em rede social.<br/><br/>Token é um cripto ativo, um ativo digital registrado em uma blockchain, que pode ser comprado, vendido ou trocado.<br/><br/>Ou seja, NFT é um item digital que garante a posse de um bem exclusivo, que nenhuma outra pessoa tem. Assim, os NFTs tornam o item único no mundo, gerando interesse em colecionadores e investidores."
-    },
-    {
-      "title": "O que é Stock Club?",
-      "content": "Um dos clubes mais exclusivos do mundo do automobilismo, o ponto de encontro dos maiores fãs das pistas, corridas, carros e campeões onde os VIP Members e colecionadores de NFTs terão acesso a itens raros, experiências, encontros e vantagens exclusivas.<br/><br/>Mais detalhes sobre o Stock Club serão anunciados em breve."
-    }
-  ],
   "view_opensea": "Veja no OpenSea",
   "view_rarible": "Veja no Rarible",
   "nft_title": "NFT Título",

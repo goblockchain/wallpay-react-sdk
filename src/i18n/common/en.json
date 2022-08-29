@@ -1,44 +1,6 @@
 {
   "welcome": "Welcome to the NFTs community and marketplace",
   "about_stockCar": "Stock Car, the main category of national motorsport, continues to be more and more exciting. Every season, news and changes are designed to make the disputes more fierce and electrifying, both for drivers and for the public.",
-  "faqItems": [
-    {
-      "title": "What is the #NFT Hall of Fame?",
-      "content": "The Hall of Fame is the first collection of NFTs from Stock Car, a poster that celebrates all the cars and champions of the category, from 1979 to the present day, in an exclusive art signed by Ararê Novaes, graphic illustrator and plastic artist, specialist in realistic automotive art. The 1979 champion Opala, by Paulo Gomes, the Opala Hidroplas by Zeca Giaffone, who won in 1987, the 1996 winner Omega, by Ingo Hoffmann, the Vectra with tubular structure, which took Chico Serra to the podium in his debut, in 2000, the Chevrolet Astra by Giuliano Losacco that won in 2005, the Mitsubishi Lancer that debuted in 2006 with the title of Cacá Bueno. All the most iconic champion cars are in this exclusive work by Ararê Novaes, who painted each one of them with a realistic technique, especially for the part.<br/>In limited edition, there are three categories with distinct benefits and characteristics.<br/><br/><br/>HALL OF FAME - SIGNATURE <br/>Quantity: 100 | Price: BRL 3,600 <br/>• 1 NFT Hall of Fame series signature autographed by Ingo Hoffmann;<br/>• 1 Printed Poster;<br/>• 1 Box badge for the 2022 races;<br/>• R$200 in Stock Car store credit;<br/>• Meet & Greet with Ingo Hoffmann;<br/><br/><br/>HALL OF FAME - LIMITED<br/>Quantity: 350 | Price: R$ 550<br/>• 1 NFT Hall of Fame limited series with gold frame;<br/>• 1 Printed Poster;<br/>• 2 Stock Car bleacher tickets;<br/><br/><br/>"
-    },
-    {
-      "title": "How do I receive my printed poster and other benefits?",
-      "content": "Each category of NFTs will or will not grant its Acquirer the right to use benefits, with redemption allowed from 08.22.2022 with a 90-day deadline for redemption."
-    },
-    {
-      "title": "Can I pay with Pix?",
-      "content": "Yes, if you have a brazilian bank account. If you are not yet familiar with the world of blockchain and cryptocurrencies, don't worry, you can log in, make your purchase via PIX and our platform will automatically create a digital wallet for you, already connected to the Blockchain.<br/> <br/>If you already have a digital wallet like Metamask (or similar) and want to pay with crypto, that's fine too! The Hall of Fame is on the Polygon network and can be purchased with $MATIC."
-    },
-    {
-      "title": "What is a digital wallet?",
-      "content": "Digital wallets are tools that work as a bridge between blockchain and dApp (decentralized applications). <br/> This means that with a wallet you will be able to monitor your available funds, transaction history and security options. <br/> We for example use the Ethereum blockchain to record ownership of all digital assets and tradable items. <br/> Your public wallet address is a unique identifier for your wallet. <br/> It’s like a bank account number, you can share it freely with others, and it’s used to direct assets to and from your wallet. <br/> If you know very well about Blockchain or crypto, don't worry. You can use you Facebook or Google account to login and Pay with Pix."
-    },
-    {
-      "title": "Can I transfer NFT to another digital wallet?",
-      "content": "Yes it will be possible."
-    },
-    {
-      "title": "Can you resell the NFT?",
-      "content": "Yes, if you want to trade your NFT, you can resell it. In this case, the Stock Car NFTs will go to a secondary market, within the marketplace itself and you can sell there, or on other NFTs marketplaces, such as Opensea and Rarible."
-    },
-    {
-      "title": "Do I need to install an app to buy?",
-      "content": "No app installation is required, you can buy and view your collection from a web browser compatible with all major computers and smartphones"
-    },
-    {
-      "title": "What is the relationship of the NFT Hall of Fame to the Ingo Hoffmann Institute?",
-      "content": "A percentage of sales from the #1NFT Hall of Fame will go to the Ingo Hoffmann Institute, created by him, the greatest champion in the history of Stock Car.<br/><br/>The Ingo Hoffman Institute was founded in 2005 to shelter children in intensive care against cancer who are unable to be supported by their families outside their homes.<br/><br/>Ingo is from São Paulo but has the nickname Alemão. <br/><br/>Only in Stock Car he won 12 titles, 76 victories and 60 pole positions. Outside the racetracks, Ingo was also two-time Brazilian Cross Country Rally Champion, Prototype Category, and overall runner-up. dos Sertões, the biggest and most difficult off-road race in Latin America, he was also runner-up."
-    },
-    {
-      "title": "What are NFTs?",
-      "content": "NFTs are unique digital collectibles that allow you to digitally determine authenticity and ownership of an asset.<br/><br/>NFT stands for ''Non-fungible Token'' non-fungible'', in free translation) is a kind of digital certificate, a type of identity, a signature that authenticates the originality and exclusivity of a digital item, which can be an image, music, game cards, memes, designer projects, manuscripts, photos, videos, messages or even a social media post.<br/><br/>Token is a crypto asset, a digital asset registered on a blockchain, which can be bought, sold or exchanged. <br/><br/>In other words, NFT is a digital item that guarantees the possession of an exclusive good, which no other person has. Thus, NFTs make the item unique in the world, generating interest in collectors and investors."
-    }
-  ],
   "view_opensea": "View in OpenSea",
   "view_rarible": "View in Rarible",
   "nft_title": "NFT Title",

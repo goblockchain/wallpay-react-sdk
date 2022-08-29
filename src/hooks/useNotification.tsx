@@ -18,7 +18,7 @@ import wallpayLogo from "../assets/wallpay.png";
 
 import { useConfig } from "./useConfig";
 import { ERRORS, PAYMENT_STEPS, EMAIL_STATUS } from "../enums";
-import { useLanguageQuery, useTranslation } from "next-export-i18n";
+import { t } from "../i18n";
 import Lottie from "react-lottie";
 
 // @ts-ignore
@@ -106,8 +106,6 @@ export const NotificationProvider = ({ children, userSpaceUrl }) => {
   );
   const { config } = useConfig();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { t } = useTranslation();
-  const [query] = useLanguageQuery();
 
   const emitNotificationModal: EmitNotificationModal = ({
     message,
@@ -451,7 +449,7 @@ export const NotificationProvider = ({ children, userSpaceUrl }) => {
                             flexWrap={{ base: "wrap", sm: "nowrap" }}
                           >
                             <Link
-                              href={{ pathname: userSpaceUrl, query: query }}
+                              href={{ pathname: userSpaceUrl }}
                             >
                               <Button
                                 minWidth="190px"
