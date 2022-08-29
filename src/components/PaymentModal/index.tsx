@@ -276,7 +276,6 @@ export const PaymentModal = ({
   let idTransaction = "";
 
   const { onCopy } = useClipboard(qrCodeTxt);
-  const { t } = useTranslation();
 
   const [step, setStep] = useState<
     | "paymentType"

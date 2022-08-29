@@ -63,35 +63,39 @@ const getStripeParams = async (sdkPrivateKey: string) => {
 };
 
 export const loadSdkConfig = async (sdkPrivateKey: string) => {
-  const storeInfo = await validateKey(sdkPrivateKey);
-  const contractData = await getContract(sdkPrivateKey);
-
-  const configParams: Config = {
-    apiProvider: true,
-    walletProviders: ["metamask"],
-    socialLogin: true,
-    socialLoginVerifiers: ["facebook", "google"],
-    title: storeInfo.storeName,
-    networkType: storeInfo.networkType,
-    blockchain: storeInfo.network,
-    contractAddress: storeInfo.smartContract,
-    currency: "BRL",
-    mainColor: "#454545",
-  };
-
-  sdkConfig.config = configParams;
-  sdkConfig.paymentMethods = storeInfo.paymentMethods;
-
-  if (storeInfo.paymentMethods.includes("credit_card")) {
-    const stripeParams = await getStripeParams(sdkPrivateKey);
-    sdkConfig.stripeParams = stripeParams;
+  try {
+    const storeInfo = await validateKey(sdkPrivateKey);
+    const contractData = await getContract(sdkPrivateKey);
+  
+    const configParams: Config = {
+      apiProvider: true,
+      walletProviders: ["metamask"],
+      socialLogin: true,
+      socialLoginVerifiers: ["facebook", "google"],
+      title: storeInfo.storeName,
+      networkType: storeInfo.networkType,
+      blockchain: storeInfo.network,
+      contractAddress: storeInfo.smartContract,
+      currency: "BRL",
+      mainColor: "#454545",
+    };
+  
+    sdkConfig.config = configParams;
+    sdkConfig.paymentMethods = storeInfo.paymentMethods;
+  
+    if (storeInfo.paymentMethods.includes("credit_card")) {
+      const stripeParams = await getStripeParams(sdkPrivateKey);
+      sdkConfig.stripeParams = stripeParams;
+    }
+    sdkConfig.contractData = {
+      abi: contractData.result.abi,
+      contractAddress: contractData.contractAddress,
+      payableMintOrTransferMethodName:
+        contractData.result.payableMintOrTransferMethodName,
+      payableMintOrTransferMethodParams:
+        contractData.result.payableMintOrTransferMethodParams,
+    };
+  } catch (error) {
+    console.error('Error loading SDK config', error);
   }
-  sdkConfig.contractData = {
-    abi: contractData.result.abi,
-    contractAddress: contractData.contractAddress,
-    payableMintOrTransferMethodName:
-      contractData.result.payableMintOrTransferMethodName,
-    payableMintOrTransferMethodParams:
-      contractData.result.payableMintOrTransferMethodParams,
-  };
 };
