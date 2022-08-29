@@ -11,7 +11,6 @@ import { ERRORS, WALLET_PROVIDERS, NETWORKS, BlockchainInfo } from "../enums";
 import { useNotification } from "./useNotification";
 import { useConfig } from "./useConfig";
 import { useRouter } from "next/router";
-import { useTranslation } from "next-export-i18n";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { sleep } from "../utils";
 import { theme } from "../styles/theme";

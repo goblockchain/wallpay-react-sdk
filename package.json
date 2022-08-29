@@ -1,12 +1,11 @@
 {
   "name": "wallpay-react-sdk",
-  "version": "0.1.0-alpha.7",
+  "version": "0.1.0-alpha.9",
   "description": "Wallpay React SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "files": [
-    "dist",
-    "i18n"
+    "dist"
   ],
   "types": "dist/index.d.ts",
   "scripts": {
@@ -73,7 +72,6 @@
     "axios": "^0.27.2",
     "bignumber.js": "^9.0.2",
     "framer-motion": "^7.0.0",
-    "next-export-i18n": "^2.0.3",
     "react-icons": "^4.2.0",
     "react-lottie": "^1.2.3",
     "validator": "^13.7.0",

@@ -7867,11 +7867,6 @@ multihashes@^0.4.15, multihashes@~0.4.15:
     multibase "^0.7.0"
     varint "^5.0.0"
 
-mustache@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/mustache/-/mustache-4.2.0.tgz#e5892324d60a12ec9c2a73359edca52972bf6f64"
-  integrity sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==
-
 mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
@@ -7913,13 +7908,6 @@ new-github-release-url@^1.0.0:
   integrity sha512-dle7yf655IMjyFUqn6Nxkb18r4AOAkzRcgcZv6WZ0IqrOH4QCEZ8Sm6I7XX21zvHdBeeMeTkhR9qT2Z0EJDx6A==
   dependencies:
     type-fest "^0.4.1"
-
-next-export-i18n@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/next-export-i18n/-/next-export-i18n-2.0.3.tgz#2bed52da14ec4a13e4489d802464a826e178b892"
-  integrity sha512-RfiPn/ZE0nHDZok2Ci+LAMm2hoJKgdLj6ZSefjsUz21YNtaAl3xeVD4iOrV4A2PkN5WgecPWbeTFXqTZ66rqnA==
-  dependencies:
-    mustache "^4.2.0"
 
 next-tick@^1.1.0:
   version "1.1.0"

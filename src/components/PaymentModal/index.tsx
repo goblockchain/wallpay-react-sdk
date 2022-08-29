@@ -45,7 +45,7 @@ import Vector from "../../assets/Vector.png";
 import pix from "../../assets/pix.png";
 import pix_full from "../../assets/pix_full.png";
 import axios from "axios";
-import { useTranslation } from "next-export-i18n";
+import { t } from "../../i18n";
 import { FormatPrice, sleep } from "../../utils";
 import { WALLPAY_API_URL } from "../../config";
 import { sdkConfig } from "../../utils/load";
@@ -117,8 +117,6 @@ interface PixCopyAndPasteProps {
 }
 
 const PixCopyAndPaste = ({ copyFn }: PixCopyAndPasteProps) => {
-  const { t } = useTranslation();
-
   const [copyText, setCopyText] = useState(t("pix_copy_paste"));
 
   function handleCopyAndPasteClick() {
@@ -253,11 +251,7 @@ export const PaymentModal = ({
       userWalletAddress = walletAddress || paymentData.walletAddress;
       setPaymentMethods(clientPaymentMethods || paymentMethods);
       if (stripeParams) {
-        setStripePromise(
-          loadStripe(stripeParams?.goPublicKey, {
-            stripeAccount: stripeParams?.clientAccountId,
-          })
-        );
+        setStripePromise(loadStripe(stripeParams?.clientPublicKey));
       }
     }
   }, []);
@@ -278,7 +272,6 @@ export const PaymentModal = ({
   let idTransaction = "";
 
   const { onCopy } = useClipboard(qrCodeTxt);
-  const { t } = useTranslation();
 
   const [step, setStep] = useState<
     | "paymentType"
