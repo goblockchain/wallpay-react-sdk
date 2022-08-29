@@ -253,11 +253,7 @@ export const PaymentModal = ({
       userWalletAddress = walletAddress || paymentData.walletAddress;
       setPaymentMethods(clientPaymentMethods || paymentMethods);
       if (stripeParams) {
-        setStripePromise(
-          loadStripe(stripeParams?.goPublicKey, {
-            stripeAccount: stripeParams?.clientAccountId,
-          })
-        );
+        setStripePromise(loadStripe(stripeParams?.clientPublicKey));
       }
     }
   }, []);
