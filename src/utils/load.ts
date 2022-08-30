@@ -86,7 +86,7 @@ export const loadSdkConfig = async (
       currency: "BRL",
       mainColor: "#454545",
       sdkPrivateKey,
-      creditCardConfirmUrl: creditCardConfirmUrl || "/",
+      creditCardConfirmUrl: creditCardConfirmUrl || window.location.href,
     };
 
     sdkConfig.config = configParams;
