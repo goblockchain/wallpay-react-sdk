@@ -473,7 +473,7 @@ export const PaymentModal = ({
         contractAddress: config.contractAddress,
         email: userEmail,
         clientName: userName,
-        mintOrTransferParams: paymentData.mintParams,
+        payableMintOrTransferParams: paymentData.mintParams,
         item: {
           amount: paymentData.amount,
           price: paymentData.unitPrice.toString(),

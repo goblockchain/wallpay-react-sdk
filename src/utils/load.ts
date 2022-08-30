@@ -82,6 +82,7 @@ export const loadSdkConfig = async (sdkPrivateKey: string) => {
       contractAddress: storeInfo.smartContract,
       currency: "BRL",
       mainColor: "#454545",
+      sdkPrivateKey
     };
   
     sdkConfig.config = configParams;
