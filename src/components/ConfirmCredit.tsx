@@ -8,13 +8,15 @@ function HandleConfirmCredit({
   sdkPrivateKey,
   router,
   imageURL,
+  creditCardConfirmUrl,
 }: {
   sdkPrivateKey: string;
   router: any;
   imageURL: string;
+  creditCardConfirmUrl: string;
 }) {
   const { emitNotificationModal } = useNotification();
-
+  const replaceUrl = creditCardConfirmUrl || "/";
   let anyerror = false;
   useEffect(() => {
     const confirm = async () => {
@@ -23,7 +25,6 @@ function HandleConfirmCredit({
           emitNotificationModal({
             type: PAYMENT_STEPS.IN_PROGRESS,
           });
-          // if (router.query.coemaluco != "true") {
           emitNotificationModal({
             type: PAYMENT_STEPS.PROCESSING,
           });
@@ -34,7 +35,7 @@ function HandleConfirmCredit({
             },
             sdkPrivateKey
           );
-          router.replace("/");
+          router.replace(replaceUrl);
           if (!anyerror) {
             emitNotificationModal({
               type: PAYMENT_STEPS.SUCCESS,
@@ -44,11 +45,13 @@ function HandleConfirmCredit({
         }
         // }
       } catch (error) {
-        // @ts-ignore
-        if(error.response.data.message.includes("E11000 duplicate key error")){
+        if (
+          // @ts-ignore
+          error.response.data.message.includes("E11000 duplicate key error")
+        ) {
           return;
         }
-        router.replace("/");
+        router.replace(replaceUrl);
         anyerror = true;
         const primaryText = "Ocorreu um erro ao processar o pagamento";
         const secondaryText = "Tente novamente mais tarde";

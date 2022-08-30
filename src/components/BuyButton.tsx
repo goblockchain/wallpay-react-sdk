@@ -4,26 +4,15 @@ import { useWallets } from '../hooks/useWallets'
 import { useConfig } from '../hooks/useConfig'
 import HandleConfirmCredit from './ConfirmCredit'
 
-
-type TransferParams = {
-    tokenId: number,
-    amount: number,
-    walletAddress: string,
-}
-
-type MintParams = {
-    tokenId: number,
-    amount: number,
-}
-
 type BuyData = {
     unitPrice: number;
     amount: number;
     itemName: string;
     itemImage: string;
-    transferParams: TransferParams;
+    transferParams: Object;
     hasFixedPrice: boolean;
-    mintParams: MintParams;
+    mintParams: Object;
+    creditCardConfirmUrl: string;
 }
 
 type BuyButtonProps = {
@@ -73,6 +62,7 @@ export const BuyButton = ({data, style, children = "WALLPAY PAYMENT"} : BuyButto
           router={router}
           imageURL={data.itemImage}
           sdkPrivateKey={config.sdkPrivateKey}
+          creditCardConfirmUrl={config.creditCardConfirmUrl}
         />
       </>
     );
