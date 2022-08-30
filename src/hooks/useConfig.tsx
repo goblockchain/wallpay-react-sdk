@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { LOGIN_TYPE } from "@toruslabs/torus-embed";
 
 import { WalletProviders } from "./useWallets";
@@ -14,6 +14,8 @@ export type Config = {
   contractAddress: string;
   currency: "BRL" | "USD";
   mainColor: string;
+  sdkPrivateKey: string;
+  creditCardConfirmUrl: string;
 };
 
 export interface IConfigContext {

@@ -9,10 +9,11 @@ import { loadSdkConfig, sdkConfig } from "./utils/load";
 import { Config } from "./hooks/useConfig";
 import React from "react";
 import { setLanguage } from "./i18n";
+import { BuyButton } from "./components/BuyButton";
 
 const buildSDK = ({
   sdkPrivateKey,
-  creditCardConfirmUrl,
+  creditCardConfirmUrl = "/",
   userSpaceUrl,
   defaultLanguage,
 }: {
@@ -37,7 +38,7 @@ const buildSDK = ({
       const [isLoaded, setIsLoaded] = React.useState(false);
 
       React.useEffect(() => {
-        loadSdkConfig(sdkPrivateKey)
+        loadSdkConfig(sdkPrivateKey, creditCardConfirmUrl)
           .then(() => {
             setIsLoaded(true);
           })
@@ -46,23 +47,25 @@ const buildSDK = ({
           });
       }, []);
 
-      return (
-        !isLoaded ? <></> : (
-          <useConfigHooks.ConfigProvider config={sdkConfig.config as Config}>
-            <useNotificationHooks.NotificationProvider userSpaceUrl={userSpaceUrl}>
-              <useEthereumHooks.EthereumProvider sdkPrivateKey={sdkPrivateKey}>
-                <useWalletsHooks.WalletsProvider sdkPrivateKey={sdkPrivateKey}>
-                  <usePaymentHooks.PaymentProvider
-                    creditCardConfirmUrl={creditCardConfirmUrl}
-                    sdkPrivateKey={sdkPrivateKey}
-                  >
-                    {children}
-                  </usePaymentHooks.PaymentProvider>
-                </useWalletsHooks.WalletsProvider>
-              </useEthereumHooks.EthereumProvider>
-            </useNotificationHooks.NotificationProvider>
-          </useConfigHooks.ConfigProvider>
-        )
+      return !isLoaded ? (
+        <></>
+      ) : (
+        <useConfigHooks.ConfigProvider config={sdkConfig.config as Config}>
+          <useNotificationHooks.NotificationProvider
+            userSpaceUrl={userSpaceUrl}
+          >
+            <useEthereumHooks.EthereumProvider sdkPrivateKey={sdkPrivateKey}>
+              <useWalletsHooks.WalletsProvider sdkPrivateKey={sdkPrivateKey}>
+                <usePaymentHooks.PaymentProvider
+                  creditCardConfirmUrl={creditCardConfirmUrl}
+                  sdkPrivateKey={sdkPrivateKey}
+                >
+                  {children}
+                </usePaymentHooks.PaymentProvider>
+              </useWalletsHooks.WalletsProvider>
+            </useEthereumHooks.EthereumProvider>
+          </useNotificationHooks.NotificationProvider>
+        </useConfigHooks.ConfigProvider>
       );
     },
     ...useConfigHooks,
@@ -74,8 +77,10 @@ const buildSDK = ({
         router={props.router}
         imageURL={props.imageURL}
         sdkPrivateKey={sdkPrivateKey}
+        creditCardConfirmUrl={creditCardConfirmUrl}
       />
     ),
+    BuyButton
   };
 };
 
