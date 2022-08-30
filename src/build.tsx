@@ -9,6 +9,7 @@ import { loadSdkConfig, sdkConfig } from "./utils/load";
 import { Config } from "./hooks/useConfig";
 import React from "react";
 import { setLanguage } from "./i18n";
+import { BuyButton } from "./components/BuyButton";
 
 const buildSDK = ({
   sdkPrivateKey,
@@ -79,6 +80,7 @@ const buildSDK = ({
         creditCardConfirmUrl={creditCardConfirmUrl}
       />
     ),
+    BuyButton
   };
 };
 
