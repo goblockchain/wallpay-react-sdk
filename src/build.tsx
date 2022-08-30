@@ -13,7 +13,7 @@ import { BuyButton } from "./components/BuyButton";
 
 const buildSDK = ({
   sdkPrivateKey,
-  creditCardConfirmUrl = "/",
+  creditCardConfirmUrl = window.location.href,
   userSpaceUrl,
   defaultLanguage,
 }: {
