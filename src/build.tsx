@@ -38,7 +38,7 @@ const buildSDK = ({
       const [isLoaded, setIsLoaded] = React.useState(false);
 
       React.useEffect(() => {
-        loadSdkConfig(sdkPrivateKey)
+        loadSdkConfig(sdkPrivateKey, creditCardConfirmUrl)
           .then(() => {
             setIsLoaded(true);
           })

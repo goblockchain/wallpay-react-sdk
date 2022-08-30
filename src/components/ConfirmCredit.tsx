@@ -51,7 +51,7 @@ function HandleConfirmCredit({
         ) {
           return;
         }
-        router.replace("/");
+        router.replace(replaceUrl);
         anyerror = true;
         const primaryText = "Ocorreu um erro ao processar o pagamento";
         const secondaryText = "Tente novamente mais tarde";

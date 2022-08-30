@@ -15,6 +15,7 @@ export type Config = {
   currency: "BRL" | "USD";
   mainColor: string;
   sdkPrivateKey: string;
+  creditCardConfirmUrl: string;
 };
 
 export interface IConfigContext {

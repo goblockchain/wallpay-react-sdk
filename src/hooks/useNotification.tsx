@@ -477,6 +477,7 @@ export const NotificationProvider = ({ children, userSpaceUrl }) => {
                               m="10px"
                               borderRadius="45px"
                               border="solid 1px #DFDFDF"
+                              cursor="pointer"
                               color="red"
                               fontSize="22px"
                               backgroundColor="white"

@@ -66,11 +66,14 @@ const getStripeParams = async (sdkPrivateKey: string) => {
   }
 };
 
-export const loadSdkConfig = async (sdkPrivateKey: string) => {
+export const loadSdkConfig = async (
+  sdkPrivateKey: string,
+  creditCardConfirmUrl?: string
+) => {
   try {
     const storeInfo = await validateKey(sdkPrivateKey);
     const contractData = await getContract(sdkPrivateKey);
-  
+
     const configParams: Config = {
       apiProvider: true,
       walletProviders: ["metamask"],
@@ -82,12 +85,13 @@ export const loadSdkConfig = async (sdkPrivateKey: string) => {
       contractAddress: storeInfo.smartContract,
       currency: "BRL",
       mainColor: "#454545",
-      sdkPrivateKey
+      sdkPrivateKey,
+      creditCardConfirmUrl: creditCardConfirmUrl || "/",
     };
-  
+
     sdkConfig.config = configParams;
     sdkConfig.paymentMethods = storeInfo.paymentMethods;
-  
+
     if (storeInfo.paymentMethods.includes("credit_card")) {
       const stripeParams = await getStripeParams(sdkPrivateKey);
       sdkConfig.stripeParams = stripeParams;
@@ -101,6 +105,6 @@ export const loadSdkConfig = async (sdkPrivateKey: string) => {
         contractData.result.payableMintOrTransferMethodParams,
     };
   } catch (error) {
-    console.error('Error loading SDK config', error);
+    console.error("Error loading SDK config", error);
   }
 };
