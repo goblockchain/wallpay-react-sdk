@@ -12,7 +12,7 @@ import { setLanguage } from "./i18n";
 
 const buildSDK = ({
   sdkPrivateKey,
-  creditCardConfirmUrl,
+  creditCardConfirmUrl = "/",
   userSpaceUrl,
   defaultLanguage,
 }: {
@@ -46,23 +46,25 @@ const buildSDK = ({
           });
       }, []);
 
-      return (
-        !isLoaded ? <></> : (
-          <useConfigHooks.ConfigProvider config={sdkConfig.config as Config}>
-            <useNotificationHooks.NotificationProvider userSpaceUrl={userSpaceUrl}>
-              <useEthereumHooks.EthereumProvider sdkPrivateKey={sdkPrivateKey}>
-                <useWalletsHooks.WalletsProvider sdkPrivateKey={sdkPrivateKey}>
-                  <usePaymentHooks.PaymentProvider
-                    creditCardConfirmUrl={creditCardConfirmUrl}
-                    sdkPrivateKey={sdkPrivateKey}
-                  >
-                    {children}
-                  </usePaymentHooks.PaymentProvider>
-                </useWalletsHooks.WalletsProvider>
-              </useEthereumHooks.EthereumProvider>
-            </useNotificationHooks.NotificationProvider>
-          </useConfigHooks.ConfigProvider>
-        )
+      return !isLoaded ? (
+        <></>
+      ) : (
+        <useConfigHooks.ConfigProvider config={sdkConfig.config as Config}>
+          <useNotificationHooks.NotificationProvider
+            userSpaceUrl={userSpaceUrl}
+          >
+            <useEthereumHooks.EthereumProvider sdkPrivateKey={sdkPrivateKey}>
+              <useWalletsHooks.WalletsProvider sdkPrivateKey={sdkPrivateKey}>
+                <usePaymentHooks.PaymentProvider
+                  creditCardConfirmUrl={creditCardConfirmUrl}
+                  sdkPrivateKey={sdkPrivateKey}
+                >
+                  {children}
+                </usePaymentHooks.PaymentProvider>
+              </useWalletsHooks.WalletsProvider>
+            </useEthereumHooks.EthereumProvider>
+          </useNotificationHooks.NotificationProvider>
+        </useConfigHooks.ConfigProvider>
       );
     },
     ...useConfigHooks,
@@ -74,6 +76,7 @@ const buildSDK = ({
         router={props.router}
         imageURL={props.imageURL}
         sdkPrivateKey={sdkPrivateKey}
+        creditCardConfirmUrl={creditCardConfirmUrl}
       />
     ),
   };

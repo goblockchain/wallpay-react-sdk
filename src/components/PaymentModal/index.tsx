@@ -25,6 +25,7 @@ import {
   Progress,
   Show,
   Hide,
+  border,
 } from "@chakra-ui/react";
 import BigNumber from "bignumber.js";
 import { PaymentModalBody, CheckoutForm } from "./components";
@@ -702,6 +703,9 @@ export const PaymentModal = ({
 
   const handleTermsIsChecked = () => setTermsIsChecked(!termsIsChecked);
 
+  const select = document.getElementById('Field-countryInput');
+  select?.setAttribute("disabled", "");
+
   return (
     <>
       {step === "paymentType" && (
@@ -1098,42 +1102,58 @@ export const PaymentModal = ({
         </Box>
       )}
       {step === "confirmPaymentCredit" && stripePromise && (
-        <Box p="50px">
-          <Elements
-            options={{
-              appearance: {
-                theme: "stripe",
-              },
-              clientSecret,
-              loader: "always",
-              // locale: "en",
-              fonts: [
-                {
-                  cssSrc:
-                    "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap",
+        <PaymentModalBody
+          title={t("pix_payment_title")}
+          onClosePaymentModal={onClose}
+        >
+          <Box w="100%" m="0 auto">
+            <Elements
+              options={{
+                appearance: {
+                  theme: "stripe",
                 },
-              ],
-            }}
-            stripe={stripePromise}
-          >
-            <CheckoutForm
-              purchaseInfo={{
-                fiatAmount:
-                  Number(paymentData.fiatUnitPrice) * paymentData.amount,
-                currency: config.currency,
-
-                // Não estamos usando
-                amount: paymentData.unitPrice,
-                symbol: String(blockchainInfo?.SYMBOL),
-                total: paymentData.unitPrice,
+                clientSecret,
+                loader: "always",
+                // locale: defaultLanguage,
+                fonts: [
+                  {
+                    cssSrc:
+                      "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap",
+                  },
+                ],
               }}
-              checkFn={handleTermsIsChecked}
-              termsIsChecked={termsIsChecked}
-              sdkPrivateKey={sdkPrivateKey}
-              creditCardConfirmUrl={creditCardConfirmUrl}
-            />
-          </Elements>
-        </Box>
+              stripe={stripePromise}
+            >
+              <CheckoutForm
+                purchaseInfo={{
+                  fiatAmount:
+                    Number(paymentData.fiatUnitPrice) * paymentData.amount,
+                  currency: config.currency,
+
+                  // Não estamos usando
+                  amount: paymentData.unitPrice,
+                  symbol: String(blockchainInfo?.SYMBOL),
+                  total: paymentData.unitPrice,
+                }}
+                checkFn={handleTermsIsChecked}
+                termsIsChecked={termsIsChecked}
+                sdkPrivateKey={sdkPrivateKey}
+                creditCardConfirmUrl={creditCardConfirmUrl}
+              />
+            </Elements>
+          </Box>
+          <Center mt="40px" flexWrap="wrap">
+            <Text
+              fontWeight={500}
+              fontSize={"16px"}
+              textAlign="center"
+              fontFamily="'Roboto', sans-serif"
+            >
+              {t("processed_by")}
+            </Text>
+            <Image src={wallpayLogo} alt="Wallpay Logo" mx="10px" w="120px" />
+          </Center>
+        </PaymentModalBody>
       )}
 
       {step === "pix" && (

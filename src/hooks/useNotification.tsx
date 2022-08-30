@@ -448,9 +448,7 @@ export const NotificationProvider = ({ children, userSpaceUrl }) => {
                             mt="20px"
                             flexWrap={{ base: "wrap", sm: "nowrap" }}
                           >
-                            <Link
-                              href={{ pathname: userSpaceUrl }}
-                            >
+                            <Link href={{ pathname: userSpaceUrl }}>
                               <Button
                                 minWidth="190px"
                                 h="60px"
@@ -458,6 +456,7 @@ export const NotificationProvider = ({ children, userSpaceUrl }) => {
                                 borderRadius="45px"
                                 border="solid 1px #DFDFDF"
                                 color="#454545"
+                                cursor="pointer"
                                 fontSize="22px"
                                 backgroundColor="white"
                                 fontWeight="400"
