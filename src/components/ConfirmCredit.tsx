@@ -16,7 +16,7 @@ function HandleConfirmCredit({
   creditCardConfirmUrl: string;
 }) {
   const { emitNotificationModal } = useNotification();
-  const replaceUrl = creditCardConfirmUrl || "/";
+  const replaceUrl = creditCardConfirmUrl || window.location.href;
   let anyerror = false;
   useEffect(() => {
     const confirm = async () => {
