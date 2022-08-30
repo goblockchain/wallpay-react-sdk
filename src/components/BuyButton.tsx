@@ -12,7 +12,6 @@ type BuyData = {
     transferParams: Object;
     hasFixedPrice: boolean;
     mintParams: Object;
-    creditCardConfirmUrl: string;
 }
 
 type BuyButtonProps = {
