@@ -46,7 +46,7 @@
   "check_": "Compruebe si está de acuerdo con el",
   "terms_of_service": "Condiciones de servicio",
   "continue": "Continuar",
-  "qr_code": "Scan the QR Code or copy the code to pay via Pix in any enabled app:",
+  "qr_code": "Escanee el código QR o copie el código para pagar a través de Pix en cualquier aplicación habilitada:",
   "pix_copy": "Pix Copiar e Pegar",
   "pay_until": "Tiempo de pago",
   "user_area": "Espacio de Usuario",
@@ -271,5 +271,8 @@
   "Communications_": "g) Comunicaciones",
   "Communications_TXT": "En caso de duda, se puede contactar con goBlockchain a través de la dirección de correo electrónico",
   "Communications_TXT1": "Finalmente, en el ámbito de la Plataforma, es posible que exista comunicación entre Usuarios a través de chat cerrado. Esta comunicación es privada, no obstante, tenga en cuenta que estos mensajes serán almacenados en el servidor junto con todo tipo de información incluida en los mismos.",
-  "Communications_TXT2": "Estos T & C son válidos desde (...)"
+  "Communications_TXT2": "Estos T & C son válidos desde (...)",
+  "wrongNetworkPrimary":"¡Error de conexión!",
+  "wrongNetworkSecondaryInit":"Parece que no estás conectado a",
+  "wrongNetworkSecondaryEnd":"Por favor, compruebe la conexión y vuelva a intentarlo."
 }

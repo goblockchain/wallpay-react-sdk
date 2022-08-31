@@ -46,7 +46,7 @@
   "check_": "Check if you agree with the",
   "terms_of_service": "Terms of Service",
   "continue": "Continue",
-  "qr_code": "Escanee el código QR o copie el código para pagar a través de Pix en cualquier aplicación habilitada:",
+  "qr_code": "Scan the QR Code or copy the code to pay via Pix in any enabled app:",
   "pix_copy": "Pix Copy & Paste",
   "pay_until": "Time till expiration",
   "processed_by": "Processed by",
@@ -111,7 +111,7 @@
   "Warning": "Warning",
   "pix_attention": "Upon closing, you will lose all shares so far, and you will have to generate a new Pix code to restart the purchase. Do you wish to continue?",
   "Cancel": "Cancel",
-  "pix_copy_paste": "Pix Copy and paste",
+  "pix_copy_paste": "Pix Copy and Paste",
   "pix_copy_paste_copied": "Pix code copied successfully!",
   "digite_email": "Type your e-mail",
   "descriptopNft1": "The Hall of Fame is the first ever Stock Car NFT collection, celebrating its champions since 1979. The Signature version is the rarest in the collection, autographed by Ingo Hoffmann, the GOAT in Stock Car history. Also, an unique work of art by Ararê Novaes, a brazilian artist specialized in realistic automotive art. This NFT unlocks benefits. Check status and terms of use at nft.stockproseries.com.br",
@@ -270,5 +270,8 @@
   "Communications_": "g) Communications",
   "Communications_TXT": "If there is any doubt, contact with goBlockchain can be made through the email address",
   "Communications_TXT1": "Finally, within the scope of the Platform, it is possible that there is communication between Users via closed chat. This communication is private, however, be aware that these messages will be stored on the server together with all types of information included within them.",
-  "Communications_TXT2": "These T&Cs are valid from (...)"
+  "Communications_TXT2": "These T&Cs are valid from (...)",
+  "wrongNetworkPrimary":"Connection Error!",
+  "wrongNetworkSecondaryInit":"It looks like you are not connected to",
+  "wrongNetworkSecondaryEnd":"Please check your connection and try again."
 }

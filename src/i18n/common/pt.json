@@ -270,5 +270,9 @@
   "Communications_": "g) Comunicações",
   "Communications_TXT": "Em caso de dúvida, o contato com a goBlockchain pode ser feito através do endereço de e-mail",
   "Communications_TXT1": "Por fim, no âmbito da Plataforma, é possível que haja comunicação entre os Usuários via chat fechado. Esta comunicação é privada, no entanto, esteja ciente de que essas mensagens serão armazenadas no servidor juntamente com todos os tipos de informações incluídas nelas.",
-  "Communications_TXT2": "Estes T&Cs são válidos a partir de (...)"
+  "Communications_TXT2": "Estes T&Cs são válidos a partir de (...)",
+  "wrongNetworkPrimary":"Erro ao conectar!",
+  "wrongNetworkSecondaryInit":"Parece que você não está conectado à",
+  "wrongNetworkSecondaryEnd":"Por favor, verifique sua conexão e tente novamente."
+
 }

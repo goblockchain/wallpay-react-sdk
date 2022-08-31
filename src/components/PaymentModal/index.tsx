@@ -448,7 +448,8 @@ export const PaymentModal = ({
   };
 
   const getPixPaymentStatus = async () => {
-    return await axios.get(
+    let ret;
+    let test = await axios.get(
       `${WALLPAY_API_URL}/payments/pix/transaction/${idPaymentProvider}`,
       {
         headers: {
@@ -456,6 +457,12 @@ export const PaymentModal = ({
         },
       }
     );
+    if (test.status === 204) {
+      ret = { data: { data: { status: "" } } };
+    } else {
+      ret = test;
+    }
+    return ret;
   };
 
   let cryptoDataId = "";
@@ -508,17 +515,26 @@ export const PaymentModal = ({
         sdkConfig.contractData?.contractAddress
       );
 
-      const databaseParams: any[] =
-        sdkConfig.contractData?.payableMintOrTransferMethodParams || [];
-      let databaseKeys: string[] = [];
-      for (let i = 0; i < databaseParams.length; i++) {
-        databaseKeys.push(databaseParams[i]?.name);
-      }
+      const databaseParams: Object =
+        sdkConfig.contractData?.payableMintOrTransferMethodParams || {};
+
+      let databaseKeys: any[] = Object.keys(databaseParams);
+
+      let missingParams: any[] = [];
 
       const frontParams = paymentData.mintParams || {};
       let transactionParams: string[] = [];
       for (let key of databaseKeys) {
-        transactionParams.push(frontParams[key]);
+        if (frontParams.hasOwnProperty(key)) {
+          transactionParams.push(frontParams[key]);
+        } else {
+          missingParams.push(key);
+        }
+      }
+
+      if (missingParams.length > 0) {
+        console.log("[ERROR] Missing params: ", missingParams.join(", "));
+        throw new Error(`Missing parameters: ${missingParams.join(", ")}`);
       }
 
       await contract.methods[
@@ -703,7 +719,7 @@ export const PaymentModal = ({
 
   const handleTermsIsChecked = () => setTermsIsChecked(!termsIsChecked);
 
-  const select = document.getElementById('Field-countryInput');
+  const select = document.getElementById("Field-countryInput");
   select?.setAttribute("disabled", "");
 
   return (
