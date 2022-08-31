@@ -14,9 +14,9 @@ export const sdkConfig = {} as Partial<{
   };
   contractData: {
     abi: any;
-    contractAddress: any;
+    contractAddress: string;
     payableMintOrTransferMethodName: any;
-    payableMintOrTransferMethodParams: any;
+    payableMintOrTransferMethodParams: Object;
   };
 }>;
 
