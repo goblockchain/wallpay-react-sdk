@@ -354,10 +354,8 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
         emitNotificationModal({
           type: error.type,
           message: {
-            // primaryText: `${changePrimaryTextError()}`,
             primaryText: `${t("wrongNetworkPrimary")}`,
             secondaryText:
-              // error.message !== undefined ? ErrToConnect() : undefined,
               error.message !== undefined
                 ? `${t("wrongNetworkSecondaryInit")} ${capitalize(
                     config.blockchain
