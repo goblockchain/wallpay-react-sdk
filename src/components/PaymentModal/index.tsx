@@ -448,7 +448,8 @@ export const PaymentModal = ({
   };
 
   const getPixPaymentStatus = async () => {
-    return await axios.get(
+    let ret;
+    let test = await axios.get(
       `${WALLPAY_API_URL}/payments/pix/transaction/${idPaymentProvider}`,
       {
         headers: {
@@ -456,6 +457,12 @@ export const PaymentModal = ({
         },
       }
     );
+    if (test.status === 204) {
+      ret = { data: { data: { status: "" } } };
+    } else {
+      ret = test;
+    }
+    return ret;
   };
 
   let cryptoDataId = "";
@@ -703,7 +710,7 @@ export const PaymentModal = ({
 
   const handleTermsIsChecked = () => setTermsIsChecked(!termsIsChecked);
 
-  const select = document.getElementById('Field-countryInput');
+  const select = document.getElementById("Field-countryInput");
   select?.setAttribute("disabled", "");
 
   return (
