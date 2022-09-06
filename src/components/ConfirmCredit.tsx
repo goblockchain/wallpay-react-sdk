@@ -13,7 +13,7 @@ function HandleConfirmCredit({
   sdkPrivateKey: string;
   router: any;
   imageURL: string;
-  creditCardConfirmUrl: string;
+  creditCardConfirmUrl?: string;
 }) {
   const { emitNotificationModal } = useNotification();
   const replaceUrl = creditCardConfirmUrl || window.location.href;

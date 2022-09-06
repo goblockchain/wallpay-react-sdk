@@ -10,10 +10,11 @@ import { Config } from "./hooks/useConfig";
 import React from "react";
 import { setLanguage } from "./i18n";
 import { BuyButton } from "./components/BuyButton";
+import { ConnectButton } from "./components/ConnectButton";
 
 const buildSDK = ({
   sdkPrivateKey,
-  creditCardConfirmUrl = window.location.href,
+  creditCardConfirmUrl,
   userSpaceUrl,
   defaultLanguage,
 }: {
@@ -23,7 +24,6 @@ const buildSDK = ({
   defaultLanguage: string;
 }) => {
   setLanguage(defaultLanguage);
-
   return {
     ...usePaymentHooks,
     PaymentModal: (props: any) => (
@@ -80,7 +80,8 @@ const buildSDK = ({
         creditCardConfirmUrl={creditCardConfirmUrl}
       />
     ),
-    BuyButton
+    BuyButton,
+    ConnectButton: (props: any) => (<ConnectButton {...props} />),
   };
 };
 
