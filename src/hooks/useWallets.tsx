@@ -248,6 +248,7 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
               network: {
                 host: getNetworkName(config.networkType, config.blockchain),
               },
+              showTorusButton: false,
             });
             torusInstance = torus;
             if (onCloseWalletModal !== undefined) onCloseWalletModal();
