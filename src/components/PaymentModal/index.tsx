@@ -355,7 +355,7 @@ export const PaymentModal = ({
   };
 
   const handleClosePix = () => {
-    cancelPayment(pixDataId);
+    // cancelPayment(pixDataId);
     shouldCancelPixRequests = true;
     onClose();
   };
