@@ -1,39 +1,4 @@
 {
-//   "compilerOptions": {
-//     "target": "es6",
-//     "lib": [
-//       "dom",
-//       "dom.iterable",
-//       "esnext"
-//     ],
-//     "esModuleInterop": true,
-//     "module": "esnext",
-//     "moduleResolution": "node",
-//     "jsx": "preserve",
-//     "rootDir": "src",
-//     "baseUrl": "src",
-//     "paths": {
-//       "@/*": [
-//         "*"
-//       ]
-//     },
-//     "allowJs": true,
-//     "resolveJsonModule": true,
-//     "skipLibCheck": true,
-//     "strict": false,
-//     "forceConsistentCasingInFileNames": true,
-//     "noEmit": true,
-//     "isolatedModules": true,
-//     "incremental": true
-//   },
-//   "include": [
-//     "next-env.d.ts",
-//     "goblockchain.d.ts",
-//     "src"
-//   ],
-//   "exclude": [
-//     "src/main/test/cypress"
-//   ]
   "compilerOptions": {
     "rootDir": "src",
     // Default
@@ -60,5 +25,5 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx"
-  ], 
+  ]
 }
