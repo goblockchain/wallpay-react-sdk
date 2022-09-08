@@ -81,7 +81,12 @@ const buildSDK = ({
       />
     ),
     BuyButton,
-    ConnectButton: (props: any) => (<ConnectButton {...props} />),
+    ConnectButton: (props: {
+      btnTextColor?: string;
+      btnBackgroundColor?: string;
+      btnBorderColor?: string;
+      fixedButton?: boolean;
+    }) => (<ConnectButton {...props} sdkPrivateKey={sdkPrivateKey} />),
   };
 };
 
