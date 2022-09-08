@@ -6,24 +6,30 @@ import { theme } from '../../styles/theme';
 
 
 type ConnectEtherWalletsButtonProps = {
-  handleOpenWalletModal: () => void
+  handleOpenWalletModal: () => void;
+  btnTextColor?: string;
+  btnBackgroundColor?: string;
+  btnBorderColor?: string;
 }
 
-export const ConnectEtherWalletsButton = ({ handleOpenWalletModal, ...rest }: ConnectEtherWalletsButtonProps & ButtonProps) => {
+export const ConnectEtherWalletsButton = ({
+  handleOpenWalletModal,
+  btnTextColor = '#454545',
+  btnBackgroundColor = '#FFFFFF',
+}: ConnectEtherWalletsButtonProps & ButtonProps) => {
   return (
     <ChakraProvider resetCSS={false} theme={theme}>
       <Button p="0px 38px"
         _hover={{
           transform: 'translateY(0px)'
         }}
-        // backdropFilter="blur(60px)"
-        bg="0"
+        bg={btnBackgroundColor}
         h={{ base: "50px", md: "60px" }}
         w={{ base: '185px', md: 'auto' }}
         onClick={handleOpenWalletModal}
-        {...rest}
+        color={btnTextColor}
       >
-        <Text color="#FFFFFF"
+        <Text color={btnTextColor}
           fontFamily="'Roboto', sans-serif"
           fontStyle='normal'
           fontSize='18px'
@@ -31,7 +37,6 @@ export const ConnectEtherWalletsButton = ({ handleOpenWalletModal, ...rest }: Co
           lineHeight="21px"
         >  {t('connect_wallet')}
         </Text>
-        {/* <WalletIcon ml="10px" boxSize={6} /> */}
       </Button>
     </ChakraProvider>
   )

@@ -32,6 +32,7 @@ import { t } from "../../i18n";
 // import { CopyToClipboard } from "..";
 import { BlockchainInfo, NETWORKS } from "../../enums";
 import { FiLogOut, FiUser } from "react-icons/fi";
+import { BiTransfer } from "react-icons/bi";
 import Link from 'next/link'
 
 import metamaskWallet from "../../assets/metamask.png";
@@ -62,7 +63,20 @@ const blockchainIcons = {
   polygon: polygonWallet,
 };
 
-export const ConnectBodyMetaMask = () => {
+type ConnectBodyMetaMaskProps = {
+  btnTextColor?: string;
+  btnBackgroundColor?: string;
+  btnBorderColor?: string;
+  fixedButton?: boolean;
+  sdkPrivateKey: string;
+}
+
+export const ConnectBodyMetaMask = ({
+  btnTextColor = 'gray.500',
+  btnBackgroundColor = 'white',
+  btnBorderColor = 'gray.500',
+  sdkPrivateKey,
+}: ConnectBodyMetaMaskProps) => {
   const {
     walletAddress,
     walletBalance,
@@ -90,8 +104,6 @@ export const ConnectBodyMetaMask = () => {
   });
 
   const handleDisconnectMetamask = async () => {
-    //setHasStoreNFTpurchased(false);
-    //setPurchased(undefined);
     router.push("/");
     disconnectWallet();
     setTimeout(() => {
@@ -106,7 +118,9 @@ export const ConnectBodyMetaMask = () => {
           <Button
             p={{ base: "0px 28px", md: "0px 38px" }}
             _hover={{ transform: 'translateY(0px)' }}
-            bg="0"
+            bgColor={btnBackgroundColor}
+            borderColor={btnBorderColor}
+            color={btnTextColor}
             h={{ base: "50px", md: "60px" }}
             w={{ base: '185px', md: 'auto' }}
             justifyContent="space-between"
@@ -116,7 +130,7 @@ export const ConnectBodyMetaMask = () => {
               src={String(socialLoginVerifier) !== '' ? socialLoginVerifierImageSrc[socialLoginVerifier] : walletProvidersImageSrc[walletProvider]}
               mr="10px" h="25px"
             />
-            <Text fontSize="18px" fontWeight='700' lineHeight="21px" ml="5px" color="#FFFFFF" fontFamily="'Roboto', sans-serif">
+            <Text style={{ color: '#454545' }} fontSize="18px" fontWeight='700' lineHeight="21px" ml="5px" color={btnTextColor} fontFamily="'Roboto', sans-serif">
               {String(walletAddress).substring(0, 5) + '...' + String(walletAddress).substring(38)}
             </Text>
           </Button>
@@ -168,34 +182,35 @@ export const ConnectBodyMetaMask = () => {
             </PopoverHeader>
             <PopoverBody p="0px" w="100%" mb="40px">
               <Flex mt="32px" justifyContent="space-between">
-                <Flex alignItems="center">
-                  <Center
-                    borderRadius="38px"
-                    border="1px solid #DFDFDF"
-                    p="15px 20px"
+                {/* <Flex alignItems="center"> */}
+                <Box
+                  borderRadius="38px"
+                  border="1px solid #DFDFDF"
+                  p="15px 20px"
+                >
+                  <ChakraImage
+                    alt={walletProvider}
+                    src={
+                      String(socialLoginVerifier) !== ""
+                        ? socialLoginVerifierImageSrc[socialLoginVerifier]
+                        : walletProvidersImageSrc[walletProvider]
+                    }
+                  />
+                  <Text
+                    color="#717171"
+                    ml="10px"
+                    mt="2px"
+                    fontSize="18px"
+                    fontWeight="400"
+                    lineHeight="21px"
+                    fontFamily="'Roboto', sans-serif"
                   >
-                    <ChakraImage
-                      alt={walletProvider}
-                      src={
-                        String(socialLoginVerifier) !== ""
-                          ? socialLoginVerifierImageSrc[socialLoginVerifier]
-                          : walletProvidersImageSrc[walletProvider]
-                      }
-                    />
-                    <Text
-                      color="#717171"
-                      ml="10px"
-                      mt="2px"
-                      fontSize="18px"
-                      fontWeight="400"
-                      lineHeight="21px"
-                      fontFamily="'Roboto', sans-serif"
-                    >
-                      {String(walletAddress).substring(0, 5) +
-                        "..." +
-                        String(walletAddress).substring(38)}
-                    </Text>
-                  </Center>
+                    {String(walletAddress).substring(0, 5) +
+                      "..." +
+                      String(walletAddress).substring(38)}
+                  </Text>
+                </Box>
+                <Flex alignItems="center">
                   <Tooltip
                     hasArrow
                     label={t('copy_clipboard')}
@@ -205,50 +220,11 @@ export const ConnectBodyMetaMask = () => {
                     <CopyToClipboard copyFn={onCopy} color="#009FE3" />
                   </Tooltip>
                 </Flex>
-                <Center>
-                  <Tooltip
-                    hasArrow
-                    mr="10px"
-                    label={t('user_area')}
-                    shouldWrapChildren
-                    bg={"#454545"}
-                  > <Link href={{ pathname: '/userSpace' }}>
-                      <IconButton
-                        mr="10px"
-                        variant="outline"
-                        colorScheme="whiteAlpha"
-                        aria-label="User Space"
-                        isRound={true}
-                        icon={<FiUser size={"25px"} color="#454545" />}
-                        border="none"
-                        _hover={{
-                          backgroundColor: "#f5f5f5",
-                        }}
-                        _focus={{
-                          outline: "none",
-                          backgroundColor: "#f5f5f5",
-                        }}
-                        _active={{
-                          outline: "none",
-                          backgroundColor: "#f5f5f5",
-                        }}
-                      />
-                    </Link>
-                  </Tooltip>
-                </Center>
+                {/* </Flex> */}
               </Flex>
 
               <Box borderTop="1px solid #DFDFDF" w="100%" mt={{ base: "32px" }} />
               <Box mt="26px">
-                {/* <Text
-                  fontSize="20px"
-                  fontWeight="700"
-                  lineHeight="23px"
-                  color="#454545"
-                  textAlign="center"
-                >
-                  {t('saldo')}
-                </Text> */}
                 <Tooltip
                   hasArrow
                   mr="10px"
@@ -284,6 +260,71 @@ export const ConnectBodyMetaMask = () => {
                   </Flex>
                 </Tooltip>
               </Box>
+              <Box borderTop="1px solid #DFDFDF" w="100%" mt={{ base: "32px" }} />
+              <Box mt="26px">
+                <Flex mt="32px" display="flex" alignItems="center">
+                  <Center>
+                    <Tooltip
+                      hasArrow
+                      mr="10px"
+                      label={t('user_area')}
+                      shouldWrapChildren
+                      bg={"#454545"}
+                    > <Link href={{ pathname: '/userSpace' }}>
+                        <IconButton
+                          mr="10px"
+                          variant="outline"
+                          colorScheme="whiteAlpha"
+                          aria-label="User Space"
+                          isRound={true}
+                          icon={<FiUser size={"25px"} color="#454545" />}
+                          border="none"
+                          _hover={{
+                            backgroundColor: "#f5f5f5",
+                          }}
+                          _focus={{
+                            outline: "none",
+                            backgroundColor: "#f5f5f5",
+                          }}
+                          _active={{
+                            outline: "none",
+                            backgroundColor: "#f5f5f5",
+                          }}
+                        />
+                      </Link>
+                    </Tooltip>
+                    <Tooltip
+                      hasArrow
+                      mr="10px"
+                      label={t('transfer_area')}
+                      shouldWrapChildren
+                      bg={"#454545"}
+                    > <Link href={`https://wallpay.com/pay?key=${sdkPrivateKey}`}>
+                        <IconButton
+                          mr="10px"
+                          variant="outline"
+                          colorScheme="whiteAlpha"
+                          aria-label="Transfer"
+                          isRound={true}
+                          icon={<BiTransfer size={"25px"} color="#454545" />}
+                          border="none"
+                          _hover={{
+                            backgroundColor: "#f5f5f5",
+                          }}
+                          _focus={{
+                            outline: "none",
+                            backgroundColor: "#f5f5f5",
+                          }}
+                          _active={{
+                            outline: "none",
+                            backgroundColor: "#f5f5f5",
+                          }}
+                        />
+                      </Link>
+                    </Tooltip>
+                  </Center>
+                </Flex>
+              </Box>
             </PopoverBody>
             <PopoverFooter bottom="0" w="100%" p="0" border="0">
               <Flex justifyContent="center">
@@ -296,7 +337,7 @@ export const ConnectBodyMetaMask = () => {
                   onClick={handleDisconnectMetamask}
                   lineHeight="22px"
                   fontFamily="'Roboto', sans-serif"
-                  textColor="#FFFFFF"
+                  color="#FFFFFF"
                   borderRadius="45px"
                   bg="#454545"
                   transition={"all 0.4s ease-in-out"}
