@@ -61,7 +61,7 @@ export const NETWORKS: Networks = {
       EXPLORER: "https://rinkeby.etherscan.io",
       SYMBOL: "ETH",
       INFURA_URL:
-        "https://rinkeby.infura.io/v3/e7d8ec5586614d49a59959f7ac103bda",
+        "https://rinkeby.infura.io/v3/71832579c9794b3a87dfdde1baedd8e7",
       RPC_URL: "https://rinkeby.infura.io/v3/",
       OPENSEA_URL: `https://testnets.${OPENSEA_BASE_DOMAIN}/assets`,
       RARIBLE_URL: `https://rinkeby.${RARIBLE_BASE_DOMAIN}/token`,
@@ -75,7 +75,7 @@ export const NETWORKS: Networks = {
       EXPLORER: "https://etherscan.io",
       SYMBOL: "MATIC",
       INFURA_URL:
-        "https://polygon-mumbai.infura.io/v3/e7d8ec5586614d49a59959f7ac103bda",
+        "https://polygon-mumbai.infura.io/v3/71832579c9794b3a87dfdde1baedd8e7",
       RPC_URL: "https://rpc-mumbai.maticvigil.com/",
       OPENSEA_URL: `https://testnets.${OPENSEA_BASE_DOMAIN}/assets/mumbai`,
       RARIBLE_URL: `https://rinkeby.${RARIBLE_BASE_DOMAIN}/token/polygon`,
@@ -109,7 +109,7 @@ export const ERRORS = {
       TYPE: "walletConnect.modalClosed",
     },
   },
-  TORUS: {
+  WEB3AUTH: {
     MODAL_CLOSE: {
       CODE: 1005,
       TYPE: "torus.modalClosed",
@@ -133,5 +133,5 @@ export const EMAIL_STATUS = {
 export const WALLET_PROVIDERS = {
   METAMASK: "metamask",
   WALLET_CONNECT: "wallet-connect",
-  TORUS: "torus",
+  WEB3AUTH: "web3auth",
 };
