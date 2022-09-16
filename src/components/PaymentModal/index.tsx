@@ -225,7 +225,7 @@ export const PaymentModal = ({
     walletBalance,
     walletAddress,
     setNewBalance,
-    torusInstance,
+    web3AuthInstance,
     walletProvider,
     walletIsConnected,
   } = useWallets();
@@ -262,7 +262,7 @@ export const PaymentModal = ({
 
   const [qrCodeTxt, setQrCodeTxt] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string>("");
-  const [userName, setUserName] = useState<string>(" ");
+  const [userName, setUserName] = useState<string>("");
   const [dueDate, setDueDate] = useState<string>("");
 
   const [iPaying, setIPaying] = useState(false);
@@ -667,9 +667,9 @@ export const PaymentModal = ({
   const [showEmailInput, setShowEmailInput] = useState(true);
 
   const testShowEmailInput = async () => {
-    if (walletProvider === "torus" && walletIsConnected) {
-      const userInfo = await torusInstance.getUserInfo("");
-      if (userInfo.email) {
+    if (walletProvider === "web3auth" && walletIsConnected) {
+      const userInfo = await web3AuthInstance.getUserInfo();
+      if (userInfo.email && userInfo.name) {
         setUserEmail(userInfo.email);
         setUserName(userInfo.name);
         setShowEmailInput(false);

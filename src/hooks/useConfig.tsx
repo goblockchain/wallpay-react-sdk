@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState } from "react";
-import { LOGIN_TYPE } from "@toruslabs/torus-embed";
 
 import { WalletProviders } from "./useWallets";
 
@@ -7,7 +6,7 @@ export type Config = {
   apiProvider: boolean;
   walletProviders: WalletProviders[];
   socialLogin: boolean;
-  socialLoginVerifiers: LOGIN_TYPE[];
+  socialLoginVerifiers: ("google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless")[];
   title: string;
   networkType: "mainnet" | "testnet";
   blockchain: "ethereum" | "polygon";

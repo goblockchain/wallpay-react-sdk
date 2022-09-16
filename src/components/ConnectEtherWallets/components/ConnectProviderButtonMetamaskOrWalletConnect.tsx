@@ -7,7 +7,6 @@ import {
   Center,
   ChakraProvider
 } from '@chakra-ui/react'
-import { LOGIN_TYPE } from '@toruslabs/torus-embed';
 import { t } from '../../../i18n';
 
 import { ConnectWalletInput, WalletProviders } from '../../../hooks/useWallets';
@@ -16,7 +15,7 @@ type ConnectProviderButtonProps = {
   handleWalletConnect: (provider: ConnectWalletInput) => Promise<void>
   walletProviderImageSrc: string
   walletProvider: WalletProviders
-  loginType?: LOGIN_TYPE
+  loginType?: "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless";
 }
 
 export const ConnectProviderButtonMetamaskOrWalletConnect = ({

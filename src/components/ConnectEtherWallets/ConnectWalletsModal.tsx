@@ -105,7 +105,7 @@ export const ConnectWalletsModal = ({
                     <ConnectProviderButton
                       key={verifier}
                       handleWalletConnect={handleWalletConnect}
-                      walletProvider="torus"
+                      walletProvider="web3auth"
                       loginType={verifier}
                       walletProviderImageSrc={imageUrl[verifier]}
                     />

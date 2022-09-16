@@ -6,7 +6,6 @@ import { JsonRpcPayload, JsonRpcResponse } from "web3-core-helpers";
 import { AbstractProvider } from "web3-core/types";
 import { Contract } from "web3-eth-contract";
 import { AbiItem } from "web3-utils";
-import Torus, { LOGIN_TYPE, TorusLoginParams } from "@toruslabs/torus-embed";
 import { ERRORS, WALLET_PROVIDERS, NETWORKS, BlockchainInfo } from "../enums";
 import { useNotification } from "./useNotification";
 import { useConfig } from "./useConfig";
@@ -17,21 +16,23 @@ import { theme } from "../styles/theme";
 import { ConnectWalletsModal } from "../components/ConnectEtherWallets";
 import { sdkConfig } from "../utils/load";
 import { t } from "../i18n";
+import { Web3AuthCore } from "@web3auth/core";
+import { CHAIN_NAMESPACES } from "@web3auth/base";
+import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 
 declare class WalletConnectWeb3Provider
   extends WalletConnectProvider
-  implements AbstractProvider
-{
+  implements AbstractProvider {
   sendAsync(
     payload: JsonRpcPayload,
     callback: (error: Error | null, result?: JsonRpcResponse) => void
   ): void;
 }
 
-export type WalletProviders = "metamask" | "wallet-connect" | "torus";
+export type WalletProviders = "metamask" | "wallet-connect" | "web3auth";
 export type ConnectWalletInput = {
   provider: WalletProviders;
-  loginType?: LOGIN_TYPE;
+  loginType?: "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless";
 };
 type ConnectWallet = (input: ConnectWalletInput) => Promise<void>;
 type DisconnectWallet = () => Promise<void>;
@@ -40,13 +41,13 @@ type SetNewBalance = (input: SetNewBalanceInput) => Promise<void>;
 type GetProviderOptionsInput = {
   provider: WalletProviders;
   onCloseWalletModal?: () => void;
-  loginType?: LOGIN_TYPE;
+  loginType?: "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless";
 };
 type GetProviderOptionsOutput = {
   web3?: Web3;
   address?: string;
   ethereumProvider?: WalletConnectProvider | any;
-  torusInstance?: Torus;
+  web3AuthInstance?: Web3AuthCore;
   error?: boolean;
   errorType?: string;
 };
@@ -80,8 +81,8 @@ export interface IWalletsContext {
   walletIsNotConnected: boolean;
   setWalletIsNotConnected: (boolean) => void;
   walletProvider: WalletProviders;
-  torusInstance: Torus;
-  socialLoginVerifier: LOGIN_TYPE;
+  web3AuthInstance: Web3AuthCore;
+  socialLoginVerifier: "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless";
   goBlockchainContract: Contract;
   web3: Web3;
   onOpenModal: () => void;
@@ -106,8 +107,8 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
   const [walletProvider, setWalletProvider] = useState<WalletProviders>(
     "" as WalletProviders
   );
-  const [socialLoginVerifier, setSocialLoginVerifier] = useState<LOGIN_TYPE>(
-    "" as LOGIN_TYPE
+  const [socialLoginVerifier, setSocialLoginVerifier] = useState<"google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless">(
+    "" as "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless"
   );
   const [goBlockchainContract, setGoBlockchainContract] = useState<Contract>(
     {} as Contract
@@ -116,7 +117,7 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
   const [walletEthereumProvider, setWalletEthereumProvider] = useState<
     WalletConnectProvider | any
   >({} as WalletConnectProvider | any);
-  const [torusInstance, setTorusInstance] = useState<Torus>({} as Torus);
+  const [web3AuthInstance, setweb3AuthInstance] = useState<Web3AuthCore>({} as Web3AuthCore);
   const [loadingWhenConnetWallet, setLoadingWhenConnetWallet] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -195,10 +196,10 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
     loginType,
   }) => {
     let web3: Web3 = {} as Web3;
-    let address: string = "";
+    let address: string = "0x";
     let ethereumProvider: WalletConnectProvider | any =
       {} as WalletConnectProvider;
-    let torusInstance: Torus = {} as Torus;
+    let web3AuthInstance: Web3AuthCore = {} as Web3AuthCore;
     try {
       switch (provider) {
         case WALLET_PROVIDERS.METAMASK:
@@ -239,30 +240,68 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
           } catch {
             throw { type: ERRORS.WALLET_CONNECT.MODAL_CLOSE.TYPE };
           }
-        case WALLET_PROVIDERS.TORUS:
+        case WALLET_PROVIDERS.WEB3AUTH:
           try {
-            const TorusEmbed = (await import("@toruslabs/torus-embed")).default;
-            const torus = new TorusEmbed({});
-            await torus.init({
-              buildEnv: "production",
-              network: {
-                host: getNetworkName(config.networkType, config.blockchain),
+            const clientId = "BI2p2AxweCBOu3hVaTEw7BTeitIi9rpmOk9nX-qXEu-0K-0hkYUgkong_ozoRVx0Q3MXEGHEB1U0vhmN1qEDIYo";
+            let blockchainInfo: BlockchainInfo;
+            if (config.networkType === 'mainnet') {
+              blockchainInfo = NETWORKS.MAINNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain) as BlockchainInfo;
+            } else {
+              blockchainInfo = NETWORKS.TESTNET.find(blockchainInfo => blockchainInfo.BLOCKCHAIN === config.blockchain) as BlockchainInfo;
+            }
+            const web3auth = new Web3AuthCore({
+              chainConfig: {
+                displayName: String(sdkConfig.config?.blockchain),
+                chainNamespace: CHAIN_NAMESPACES.EIP155,
+                chainId: blockchainInfo.CHAIN_ID.HEX,
+                rpcTarget: blockchainInfo.INFURA_URL,
+                blockExplorer: blockchainInfo.EXPLORER,
+                ticker: blockchainInfo.SYMBOL,
+                tickerName: blockchainInfo.BLOCKCHAIN === 'ethereum' ? 'Ethereum' : 'Polygon',
               },
-              showTorusButton: false,
+              clientId,
             });
-            torusInstance = torus;
+
+            const openloginAdapter = new OpenloginAdapter({
+              adapterSettings: {
+                clientId,
+                network: config.networkType,
+                uxMode: "popup",
+                storageKey: "session"
+              }
+            });
+
+            openloginAdapter.setChainConfig({
+              displayName: String(sdkConfig.config?.blockchain),
+              chainNamespace: CHAIN_NAMESPACES.EIP155,
+              chainId: blockchainInfo.CHAIN_ID.HEX,
+              rpcTarget: blockchainInfo.INFURA_URL,
+              blockExplorer: blockchainInfo.EXPLORER,
+              ticker: blockchainInfo.SYMBOL,
+              tickerName: blockchainInfo.BLOCKCHAIN === 'ethereum' ? 'Ethereum' : 'Polygon',
+            });
+            await openloginAdapter.init({});
+            web3auth.configureAdapter(openloginAdapter);
+
+            web3AuthInstance = web3auth;
+
+            const connectedProvider = await web3auth.connectTo('openlogin', {
+              loginProvider: loginType,
+            });
+            web3 = new Web3(connectedProvider as any);
+
+            const walletAddress = (await web3.eth.getAccounts())[0];
+            console.log('web3 walletAddress', walletAddress);
+
+            ethereumProvider = connectedProvider;
+            address = walletAddress;
+
             if (onCloseWalletModal !== undefined) onCloseWalletModal();
-            const loginParams: TorusLoginParams = {};
-            if (loginType !== undefined && loginType !== "passwordless")
-              loginParams.verifier = loginType;
-            const [torusAddress] = await torus.login(loginParams);
-            const torusProvider = torus.provider;
-            address = torusAddress;
-            web3 = new Web3(torusProvider as AbstractProvider);
-            ethereumProvider = torusProvider;
+
             break;
           } catch (error) {
-            throw { type: ERRORS.TORUS.MODAL_CLOSE.TYPE };
+            console.error('Error loading WEB3AUTH stuff', error);
+            throw { type: ERRORS.WEB3AUTH.MODAL_CLOSE.TYPE };
           }
       }
       sessionStorage.setItem(
@@ -273,11 +312,11 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
         web3,
         address,
         ethereumProvider,
-        torusInstance,
+        web3AuthInstance,
         error: false,
       };
     } catch (error: any) {
-      if (provider === WALLET_PROVIDERS.TORUS) await torusInstance.cleanUp();
+      if (provider === WALLET_PROVIDERS.WEB3AUTH) await web3AuthInstance.logout();
       return { error: true, errorType: error.type };
     }
   };
@@ -293,14 +332,14 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
         address,
         web3,
         ethereumProvider,
-        torusInstance,
+        web3AuthInstance,
         error,
         errorType,
       } = await getProviderOptions({
         provider,
         onCloseWalletModal:
           provider === WALLET_PROVIDERS.WALLET_CONNECT ||
-          provider === WALLET_PROVIDERS.TORUS
+            provider === WALLET_PROVIDERS.WEB3AUTH
             ? onClose
             : undefined,
         loginType,
@@ -334,9 +373,9 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
       setWalletAddress(address as string);
       setWalletBalance(balance);
       setWalletProvider(provider);
-      if (provider === WALLET_PROVIDERS.TORUS) {
-        setTorusInstance(torusInstance as Torus);
-        setSocialLoginVerifier(loginType as LOGIN_TYPE);
+      if (provider === WALLET_PROVIDERS.WEB3AUTH) {
+        setweb3AuthInstance(web3AuthInstance as Web3AuthCore);
+        setSocialLoginVerifier(loginType as "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless");
       }
       setGoBlockchainContract(goBlockchainContract);
       setWeb3(web3 as Web3);
@@ -347,7 +386,7 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
       console.log(error);
       if (
         error.type === ERRORS.WALLET_CONNECT.MODAL_CLOSE.TYPE ||
-        error.type === ERRORS.TORUS.MODAL_CLOSE.TYPE
+        error.type === ERRORS.WEB3AUTH.MODAL_CLOSE.TYPE
       ) {
         if (isOpen) onClose();
       } else {
@@ -359,10 +398,10 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
             secondaryText:
               error.message !== undefined
                 ? `${t("wrongNetworkSecondaryInit")} ${capitalize(
-                    config.blockchain
-                  )} ${capitalize(config.networkType)}. ${t(
-                    "wrongNetworkSecondaryEnd"
-                  )}`
+                  config.blockchain
+                )} ${capitalize(config.networkType)}. ${t(
+                  "wrongNetworkSecondaryEnd"
+                )}`
                 : undefined,
           },
         });
@@ -386,9 +425,9 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
     if (walletProvider === WALLET_PROVIDERS.WALLET_CONNECT) {
       await walletEthereumProvider.disconnect();
     }
-    if (walletProvider === WALLET_PROVIDERS.TORUS) {
-      await torusInstance.cleanUp();
-      setSocialLoginVerifier("" as LOGIN_TYPE);
+    if (walletProvider === WALLET_PROVIDERS.WEB3AUTH) {
+      await web3AuthInstance.logout();
+      setSocialLoginVerifier("" as "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless");
     }
     disconnectWallet();
   };
@@ -425,7 +464,7 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
         walletIsNotConnected,
         setWalletIsNotConnected,
         walletProvider,
-        torusInstance,
+        web3AuthInstance,
         socialLoginVerifier,
         goBlockchainContract,
         web3,
