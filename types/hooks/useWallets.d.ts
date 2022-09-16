@@ -1,12 +1,12 @@
 import React from "react";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
-import Torus, { LOGIN_TYPE } from "@toruslabs/torus-embed";
 import { MetaMaskInpageProvider } from "@metamask/providers";
-export declare type WalletProviders = "metamask" | "wallet-connect" | "torus";
+import { Web3AuthCore } from "@web3auth/core";
+export declare type WalletProviders = "metamask" | "wallet-connect" | "web3auth";
 export declare type ConnectWalletInput = {
     provider: WalletProviders;
-    loginType?: LOGIN_TYPE;
+    loginType?: "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless";
 };
 declare type ConnectWallet = (input: ConnectWalletInput) => Promise<void>;
 declare type DisconnectWallet = () => Promise<void>;
@@ -23,8 +23,8 @@ interface IWalletsContext {
     walletBalance: string;
     walletIsConnected: boolean;
     walletProvider: WalletProviders;
-    torusInstance: Torus;
-    socialLoginVerifier: LOGIN_TYPE;
+    web3AuthInstance: Web3AuthCore;
+    socialLoginVerifier: "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless";
     goBlockchainContract: Contract;
     web3: Web3;
     onOpenModal: () => void;
