@@ -6,7 +6,7 @@ import { JsonRpcPayload, JsonRpcResponse } from "web3-core-helpers";
 import { AbstractProvider } from "web3-core/types";
 import { Contract } from "web3-eth-contract";
 import { AbiItem } from "web3-utils";
-import { ERRORS, WALLET_PROVIDERS, NETWORKS, BlockchainInfo } from "../enums";
+import { ERRORS, WALLET_PROVIDERS, NETWORKS, BlockchainInfo, LoginType } from "../enums";
 import { useNotification } from "./useNotification";
 import { useConfig } from "./useConfig";
 import { useRouter } from "next/router";
@@ -32,7 +32,7 @@ declare class WalletConnectWeb3Provider
 export type WalletProviders = "metamask" | "wallet-connect" | "web3auth";
 export type ConnectWalletInput = {
   provider: WalletProviders;
-  loginType?: "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless";
+  loginType?: LoginType;
 };
 type ConnectWallet = (input: ConnectWalletInput) => Promise<void>;
 type DisconnectWallet = () => Promise<void>;
@@ -41,13 +41,13 @@ type SetNewBalance = (input: SetNewBalanceInput) => Promise<void>;
 type GetProviderOptionsInput = {
   provider: WalletProviders;
   onCloseWalletModal?: () => void;
-  loginType?: "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless";
+  loginType?: LoginType;
 };
 type GetProviderOptionsOutput = {
   web3?: Web3;
   address?: string;
   ethereumProvider?: WalletConnectProvider | any;
-  web3AuthInstance?: Web3AuthCore;
+  web3AuthInstance?: OpenloginAdapter;
   error?: boolean;
   errorType?: string;
 };
@@ -81,8 +81,8 @@ export interface IWalletsContext {
   walletIsNotConnected: boolean;
   setWalletIsNotConnected: (boolean) => void;
   walletProvider: WalletProviders;
-  web3AuthInstance: Web3AuthCore;
-  socialLoginVerifier: "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless";
+  web3AuthInstance: OpenloginAdapter;
+  socialLoginVerifier: LoginType;
   goBlockchainContract: Contract;
   web3: Web3;
   onOpenModal: () => void;
@@ -107,8 +107,8 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
   const [walletProvider, setWalletProvider] = useState<WalletProviders>(
     "" as WalletProviders
   );
-  const [socialLoginVerifier, setSocialLoginVerifier] = useState<"google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless">(
-    "" as "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless"
+  const [socialLoginVerifier, setSocialLoginVerifier] = useState<LoginType>(
+    "" as LoginType
   );
   const [goBlockchainContract, setGoBlockchainContract] = useState<Contract>(
     {} as Contract
@@ -117,7 +117,7 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
   const [walletEthereumProvider, setWalletEthereumProvider] = useState<
     WalletConnectProvider | any
   >({} as WalletConnectProvider | any);
-  const [web3AuthInstance, setweb3AuthInstance] = useState<Web3AuthCore>({} as Web3AuthCore);
+  const [web3AuthInstance, setweb3AuthInstance] = useState<OpenloginAdapter>({} as OpenloginAdapter);
   const [loadingWhenConnetWallet, setLoadingWhenConnetWallet] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -199,7 +199,7 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
     let address: string = "0x";
     let ethereumProvider: WalletConnectProvider | any =
       {} as WalletConnectProvider;
-    let web3AuthInstance: Web3AuthCore = {} as Web3AuthCore;
+    let web3AuthInstance: OpenloginAdapter = {} as OpenloginAdapter;
     try {
       switch (provider) {
         case WALLET_PROVIDERS.METAMASK:
@@ -283,7 +283,7 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
             await openloginAdapter.init({});
             web3auth.configureAdapter(openloginAdapter);
 
-            web3AuthInstance = web3auth;
+            web3AuthInstance = openloginAdapter;
 
             const connectedProvider = await web3auth.connectTo('openlogin', {
               loginProvider: loginType,
@@ -316,7 +316,7 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
         error: false,
       };
     } catch (error: any) {
-      if (provider === WALLET_PROVIDERS.WEB3AUTH) await web3AuthInstance.logout();
+      if (provider === WALLET_PROVIDERS.WEB3AUTH) await web3AuthInstance.disconnect();
       return { error: true, errorType: error.type };
     }
   };
@@ -374,8 +374,8 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
       setWalletBalance(balance);
       setWalletProvider(provider);
       if (provider === WALLET_PROVIDERS.WEB3AUTH) {
-        setweb3AuthInstance(web3AuthInstance as Web3AuthCore);
-        setSocialLoginVerifier(loginType as "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless");
+        setweb3AuthInstance(web3AuthInstance as OpenloginAdapter);
+        setSocialLoginVerifier(loginType as LoginType);
       }
       setGoBlockchainContract(goBlockchainContract);
       setWeb3(web3 as Web3);
@@ -426,8 +426,8 @@ export const WalletsProvider = ({ children, sdkPrivateKey }) => {
       await walletEthereumProvider.disconnect();
     }
     if (walletProvider === WALLET_PROVIDERS.WEB3AUTH) {
-      await web3AuthInstance.logout();
-      setSocialLoginVerifier("" as "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless");
+      await web3AuthInstance.disconnect();
+      setSocialLoginVerifier("" as LoginType);
     }
     disconnectWallet();
   };

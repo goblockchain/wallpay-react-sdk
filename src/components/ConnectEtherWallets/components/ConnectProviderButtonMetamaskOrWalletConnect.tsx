@@ -11,11 +11,12 @@ import { t } from '../../../i18n';
 
 import { ConnectWalletInput, WalletProviders } from '../../../hooks/useWallets';
 import { theme } from '../../../styles/theme';
+import { LoginType } from '../../../enums';
 type ConnectProviderButtonProps = {
   handleWalletConnect: (provider: ConnectWalletInput) => Promise<void>
   walletProviderImageSrc: string
   walletProvider: WalletProviders
-  loginType?: "google" | "facebook" | "reddit" | "discord" | "twitch" | "apple" | "github" | "linkedin" | "twitter" | "weibo" | "line" | "jwt" | "email_password" | "passwordless";
+  loginType?: LoginType;
 }
 
 export const ConnectProviderButtonMetamaskOrWalletConnect = ({

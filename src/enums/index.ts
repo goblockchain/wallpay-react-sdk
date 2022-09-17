@@ -17,6 +17,8 @@ type Networks = {
   TESTNET: BlockchainInfo[];
 };
 
+export type LoginType = LoginType;
+
 const OPENSEA_BASE_DOMAIN = "opensea.io";
 const RARIBLE_BASE_DOMAIN = "rarible.com";
 
