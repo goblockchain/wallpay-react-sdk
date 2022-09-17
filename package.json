@@ -1,6 +1,6 @@
 {
   "name": "wallpay-react-sdk",
-  "version": "0.1.10-alpha",
+  "version": "0.1.5-alpha",
   "description": "Wallpay React SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

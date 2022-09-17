@@ -167,7 +167,7 @@ export const ConnectBodyMetaMask = ({
                 <PopoverCloseButton
                   position={"relative"}
                   display="flex"
-                  pb={"20px"}
+                  py={"16px"}
                   color="#454545"
                   alignItems="center"
                   size={"md"}
