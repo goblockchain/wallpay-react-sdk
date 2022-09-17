@@ -16,11 +16,8 @@ import {
   Image,
   Button,
   useClipboard,
-  Button as ChakraButton,
-  PopoverArrow,
   IconButton,
   Tooltip,
-  border,
   ChakraProvider,
 } from "@chakra-ui/react";
 
@@ -187,28 +184,40 @@ export const ConnectBodyMetaMask = ({
                   borderRadius="38px"
                   border="1px solid #DFDFDF"
                   p="15px 20px"
+                  width="100%"
                 >
-                  <ChakraImage
-                    alt={walletProvider}
-                    src={
-                      String(socialLoginVerifier) !== ""
-                        ? socialLoginVerifierImageSrc[socialLoginVerifier]
-                        : walletProvidersImageSrc[walletProvider]
-                    }
-                  />
-                  <Text
-                    color="#717171"
-                    ml="10px"
-                    mt="2px"
-                    fontSize="18px"
-                    fontWeight="400"
-                    lineHeight="21px"
-                    fontFamily="'Roboto', sans-serif"
-                  >
-                    {String(walletAddress).substring(0, 5) +
-                      "..." +
-                      String(walletAddress).substring(38)}
-                  </Text>
+                  <Flex mt="16px">
+                  {/* <SimpleGrid
+                    w="100%"
+                    justifyItems="flex-start"
+                    spacingX="16px"
+                    columns={{ sm: 2, md: 2, xl: 2 }}
+                  > */}
+                    <ChakraImage
+                      width="24px"
+                      height="24px"
+                      alt={walletProvider}
+                      src={
+                        String(socialLoginVerifier) !== ""
+                          ? socialLoginVerifierImageSrc[socialLoginVerifier]
+                          : walletProvidersImageSrc[walletProvider]
+                      }
+                    />
+                    <Text
+                      color="#717171"
+                      ml="10px"
+                      mt="2px"
+                      fontSize="18px"
+                      fontWeight="400"
+                      lineHeight="21px"
+                      fontFamily="'Roboto', sans-serif"
+                    >
+                      {String(walletAddress).substring(0, 5) +
+                        "..." +
+                        String(walletAddress).substring(38)}
+                    </Text>
+                  {/* </SimpleGrid> */}
+                  </Flex>
                 </Box>
                 <Flex alignItems="center">
                   <Tooltip
