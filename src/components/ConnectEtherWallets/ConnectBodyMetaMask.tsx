@@ -101,11 +101,7 @@ export const ConnectBodyMetaMask = ({
   });
 
   const handleDisconnectMetamask = async () => {
-    router.push("/");
     disconnectWallet();
-    setTimeout(() => {
-      router.reload();
-    }, 2000);
   };
 
   return (
@@ -187,12 +183,6 @@ export const ConnectBodyMetaMask = ({
                   width="100%"
                 >
                   <Flex mt="16px">
-                  {/* <SimpleGrid
-                    w="100%"
-                    justifyItems="flex-start"
-                    spacingX="16px"
-                    columns={{ sm: 2, md: 2, xl: 2 }}
-                  > */}
                     <ChakraImage
                       width="24px"
                       height="24px"
@@ -216,7 +206,6 @@ export const ConnectBodyMetaMask = ({
                         "..." +
                         String(walletAddress).substring(38)}
                     </Text>
-                  {/* </SimpleGrid> */}
                   </Flex>
                 </Box>
                 <Flex alignItems="center">
